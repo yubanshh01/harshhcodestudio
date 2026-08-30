@@ -441,19 +441,68 @@ footer {
     font-size: 0.9rem;
 }
 
-/* --- Mobile Responsive --- */
+/* --- Mobile Responsive Fix --- */
 @media (max-width: 860px) {
-    .nav-links {
-        display: none; /* Can be expanded or scrolled */
+    nav {
+        flex-direction: column;
+        align-items: center;
+        gap: 0.8rem;
     }
+
+    .nav-links {
+        display: flex;
+        width: 100%;
+        justify-content: flex-start;
+        overflow-x: auto;
+        white-space: nowrap;
+        gap: 0.6rem;
+        padding: 4px 0;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+    }
+
+    .nav-links::-webkit-scrollbar {
+        display: none;
+    }
+
+    .nav-links a {
+        padding: 6px 12px;
+        background: var(--primary-light);
+        border-radius: 6px;
+        font-size: 0.85rem;
+        border-bottom: none;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active {
+        background: var(--accent);
+        color: var(--white);
+        border-bottom: none;
+    }
+
+    .hero {
+        padding: 3.5rem 0;
+    }
+
     .hero h1 {
         font-size: 2.2rem;
     }
+
+    .hero p {
+        font-size: 1rem;
+    }
+
     .contact-layout {
         grid-template-columns: 1fr;
     }
+
     .btn-outline {
         margin-left: 0;
         margin-top: 10px;
+    }
+
+    .stats-bar {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
     }
 }
