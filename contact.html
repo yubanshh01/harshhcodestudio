@@ -5,44 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contact Us | HarshCode Studio</title>
     <link rel="stylesheet" href="style.css">
-    <style>
-        /* Form Status Alert Box */
-        .status-msg {
-            display: none;
-            margin-top: 15px;
-            padding: 14px;
-            border-radius: 8px;
-            font-size: 1.05rem;
-            font-weight: 700;
-            text-align: center;
-        }
-        .status-msg.success {
-            display: block !important;
-            background: #dcfce7 !important;
-            color: #15803d !important;
-            border: 2px solid #86efac !important;
-        }
-        .status-msg.error {
-            display: block !important;
-            background: #fee2e2 !important;
-            color: #b91c1c !important;
-            border: 2px solid #fca5a5 !important;
-        }
-        .btn:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
-    </style>
 </head>
 <body>
 
+    <!-- Header -->
     <header>
         <div class="container">
             <nav>
                 <a href="index.html" class="logo-container">
-                    <img src="images/logo.jpeg" alt="Logo" class="brand-logo" onerror="this.style.display='none'">
+                    <img src="images/logo.png" alt="Logo" class="brand-logo" onerror="this.style.display='none'">
                     <span class="brand-name">HarshCode<span>.Studio</span></span>
                 </a>
+                
                 <ul class="nav-links">
                     <li><a href="index.html">Home</a></li>
                     <li><a href="about.html">About</a></li>
@@ -55,6 +29,7 @@
         </div>
     </header>
 
+    <!-- Contact Section -->
     <section class="section">
         <div class="container">
             <div class="section-header">
@@ -64,9 +39,10 @@
 
             <div class="contact-layout">
                 
+                <!-- Contact Info Card -->
                 <div class="contact-card-box">
                     <h3>Contact Information</h3>
-                    <p style="color: var(--text-muted); margin-top: 5px;">Aap direct call, message ya Instagram ke through bhi connect kar sakte hain.</p>
+                    <p style="color: var(--text-muted); margin-top: 5px;">Aap direct call, message ya Instagram ke through connect kar sakte hain.</p>
                     
                     <ul class="contact-links-list">
                         <li>
@@ -97,10 +73,12 @@
                     </div>
                 </div>
 
+                <!-- Formspree Connected Form -->
                 <div class="contact-card-box">
                     <h3>Send Direct Message</h3>
                     
-                    <form id="contact-form" action="https://formspree.io/f/moeqvarv" method="POST" style="margin-top: 1.2rem;">
+                    <!-- NOTE: Apne Formspree ID se 'YOUR_FORMSPREE_ID' ko replace karein -->
+                    <form id="contact-form" action="https://formspree.io/f/YOUR_FORMSPREE_ID" method="POST" style="margin-top: 1.2rem;">
                         
                         <div class="form-group">
                             <label for="name">Aapka Naam (Your Name):</label>
@@ -134,6 +112,7 @@
 
                         <button type="submit" id="submit-btn" class="btn" style="width: 100%;">Submit Message</button>
                         
+                        <!-- Success / Error Message Box -->
                         <div id="status-message" class="status-msg"></div>
                     </form>
                 </div>
@@ -142,6 +121,7 @@
         </div>
     </section>
 
+    <!-- Footer -->
     <footer>
         <div class="container">
             <div class="footer-bottom">
@@ -150,6 +130,7 @@
         </div>
     </footer>
 
+    <!-- Formspree Submission Script (No Redirect + Popup + Text) -->
     <script>
         const form = document.getElementById("contact-form");
         const statusMsg = document.getElementById("status-message");
@@ -158,7 +139,6 @@
         form.addEventListener("submit", function(event) {
             event.preventDefault();
 
-            // Button status update
             submitBtn.disabled = true;
             submitBtn.innerText = "Sending...";
             statusMsg.style.display = "none";
@@ -174,10 +154,7 @@
             })
             .then(response => {
                 if (response.ok) {
-                    // 1. Alert Pop-up
                     alert("Form submitted successfully!");
-                    
-                    // 2. Green Box display on page
                     statusMsg.innerText = "✓ Form submitted successfully!";
                     statusMsg.className = "status-msg success";
                     form.reset();
@@ -186,14 +163,13 @@
                         if (Object.hasOwn(data, 'errors')) {
                             statusMsg.innerText = data["errors"].map(error => error["message"]).join(", ");
                         } else {
-                            statusMsg.innerText = "Error: Formspree ID check karein.";
+                            statusMsg.innerText = "Error: Please check your Formspree ID.";
                         }
                         statusMsg.className = "status-msg error";
                     });
                 }
             })
             .catch(error => {
-                // Local file / network fallback
                 alert("Form submitted successfully!");
                 statusMsg.innerText = "✓ Form submitted successfully!";
                 statusMsg.className = "status-msg success";
