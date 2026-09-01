@@ -48,50 +48,52 @@
             </div>
         </div>
     </footer>
+<script>
+    const GITHUB_USERNAME = "YOUR_GITHUB_USERNAME";
+    const GITHUB_REPO = "YOUR_REPO_NAME";
+    const GITHUB_BRANCH = "main";
 
-    <script>
-        const JSONBIN_MASTER_KEY = "$2a$10$s0ui3ESW0cXraUgdQYbTB.iE4plFNtO5bD1A7p0IBWoiMk42r1hme"; // Data Cloud
-        const JSONBIN_BIN_NAME = "studio_feed"; // Your Bin Name
+    async function loadPublicPosts() {
+        const container = document.getElementById("publicPostsContainer");
+        container.innerHTML = "<p style='text-align:center;'>Fetching live updates...</p>";
 
-        async function loadPublicPosts() {
-            const container = document.getElementById("publicPostsContainer");
-            container.innerHTML = "<p style='text-align:center;'>Fetching live updates...</p>";
+        try {
+            // Raw GitHub URL with cache-buster
+            const res = await fetch(`https://raw.githubusercontent.com/${GITHUB_USERNAME}/${GITHUB_REPO}/${GITHUB_BRANCH}/posts.json?cb=${Date.now()}`);
+            
+            if (!res.ok) throw new Error("Could not load posts.");
+            
+            const posts = await res.json();
+            container.innerHTML = "";
 
-            try {
-                // Fetch dynamic data from JSONBin (Cloud Storage)
-                const res = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_BIN_NAME}`, {
-                    headers: { "X-Master-Key": JSONBIN_MASTER_KEY }
-                });
-                
-                const posts = (await res.json()).record;
-                container.innerHTML = "";
-
-                if (!posts || posts.length === 0) {
-                    container.innerHTML = "<p style='text-align:center;'>No posts published yet.</p>";
-                    return;
-                }
-
-                posts.forEach(post => {
-                    container.innerHTML += `
-                        <div class="post-card">
-                            <div class="post-header">
-                                <span class="post-tag">${post.tag}</span>
-                                <span class="post-date">📅 ${post.date}</span>
-                            </div>
-                            <h3 style="font-size:1.3rem; margin-bottom: 0.5rem; color: var(--text-dark);">${post.title}</h3>
-                            ${post.img ? `
-                                <div class="post-img-wrapper">
-                                    <img src="${post.img}" class="post-img" alt="${post.title}">
-                                </div>` : ''}
-                            <p style="color:#334155; line-height: 1.6; margin-top: 10px;">${post.content}</p>
-                        </div>
-                    `;
-                });
-            } catch (err) {
-                container.innerHTML = "<p style='text-align:center; color:red;'>Failed to load live feed.</p>";
+            if (!posts || posts.length === 0) {
+                container.innerHTML = "<p style='text-align:center; color:var(--text-muted);'>No posts published yet.</p>";
+                return;
             }
+
+            posts.forEach(post => {
+                container.innerHTML += `
+                    <div class="post-card">
+                        <div class="post-header">
+                            <span class="post-tag">${post.tag}</span>
+                            <span class="post-date">📅 ${post.date}</span>
+                        </div>
+                        <h3 style="font-size:1.3rem; margin-bottom: 0.5rem; color: var(--text-dark);">${post.title}</h3>
+                        ${post.img ? `
+                            <div class="post-img-wrapper">
+                                <img src="${post.img}" class="post-img" alt="${post.title}">
+                            </div>` : ''}
+                        <p style="color:#334155; line-height: 1.6; margin-top: 10px;">${post.content}</p>
+                    </div>
+                `;
+            });
+        } catch (err) {
+            container.innerHTML = "<p style='text-align:center; color:red;'>Failed to load live feed.</p>";
         }
-        loadPublicPosts();
-    </script>
+    }
+
+    loadPublicPosts();
+</script>
+ 
 </body>
 </html>
