@@ -19,6 +19,12 @@
     font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 }
 
+html, body {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
 body {
     background-color: var(--bg-light);
     color: var(--text-dark);
@@ -42,6 +48,7 @@ header {
     top: 0;
     z-index: 1000;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    width: 100%;
 }
 
 nav {
@@ -50,6 +57,7 @@ nav {
     align-items: center;
     flex-wrap: wrap;
     gap: 0.8rem;
+    width: 100%;
 }
 
 .logo-container {
@@ -84,6 +92,7 @@ nav {
     list-style: none;
     gap: 0.6rem;
     align-items: center;
+    flex-wrap: wrap; /* Overflow rokne ke liye wrap add kiya */
 }
 
 .nav-links a {
@@ -158,6 +167,7 @@ nav {
 /* --- Sections --- */
 .section {
     padding: 4.5rem 0;
+    width: 100%;
 }
 
 .section-bg {
@@ -242,12 +252,14 @@ nav {
     color: var(--white);
     padding: 5.5rem 0;
     text-align: center;
+    width: 100%;
 }
 
 .hero h1 {
     font-size: 3rem;
     font-weight: 800;
     margin-bottom: 1.2rem;
+    word-break: break-word;
 }
 
 .hero h1 span {
@@ -290,7 +302,7 @@ nav {
 /* --- Gallery Styling --- */
 .gallery-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 1.8rem;
 }
 
@@ -496,7 +508,7 @@ nav {
     color: var(--text-muted);
 }
 
-./* --- Post Photo Full View (No Crop) --- */
+/* --- Post Photo Full View (No Crop) --- */
 .post-img-wrapper {
     width: 100%;
     margin: 1.2rem 0;
@@ -513,10 +525,11 @@ nav {
     width: 100%;
     max-height: 520px;
     height: auto;
-    object-fit: contain; /* Photo poori dikhegi bina cut huye */
+    object-fit: contain;
     display: block;
     border-radius: 8px;
 }
+
 /* --- Classic Long & Spacious Footer --- */
 footer {
     margin-top: auto;
@@ -524,6 +537,7 @@ footer {
     color: #cbd5e1;
     padding: 4.5rem 0 2rem 0;
     border-top: 1px solid rgba(255, 255, 255, 0.1);
+    width: 100%;
 }
 
 .footer-grid {
@@ -561,7 +575,6 @@ footer {
     margin-bottom: 1rem;
 }
 
-/* Classic List Links - 100% White */
 .footer-col ul {
     list-style: none;
 }
@@ -605,7 +618,6 @@ footer {
     color: #60a5fa !important;
 }
 
-/* Bottom Copyright Bar */
 .footer-bottom {
     border-top: 1px solid rgba(255, 255, 255, 0.1);
     padding-top: 2rem;
@@ -628,8 +640,16 @@ footer {
     color: #60a5fa !important;
 }
 
-/* Responsive */
+/* ==========================================================
+   --- Mobile & Tablet Responsive Media Queries ---
+   ========================================================== */
+
 @media (max-width: 900px) {
+    .about-grid,
+    .contact-layout {
+        grid-template-columns: 1fr;
+    }
+
     footer {
         padding: 3.5rem 0 1.5rem 0;
     }
@@ -640,7 +660,58 @@ footer {
     }
 }
 
+@media (max-width: 768px) {
+    nav {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .nav-links {
+        width: 100%;
+        justify-content: center;
+        overflow-x: auto;
+        padding-bottom: 6px;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .hero h1 {
+        font-size: 2.2rem;
+    }
+
+    .hero p {
+        font-size: 1.05rem;
+    }
+
+    .section-header h2 {
+        font-size: 1.8rem;
+    }
+}
+
 @media (max-width: 580px) {
+    .container {
+        width: 92%;
+    }
+
+    .hero {
+        padding: 3.5rem 0;
+    }
+
+    .hero h1 {
+        font-size: 1.85rem;
+    }
+
+    .stats-bar {
+        grid-template-columns: 1fr;
+        gap: 1.2rem;
+        padding: 1.5rem;
+        margin-top: -1.5rem;
+    }
+
+    .grid,
+    .gallery-grid {
+        grid-template-columns: 1fr;
+    }
+
     .footer-grid {
         grid-template-columns: 1fr;
         gap: 2.2rem;
