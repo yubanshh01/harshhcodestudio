@@ -5,55 +5,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contact Us | HarshCode Studio</title>
     <link rel="stylesheet" href="style.css">
-    <style>
-        /* Form Status Alert Box */
-        .status-msg {
-            display: none;
-            margin-top: 15px;
-            padding: 14px;
-            border-radius: 8px;
-            font-size: 1.05rem;
-            font-weight: 700;
-            text-align: center;
-        }
-        .status-msg.success {
-            display: block !important;
-            background: #dcfce7 !important;
-            color: #15803d !important;
-            border: 2px solid #86efac !important;
-        }
-        .status-msg.error {
-            display: block !important;
-            background: #fee2e2 !important;
-            color: #b91c1c !important;
-            border: 2px solid #fca5a5 !important;
-        }
-        .btn:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
-    </style>
 </head>
 <body>
+<!-- Header with Clean Brand Logo and Navigation (Admin placed right next to Contact with Profile Icon) -->
+<header>
+    <div class="container">
+        <nav>
+            <a href="index.html" class="logo-container">
+                <img src="images/logo.jpeg" alt="Logo" class="brand-logo" onerror="this.src='images/logo.png'">
+                <span class="brand-name">HarshCode<span>.Studio</span></span>
+            </a>
 
-    <header>
-        <div class="container">
-            <nav>
-                <a href="index.html" class="logo-container">
-                    <img src="images/logo.jpeg" alt="Logo" class="brand-logo" onerror="this.style.display='none'">
-                    <span class="brand-name">HarshCode<span>.Studio</span></span>
-                </a>
-                <ul class="nav-links">
-                    <li><a href="index.html">Home</a></li>
-                    <li><a href="about.html">About</a></li>
-                    <li><a href="services.html">Services</a></li>
-                    <li><a href="gallery.html">Gallery</a></li>
-                    <li><a href="reviews.html">Reviews</a></li>
-                    <li><a href="contact.html" class="active">Contact</a></li>
-                </ul>
-            </nav>
-        </div>
-    </header>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="services.html">Services</a></li>
+                <li><a href="gallery.html">Gallery</a></li>
+                <li><a href="feed.html">Posts</a></li>
+                <li><a href="reviews.html">Reviews</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li><a href="login.html">👤 Admin</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
 
     <section class="section">
         <div class="container">
@@ -142,13 +117,82 @@
         </div>
     </section>
 
-    <footer>
-        <div class="container">
-            <div class="footer-bottom">
-                <p>&copy; 2026 HarshCode Studio. All Rights Reserved.</p>
+    <!-- Long & Spacious Classic Footer -->
+<footer>
+    <div class="container">
+        <div class="footer-grid">
+            
+            <!-- Col 1: Brand Story -->
+            <div class="footer-col">
+                <h4>HarshCode Studio</h4>
+                <p>
+                    Student & Professional Web Developer. Mai fast, clean aur 100% mobile-friendly business websites create karta hu jo aapke brand ko stand out karein.
+                </p>
+                <p style="color: #64748b; font-size: 0.85rem;">
+                    📍 Bilari, Uttar Pradesh, India
+                </p>
             </div>
+
+            <!-- Col 2: Quick Links (White Links) -->
+            <div class="footer-col">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="index.html">→ Home</a></li>
+                    <li><a href="about.html">→ About Me</a></li>
+                    <li><a href="services.html">→ Services</a></li>
+                    <li><a href="gallery.html">→ Photo Gallery</a></li>
+                    <li><a href="feed.html">→ Posts & Updates</a></li>
+                    <li><a href="reviews.html">→ Customer Reviews</a></li>
+                </ul>
+            </div>
+
+            <!-- Col 3: Services & Admin -->
+            <div class="footer-col">
+                <h4>Our Services</h4>
+                <ul>
+                    <li><a href="services.html">→ Business Websites</a></li>
+                    <li><a href="services.html">→ Portfolio Websites</a></li>
+                    <li><a href="services.html">→ Mobile UI Design</a></li>
+                    <li><a href="services.html">→ Speed Optimization</a></li>
+                    <li><a href="login.html">→ 👤 Admin Portal</a></li>
+                </ul>
+            </div>
+
+            <!-- Col 4: Direct Connect -->
+            <div class="footer-col">
+                <h4>Direct Connect</h4>
+                <div class="footer-contact-item">
+                    <span>📞</span>
+                    <div>
+                        <strong style="display:block; font-size: 0.85rem; color:#94a3b8;">Phone:</strong>
+                        <a href="tel:9412078091">+91 9412078091</a>
+                    </div>
+                </div>
+                <div class="footer-contact-item">
+                    <span>✉️</span>
+                    <div>
+                        <strong style="display:block; font-size: 0.85rem; color:#94a3b8;">Email:</strong>
+                        <a href="mailto:yubanshhsalklan@gmail.com">yubanshhsalklan@gmail.com</a>
+                    </div>
+                </div>
+                <div class="footer-contact-item">
+                    <span>📸</span>
+                    <div>
+                        <strong style="display:block; font-size: 0.85rem; color:#94a3b8;">Instagram:</strong>
+                        <a href="https://instagram.com/yubanshh_chaudhary01" target="_blank">@yubanshh_chaudhary01</a>
+                    </div>
+                </div>
+            </div>
+
         </div>
-    </footer>
+
+        <!-- Footer Bottom -->
+        <div class="footer-bottom">
+            <p>&copy; 2026 HarshCode Studio. All Rights Reserved. Designed by Harsh Chaudhary Tomar.</p>
+            <p><a href="login.html">Admin Login</a> • <a href="contact.html">Get In Touch</a></p>
+        </div>
+    </div>
+</footer>
 
     <script>
         const form = document.getElementById("contact-form");
@@ -158,7 +202,6 @@
         form.addEventListener("submit", function(event) {
             event.preventDefault();
 
-            // Button status update
             submitBtn.disabled = true;
             submitBtn.innerText = "Sending...";
             statusMsg.style.display = "none";
@@ -174,10 +217,7 @@
             })
             .then(response => {
                 if (response.ok) {
-                    // 1. Alert Pop-up
                     alert("Form submitted successfully!");
-                    
-                    // 2. Green Box display on page
                     statusMsg.innerText = "✓ Form submitted successfully!";
                     statusMsg.className = "status-msg success";
                     form.reset();
@@ -186,14 +226,13 @@
                         if (Object.hasOwn(data, 'errors')) {
                             statusMsg.innerText = data["errors"].map(error => error["message"]).join(", ");
                         } else {
-                            statusMsg.innerText = "Error: Formspree ID check karein.";
+                            statusMsg.innerText = "Error: Form submission failed.";
                         }
                         statusMsg.className = "status-msg error";
                     });
                 }
             })
             .catch(error => {
-                // Local file / network fallback
                 alert("Form submitted successfully!");
                 statusMsg.innerText = "✓ Form submitted successfully!";
                 statusMsg.className = "status-msg success";
