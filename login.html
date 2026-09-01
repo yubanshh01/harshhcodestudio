@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login | HarshCode Studio</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .login-wrapper {
+            max-width: 420px;
+            margin: 3.5rem auto;
+        }
+        .login-box {
+            background: var(--white);
+            padding: 2.2rem;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="container">
+            <nav>
+                <a href="index.html" class="logo-container">
+                    <img src="images/logo.jpeg" alt="Logo" class="brand-logo" onerror="this.src='images/logo.png'">
+                    <span class="brand-name">HarshCode<span>.Studio</span></span>
+                </a>
+
+                <ul class="nav-links">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="services.html">Services</a></li>
+                    <li><a href="gallery.html">Gallery</a></li>
+                    <li><a href="feed.html">Posts</a></li>
+                    <li><a href="reviews.html">Reviews</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                    <li><a href="login.html" class="active">👤 Admin</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="login-wrapper">
+            
+            <div class="login-box">
+                <div style="text-align: center; margin-bottom: 1.5rem;">
+                    <span style="font-size: 2.2rem;">🔒</span>
+                    <h2 style="color: var(--primary); margin-top: 5px;">Admin Portal</h2>
+                    <p style="color: var(--text-muted); font-size: 0.9rem;">Sign in to publish posts & manage content</p>
+                </div>
+
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label>Username</label>
+                        <input type="text" id="username" placeholder="Enter username" required autocomplete="username">
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" id="password" placeholder="Enter password" required autocomplete="current-password">
+                    </div>
+                    <button type="submit" class="btn" style="width: 100%; margin-top: 10px;">Login to Dashboard</button>
+                </form>
+
+                <div id="loginError" style="color: #dc2626; font-size: 0.9rem; margin-top: 12px; display: none; text-align: center; font-weight: 600;">
+                    Invalid Username or Password!
+                </div>
+
+                <hr style="margin: 1.5rem 0; border: 0; border-top: 1px solid var(--border);">
+
+                <div style="text-align: center;">
+                    <a href="index.html" class="btn-back-home">
+                        ← Back to Home Page
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <div class="footer-bottom">
+                <p>&copy; 2026 HarshCode Studio. All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Check if already logged in (Persistent Session)
+        if (localStorage.getItem("harsh_admin_logged") === "true") {
+            window.location.href = "admin.html";
+        }
+
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const user = document.getElementById('username').value.trim();
+            const pass = document.getElementById('password').value.trim();
+
+            if (user === "yubanshh01" && pass === "Salklanji@1234") {
+                // Persistent Login Storage
+                localStorage.setItem("harsh_admin_logged", "true");
+                alert("Login Successful! Welcome Harsh.");
+                window.location.href = "admin.html";
+            } else {
+                document.getElementById('loginError').style.display = "block";
+            }
+        });
+    </script>
+</body>
+</html>
