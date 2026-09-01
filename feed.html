@@ -104,29 +104,28 @@
             </div>
         </div>
     </footer>
+<!-- Live Cloud Feed Script -->
+<script>
+    const FIREBASE_DB_URL = "https://harshh-code-studio-default-rtdb.firebaseio.com/";
 
-    <script>
-        function loadPublicPosts() {
-            const posts = JSON.parse(localStorage.getItem("harsh_studio_posts")) || [
-                {
-                    id: 1,
-                    title: "Welcome to HarshCode Studio!",
-                    tag: "Announcement",
-                    img: "",
-                    content: "Humari nayi website live ho chuki hai. Web design aur development projects ke liye direct contact form ke through connect karein.",
-                    date: "01 Sep 2026"
-                }
-            ];
+    async function loadLiveFeed() {
+        const container = document.getElementById("publicPostsContainer");
+        container.innerHTML = "<p style='text-align:center; color:var(--text-muted);'>Fetching live updates...</p>";
 
-            const container = document.getElementById("publicPostsContainer");
+        try {
+            const res = await fetch(FIREBASE_DB_URL);
+            const data = await res.json();
             container.innerHTML = "";
 
-            if (posts.length === 0) {
+            if (!data) {
                 container.innerHTML = "<p style='text-align:center; color:var(--text-muted);'>No posts published yet.</p>";
                 return;
             }
 
-            posts.forEach(post => {
+            const postKeys = Object.keys(data).reverse();
+
+            postKeys.forEach(key => {
+                const post = data[key];
                 container.innerHTML += `
                     <div class="post-card">
                         <div class="post-header">
@@ -142,9 +141,14 @@
                     </div>
                 `;
             });
+        } catch (err) {
+            container.innerHTML = "<p style='text-align:center; color:red;'>Live feed currently unavailable.</p>";
         }
+    }
 
-        loadPublicPosts();
-    </script>
+    // Auto-load on page open
+    loadLiveFeed();
+</script>
+
 </body>
 </html>
