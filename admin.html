@@ -8,7 +8,7 @@
 </head>
 <body>
 
-    <!-- Header (Standard Menu Bar) -->
+    <!-- Header -->
     <header>
         <div class="container">
             <nav>
@@ -37,7 +37,7 @@
             <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 2rem; background: var(--white); padding: 1.2rem 1.5rem; border-radius: 10px; border: 1px solid var(--border);">
                 <div>
                     <h2 style="font-size: 1.4rem; color: var(--primary);">Admin Dashboard</h2>
-                    <p style="color: var(--text-muted); font-size: 0.9rem;">Cloud Sync Mode (JSONBin + ImgBB)</p>
+                    <p style="color: var(--text-muted); font-size: 0.85rem;">Live GitHub Sync Active</p>
                 </div>
                 <div style="display: flex; gap: 8px; align-items: center;">
                     <a href="index.html" class="btn-back-home">← Back to Home</a>
@@ -48,7 +48,7 @@
 
             <!-- Create Post Card -->
             <div class="card" style="max-width: 700px; margin: 0 auto 2.5rem auto;">
-                <h3>Create New Public Post (Cloud Mode)</h3>
+                <h3>Create New Public Post</h3>
                 <form id="postForm" style="margin-top: 1rem;">
                     <div class="form-group">
                         <label>Post Title</label>
@@ -65,7 +65,7 @@
                     </div>
                     <div class="form-group">
                         <label>Upload Photo (Device se Photo Chunein)</label>
-                        <input type="file" id="postFileInput" accept="image/*" style="background: var(--bg-light); cursor: pointer;" required>
+                        <input type="file" id="postFileInput" accept="image/*" style="background: var(--bg-light); cursor: pointer;">
                         <div id="previewContainer" style="display:none; margin-top: 10px; background:#0f172a; border-radius:8px; padding:6px; text-align:center;">
                             <img id="imagePreview" style="max-width: 100%; max-height: 280px; object-fit: contain; border-radius: 6px;">
                         </div>
@@ -82,173 +82,260 @@
             <div id="adminPostsList"></div>
         </div>
     </section>
-<script>
-    // --- GitHub Configuration ---
-    const GITHUB_USERNAME = "yubanshh01"; 
-    const GITHUB_REPO = "harshhcodestudio";           
-    const GITHUB_TOKEN = "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";
-    const GITHUB_BRANCH = "main";
 
-    // Session Check
-    if (localStorage.getItem("harsh_admin_logged") !== "true") {
-        alert("Please login first!");
-        window.location.href = "login.html";
-    }
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-bottom">
+                <p>&copy; 2026 HarshCode Studio. All Rights Reserved.</p>
+                <p><a href="index.html">Home</a> • <a href="feed.html">Live Feed</a></p>
+            </div>
+        </div>
+    </footer>
 
-    function logout() {
-        localStorage.removeItem("harsh_admin_logged");
-        window.location.href = "login.html";
-    }
+    <script>
+        // --- GitHub API Configuration ---
+        const GITHUB_USERNAME = "yubanshh01"; 
+        const GITHUB_REPO = "harshhcodestudio";           
+        const GITHUB_TOKEN = "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";
+        const GITHUB_BRANCH = "main";
 
-    let fileBase64Clean = "";
-    let fileName = "";
-
-    // Image Preview & Base64 Reader
-    document.getElementById("postFileInput").addEventListener("change", function(e) {
-        const file = e.target.files[0];
-        if (file) {
-            fileName = Date.now() + "_" + file.name.replace(/\s+/g, "_");
-            const reader = new FileReader();
-            reader.onload = function(event) {
-                const fullBase64 = event.target.result;
-                document.getElementById("imagePreview").src = fullBase64;
-                document.getElementById("previewContainer").style.display = "block";
-                // GitHub API ke liye prefix hatana hota hai
-                fileBase64Clean = fullBase64.split(",")[1];
-            };
-            reader.readAsDataURL(file);
+        // 1. Persistent Session Guard
+        if (localStorage.getItem("harsh_admin_logged") !== "true") {
+            alert("Unauthorized! Please login first.");
+            window.location.href = "login.html";
         }
-    });
 
-    // Post to GitHub Repo
-    document.getElementById("postForm").addEventListener("submit", async function(e) {
-        e.preventDefault();
-        const publishBtn = document.getElementById("publishBtn");
-        publishBtn.disabled = true;
-        publishBtn.innerText = "Step 1: Uploading Image to GitHub...";
+        function logout() {
+            if (confirm("Logout karna chahte hain?")) {
+                localStorage.removeItem("harsh_admin_logged");
+                window.location.href = "login.html";
+            }
+        }
 
-        let finalImageUrl = "";
+        let fileBase64Clean = "";
+        let originalFileName = "";
 
-        try {
-            // 1. Upload Photo to images/posts/ in Repo
-            if (fileBase64Clean) {
-                const imgUploadUrl = `https://api.github.com/repos/${GITHUB_USERNAME}/${GITHUB_REPO}/contents/images/posts/${fileName}`;
-                const imgRes = await fetch(imgUploadUrl, {
-                    method: "PUT",
-                    headers: {
-                        "Authorization": `token ${GITHUB_TOKEN}`,
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({
-                        message: `Upload post image: ${fileName}`,
-                        content: fileBase64Clean,
-                        branch: GITHUB_BRANCH
-                    })
+        // 2. Image Preview & Base64 Reader
+        document.getElementById("postFileInput").addEventListener("change", function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                // File name ko URL-safe sanitize karein
+                originalFileName = Date.now() + "_" + file.name.replace(/[^a-zA-Z0-9._-]/g, "");
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const fullBase64 = event.target.result;
+                    document.getElementById("imagePreview").src = fullBase64;
+                    document.getElementById("previewContainer").style.display = "block";
+                    fileBase64Clean = fullBase64.split(",")[1];
+                };
+                reader.readAsDataURL(file);
+            } else {
+                fileBase64Clean = "";
+                document.getElementById("previewContainer").style.display = "none";
+            }
+        });
+
+        // 3. Post Submission to GitHub Repo
+        document.getElementById("postForm").addEventListener("submit", async function(e) {
+            e.preventDefault();
+            const publishBtn = document.getElementById("publishBtn");
+            publishBtn.disabled = true;
+            publishBtn.innerText = "Step 1: Uploading Image to GitHub...";
+
+            let finalImageUrl = "";
+
+            try {
+                // --- Step A: Upload Image to GitHub (images/posts/) ---
+                if (fileBase64Clean) {
+                    const imgUploadUrl = `https://api.github.com/repos/${GITHUB_USERNAME}/${GITHUB_REPO}/contents/images/posts/${originalFileName}`;
+                    
+                    const imgRes = await fetch(imgUploadUrl, {
+                        method: "PUT",
+                        headers: {
+                            "Authorization": `Bearer ${GITHUB_TOKEN}`,
+                            "Accept": "application/vnd.github+json",
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            message: `Upload post image: ${originalFileName}`,
+                            content: fileBase64Clean,
+                            branch: GITHUB_BRANCH
+                        })
+                    });
+
+                    if (!imgRes.ok) {
+                        const err = await imgRes.json();
+                        throw new Error(`Image Upload Error [${imgRes.status}]: ${err.message}`);
+                    }
+
+                    // Direct raw photo link
+                    finalImageUrl = `https://raw.githubusercontent.com/${GITHUB_USERNAME}/${GITHUB_REPO}/${GITHUB_BRANCH}/images/posts/${originalFileName}`;
+                }
+
+                publishBtn.innerText = "Step 2: Syncing posts.json...";
+
+                // --- Step B: Fetch current posts.json ---
+                const jsonFileUrl = `https://api.github.com/repos/${GITHUB_USERNAME}/${GITHUB_REPO}/contents/posts.json`;
+                const getRes = await fetch(jsonFileUrl, {
+                    headers: { 
+                        "Authorization": `Bearer ${GITHUB_TOKEN}`,
+                        "Accept": "application/vnd.github+json"
+                    }
                 });
 
-                if (!imgRes.ok) throw new Error("Image upload to GitHub failed.");
-                finalImageUrl = `https://raw.githubusercontent.com/${GITHUB_USERNAME}/${GITHUB_REPO}/${GITHUB_BRANCH}/images/posts/${fileName}`;
-            }
+                let sha = "";
+                let posts = [];
+                
+                if (getRes.ok) {
+                    const fileData = await getRes.json();
+                    sha = fileData.sha;
+                    const rawContent = decodeURIComponent(escape(atob(fileData.content)));
+                    posts = JSON.parse(rawContent || "[]");
+                } else if (getRes.status === 404) {
+                    // Agar posts.json pehle se nahi hai toh new file banegi
+                    posts = [];
+                } else {
+                    const err = await getRes.json();
+                    throw new Error(`posts.json Fetch Error [${getRes.status}]: ${err.message}`);
+                }
 
-            publishBtn.innerText = "Step 2: Updating posts.json...";
+                // --- Step C: Append New Post Object ---
+                const newPost = {
+                    id: Date.now(),
+                    title: document.getElementById("postTitle").value.trim(),
+                    tag: document.getElementById("postTag").value,
+                    img: finalImageUrl,
+                    content: document.getElementById("postContent").value.trim(),
+                    date: new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })
+                };
 
-            // 2. Get current posts.json SHA and Content
-            const jsonFileUrl = `https://api.github.com/repos/${GITHUB_USERNAME}/${GITHUB_REPO}/contents/posts.json`;
-            const getRes = await fetch(jsonFileUrl, {
-                headers: { "Authorization": `token ${GITHUB_TOKEN}` }
-            });
+                posts.unshift(newPost);
 
-            let sha = "";
-            let posts = [];
-            if (getRes.ok) {
-                const fileData = await getRes.json();
-                sha = fileData.sha;
-                const rawContent = decodeURIComponent(escape(atob(fileData.content)));
-                posts = JSON.parse(rawContent || "[]");
-            }
-
-            // 3. Append New Post
-            const newPost = {
-                id: Date.now(),
-                title: document.getElementById("postTitle").value.trim(),
-                tag: document.getElementById("postTag").value,
-                img: finalImageUrl,
-                content: document.getElementById("postContent").value.trim(),
-                date: new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })
-            };
-
-            posts.unshift(newPost);
-
-            // 4. Commit updated posts.json to GitHub
-            const updatedContentBase64 = btoa(unescape(encodeURIComponent(JSON.stringify(posts, null, 2))));
-            const putRes = await fetch(jsonFileUrl, {
-                method: "PUT",
-                headers: {
-                    "Authorization": `token ${GITHUB_TOKEN}`,
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
+                // --- Step D: Commit Updated posts.json to Repo ---
+                const updatedContentBase64 = btoa(unescape(encodeURIComponent(JSON.stringify(posts, null, 2))));
+                const putPayload = {
                     message: `Add post: ${newPost.title}`,
                     content: updatedContentBase64,
-                    sha: sha,
                     branch: GITHUB_BRANCH
-                })
-            });
+                };
+                if (sha) putPayload.sha = sha;
 
-            if (putRes.ok) {
-                alert("Post successfully live on GitHub & all devices! 🚀");
+                const putRes = await fetch(jsonFileUrl, {
+                    method: "PUT",
+                    headers: {
+                        "Authorization": `Bearer ${GITHUB_TOKEN}`,
+                        "Accept": "application/vnd.github+json",
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(putPayload)
+                });
+
+                if (!putRes.ok) {
+                    const err = await putRes.json();
+                    throw new Error(`posts.json Save Error [${putRes.status}]: ${err.message}`);
+                }
+
+                alert("Post successfully live on GitHub! Sabhi devices par update ho gaya 🚀");
                 this.reset();
                 fileBase64Clean = "";
                 document.getElementById("previewContainer").style.display = "none";
                 loadAdminPosts();
-            } else {
-                throw new Error("Failed to update posts.json");
+
+            } catch (err) {
+                alert(err.message);
+            } finally {
+                publishBtn.disabled = false;
+                publishBtn.innerText = "Publish Live Post 🚀";
             }
+        });
 
-        } catch (err) {
-            alert("Error: " + err.message);
-        } finally {
-            publishBtn.disabled = false;
-            publishBtn.innerText = "Publish Post 🚀";
-        }
-    });
+        // 4. Load Posts from GitHub
+        async function loadAdminPosts() {
+            const container = document.getElementById("adminPostsList");
+            container.innerHTML = "<p>Loading posts from GitHub...</p>";
 
-    // Admin List View
-    async function loadAdminPosts() {
-        const container = document.getElementById("adminPostsList");
-        container.innerHTML = "<p>Loading posts from GitHub...</p>";
+            try {
+                const res = await fetch(`https://raw.githubusercontent.com/${GITHUB_USERNAME}/${GITHUB_REPO}/${GITHUB_BRANCH}/posts.json?cb=${Date.now()}`);
+                
+                if (!res.ok) {
+                    container.innerHTML = "<p style='color:var(--text-muted);'>No posts found in repository.</p>";
+                    return;
+                }
 
-        try {
-            const res = await fetch(`https://raw.githubusercontent.com/${GITHUB_USERNAME}/${GITHUB_REPO}/${GITHUB_BRANCH}/posts.json?cb=${Date.now()}`);
-            const posts = await res.json();
-            container.innerHTML = "";
+                const posts = await res.json();
+                container.innerHTML = "";
 
-            if (!posts || posts.length === 0) {
-                container.innerHTML = "<p style='color:var(--text-muted);'>No posts found.</p>";
-                return;
-            }
+                if (!posts || posts.length === 0) {
+                    container.innerHTML = "<p style='color:var(--text-muted);'>No posts found.</p>";
+                    return;
+                }
 
-            posts.forEach(post => {
-                container.innerHTML += `
-                    <div class="post-card">
-                        <div class="post-header">
-                            <div>
-                                <span class="post-tag">${post.tag}</span>
-                                <h3 style="margin-top:4px;">${post.title}</h3>
+                posts.forEach(post => {
+                    container.innerHTML += `
+                        <div class="post-card">
+                            <div class="post-header">
+                                <div>
+                                    <span class="post-tag">${post.tag}</span>
+                                    <h3 style="margin-top:4px;">${post.title}</h3>
+                                </div>
+                                <button onclick="deletePost(${post.id})" class="btn" style="background:#ef4444; padding: 4px 10px; font-size:0.85rem;">Delete</button>
                             </div>
+                            <div class="post-date">📅 ${post.date}</div>
+                            ${post.img ? `<div class="post-img-wrapper"><img src="${post.img}" class="post-img" alt="Post Photo"></div>` : ''}
+                            <p style="margin-top:10px; color:#334155;">${post.content}</p>
                         </div>
-                        <div class="post-date">📅 ${post.date}</div>
-                        ${post.img ? `<div class="post-img-wrapper"><img src="${post.img}" class="post-img" alt="Post Photo"></div>` : ''}
-                        <p style="margin-top:10px; color:#334155;">${post.content}</p>
-                    </div>
-                `;
-            });
-        } catch (e) {
-            container.innerHTML = "<p style='color:var(--text-muted);'>No posts found on repository.</p>";
+                    `;
+                });
+            } catch (e) {
+                container.innerHTML = "<p style='color:var(--text-muted);'>No posts found on repository.</p>";
+            }
         }
-    }
 
-    loadAdminPosts();
-</script>
-  </body>
+        // 5. Delete Post from GitHub
+        async function deletePost(postId) {
+            if (!confirm("Confirm delete this post from GitHub?")) return;
+
+            try {
+                const jsonFileUrl = `https://api.github.com/repos/${GITHUB_USERNAME}/${GITHUB_REPO}/contents/posts.json`;
+                const getRes = await fetch(jsonFileUrl, {
+                    headers: { 
+                        "Authorization": `Bearer ${GITHUB_TOKEN}`,
+                        "Accept": "application/vnd.github+json"
+                    }
+                });
+
+                if (!getRes.ok) throw new Error("Could not fetch posts file.");
+                const fileData = await getRes.json();
+                const rawContent = decodeURIComponent(escape(atob(fileData.content)));
+                let posts = JSON.parse(rawContent || "[]");
+
+                posts = posts.filter(p => p.id !== postId);
+
+                const updatedContentBase64 = btoa(unescape(encodeURIComponent(JSON.stringify(posts, null, 2))));
+
+                await fetch(jsonFileUrl, {
+                    method: "PUT",
+                    headers: {
+                        "Authorization": `Bearer ${GITHUB_TOKEN}`,
+                        "Accept": "application/vnd.github+json",
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        message: `Delete post ID: ${postId}`,
+                        content: updatedContentBase64,
+                        sha: fileData.sha,
+                        branch: GITHUB_BRANCH
+                    })
+                });
+
+                loadAdminPosts();
+            } catch (err) {
+                alert("Delete Failed: " + err.message);
+            }
+        }
+
+        loadAdminPosts();
+    </script>
+</body>
 </html>
