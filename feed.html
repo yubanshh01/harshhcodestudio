@@ -15,7 +15,6 @@
                     <img src="images/logo.jpeg" alt="Logo" class="brand-logo" onerror="this.src='images/logo.png'">
                     <span class="brand-name">HarshCode<span>.Studio</span></span>
                 </a>
-
                 <ul class="nav-links">
                     <li><a href="index.html">Home</a></li>
                     <li><a href="about.html">About</a></li>
@@ -36,119 +35,63 @@
                 <h2>Latest Posts & Updates</h2>
                 <p>Projects, announcements aur technical updates by Harsh Chaudhary Tomar.</p>
             </div>
-
             <div id="publicPostsContainer">
-                <!-- Dynamic Posts Load Yahan Honge -->
+                <!-- Posts yahan load hongi -->
             </div>
         </div>
     </section>
 
-    <!-- Classic Long Footer -->
     <footer>
         <div class="container">
-            <div class="footer-grid">
-                <div class="footer-col">
-                    <h4>HarshCode Studio</h4>
-                    <p>Student & Professional Web Developer. Dedicated to delivering fast, modern and responsive web projects.</p>
-                    <p style="color: #64748b; font-size: 0.85rem;">📍 Bilari, Uttar Pradesh, India</p>
-                </div>
-                <div class="footer-col">
-                    <h4>Quick Links</h4>
-                    <ul>
-                        <li><a href="index.html">→ Home</a></li>
-                        <li><a href="about.html">→ About Me</a></li>
-                        <li><a href="services.html">→ Services</a></li>
-                        <li><a href="gallery.html">→ Photo Gallery</a></li>
-                        <li><a href="feed.html">→ Posts & Updates</a></li>
-                        <li><a href="reviews.html">→ Customer Reviews</a></li>
-                    </ul>
-                </div>
-                <div class="footer-col">
-                    <h4>Our Services</h4>
-                    <ul>
-                        <li><a href="services.html">→ Business Websites</a></li>
-                        <li><a href="services.html">→ Portfolio Websites</a></li>
-                        <li><a href="services.html">→ Mobile UI Design</a></li>
-                        <li><a href="login.html">→ 👤 Admin Portal</a></li>
-                    </ul>
-                </div>
-                <div class="footer-col">
-                    <h4>Direct Connect</h4>
-                    <div class="footer-contact-item">
-                        <span>📞</span>
-                        <div>
-                            <strong style="display:block; font-size: 0.85rem; color:#94a3b8;">Phone:</strong>
-                            <a href="tel:9412078091">+91 9412078091</a>
-                        </div>
-                    </div>
-                    <div class="footer-contact-item">
-                        <span>✉️</span>
-                        <div>
-                            <strong style="display:block; font-size: 0.85rem; color:#94a3b8;">Email:</strong>
-                            <a href="mailto:yubanshhsalklan@gmail.com">yubanshhsalklan@gmail.com</a>
-                        </div>
-                    </div>
-                    <div class="footer-contact-item">
-                        <span>📸</span>
-                        <div>
-                            <strong style="display:block; font-size: 0.85rem; color:#94a3b8;">Instagram:</strong>
-                            <a href="https://instagram.com/yubanshh_chaudhary01" target="_blank">@yubanshh_chaudhary01</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
             <div class="footer-bottom">
-                <p>&copy; 2026 HarshCode Studio. All Rights Reserved.</p>
-                <p><a href="login.html">Admin Login</a> • <a href="contact.html">Get In Touch</a></p>
+                <p>&copy; 2026 HarshCode Studio. All Rights Reserved. Designed by Harsh Chaudhary Tomar.</p>
             </div>
         </div>
     </footer>
-<!-- Live Cloud Feed Script -->
-<script>
-    const FIREBASE_DB_URL = "https://harshh-code-studio-default-rtdb.firebaseio.com/";
 
-    async function loadLiveFeed() {
-        const container = document.getElementById("publicPostsContainer");
-        container.innerHTML = "<p style='text-align:center; color:var(--text-muted);'>Fetching live updates...</p>";
+    <script>
+        const JSONBIN_MASTER_KEY = "$2a$10$yc6L6sWapiapx/aXSdMlC.Vz857xathnwUfmAEG1BqrSJmn/k/jXS"; // Data Cloud
+        const JSONBIN_BIN_NAME = "studio_feed"; // Your Bin Name
 
-        try {
-            const res = await fetch(FIREBASE_DB_URL);
-            const data = await res.json();
-            container.innerHTML = "";
+        async function loadPublicPosts() {
+            const container = document.getElementById("publicPostsContainer");
+            container.innerHTML = "<p style='text-align:center;'>Fetching live updates...</p>";
 
-            if (!data) {
-                container.innerHTML = "<p style='text-align:center; color:var(--text-muted);'>No posts published yet.</p>";
-                return;
-            }
+            try {
+                // Fetch dynamic data from JSONBin (Cloud Storage)
+                const res = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_BIN_NAME}`, {
+                    headers: { "X-Master-Key": JSONBIN_MASTER_KEY }
+                });
+                
+                const posts = (await res.json()).record;
+                container.innerHTML = "";
 
-            const postKeys = Object.keys(data).reverse();
+                if (!posts || posts.length === 0) {
+                    container.innerHTML = "<p style='text-align:center;'>No posts published yet.</p>";
+                    return;
+                }
 
-            postKeys.forEach(key => {
-                const post = data[key];
-                container.innerHTML += `
-                    <div class="post-card">
-                        <div class="post-header">
-                            <span class="post-tag">${post.tag}</span>
-                            <span class="post-date">📅 ${post.date}</span>
+                posts.forEach(post => {
+                    container.innerHTML += `
+                        <div class="post-card">
+                            <div class="post-header">
+                                <span class="post-tag">${post.tag}</span>
+                                <span class="post-date">📅 ${post.date}</span>
+                            </div>
+                            <h3 style="font-size:1.3rem; margin-bottom: 0.5rem; color: var(--text-dark);">${post.title}</h3>
+                            ${post.img ? `
+                                <div class="post-img-wrapper">
+                                    <img src="${post.img}" class="post-img" alt="${post.title}">
+                                </div>` : ''}
+                            <p style="color:#334155; line-height: 1.6; margin-top: 10px;">${post.content}</p>
                         </div>
-                        <h3 style="font-size:1.3rem; margin-bottom: 0.5rem; color: var(--text-dark);">${post.title}</h3>
-                        ${post.img ? `
-                            <div class="post-img-wrapper">
-                                <img src="${post.img}" class="post-img" alt="${post.title}">
-                            </div>` : ''}
-                        <p style="color:#334155; line-height: 1.6; margin-top: 10px;">${post.content}</p>
-                    </div>
-                `;
-            });
-        } catch (err) {
-            container.innerHTML = "<p style='text-align:center; color:red;'>Live feed currently unavailable.</p>";
+                    `;
+                });
+            } catch (err) {
+                container.innerHTML = "<p style='text-align:center; color:red;'>Failed to load live feed.</p>";
+            }
         }
-    }
-
-    // Auto-load on page open
-    loadLiveFeed();
-</script>
-
+        loadPublicPosts();
+    </script>
 </body>
 </html>
