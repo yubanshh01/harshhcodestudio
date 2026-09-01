@@ -100,68 +100,99 @@
             </div>
         </div>
     </footer>
+<!-- Admin Post Section -->
+<script>
+    const FIREBASE_DB_URL = "https://harshh-code-studio-default-rtdb.firebaseio.com/";
 
-    <script>
-        // Check Persistent Login Status
-        if (localStorage.getItem("harsh_admin_logged") !== "true") {
-            alert("Unauthorized Access! Please Login first.");
+    // Session Check
+    if (localStorage.getItem("harsh_admin_logged") !== "true") {
+        alert("Please login first!");
+        window.location.href = "login.html";
+    }
+
+    function logout() {
+        if (confirm("Logout karna chahte hain?")) {
+            localStorage.removeItem("harsh_admin_logged");
             window.location.href = "login.html";
         }
+    }
 
-        // Only Logout when clicking this button
-        function logout() {
-            if (confirm("Kya aap confirm logout karna chahte hain?")) {
-                localStorage.removeItem("harsh_admin_logged");
-                window.location.href = "login.html";
-            }
+    let base64ImageString = "";
+
+    // Image Converter
+    document.getElementById("postFileInput").addEventListener("change", function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                base64ImageString = event.target.result;
+                document.getElementById("imagePreview").src = base64ImageString;
+                document.getElementById("previewContainer").style.display = "block";
+            };
+            reader.readAsDataURL(file);
         }
+    });
 
-        let base64ImageString = "";
+    // 1. Post to Cloud (Har Mobile ke liye)
+    document.getElementById("postForm").addEventListener("submit", async function(e) {
+        e.preventDefault();
+        const publishBtn = document.getElementById("publishBtn");
+        publishBtn.disabled = true;
+        publishBtn.innerText = "Publishing to Cloud...";
 
-        // File Reader with Compression/Full Preview
-        document.getElementById("postFileInput").addEventListener("change", function(e) {
-            const file = e.target.files[0];
-            const preview = document.getElementById("imagePreview");
-            const previewContainer = document.getElementById("previewContainer");
-            
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(event) {
-                    base64ImageString = event.target.result;
-                    preview.src = base64ImageString;
-                    previewContainer.style.display = "block";
-                };
-                reader.readAsDataURL(file);
-            } else {
+        const newPost = {
+            title: document.getElementById("postTitle").value.trim(),
+            tag: document.getElementById("postTag").value,
+            img: base64ImageString,
+            content: document.getElementById("postContent").value.trim(),
+            date: new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }),
+            timestamp: Date.now()
+        };
+
+        try {
+            const response = await fetch(FIREBASE_DB_URL, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(newPost)
+            });
+
+            if (response.ok) {
+                alert("Post sabhi devices par live ho gayi!");
+                this.reset();
                 base64ImageString = "";
-                previewContainer.style.display = "none";
+                document.getElementById("previewContainer").style.display = "none";
+                loadAdminPosts();
+            } else {
+                alert("Upload failed. Rules check karein.");
             }
-        });
-
-        function getPosts() {
-            return JSON.parse(localStorage.getItem("harsh_studio_posts")) || [
-                {
-                    id: 1,
-                    title: "Welcome to HarshCode Studio!",
-                    tag: "Announcement",
-                    img: "",
-                    content: "Humari nayi website live ho chuki hai. Web design aur development projects ke liye direct contact form ke through connect karein.",
-                    date: "01 Sep 2026"
-                }
-            ];
+        } catch (err) {
+            alert("Network Error: " + err.message);
+        } finally {
+            publishBtn.disabled = false;
+            publishBtn.innerText = "Publish Post 🚀";
         }
+    });
 
-        function renderAdminPosts() {
-            const posts = getPosts();
-            const container = document.getElementById("adminPostsList");
+    // 2. Load and Delete System
+    async function loadAdminPosts() {
+        const container = document.getElementById("adminPostsList");
+        container.innerHTML = "<p>Loading cloud posts...</p>";
+
+        try {
+            const res = await fetch(FIREBASE_DB_URL);
+            const data = await res.json();
             container.innerHTML = "";
 
-            if (posts.length === 0) {
-                container.innerHTML = "<p style='color:var(--text-muted);'>No posts found. Create your first post above!</p>";
+            if (!data) {
+                container.innerHTML = "<p style='color:var(--text-muted);'>No posts online.</p>";
                 return;
             }
 
-            posts.forEach(post => {
+            // Convert Object to Array and Reverse (Latest First)
+            const postKeys = Object.keys(data).reverse();
+
+            postKeys.forEach(key => {
+                const post = data[key];
                 container.innerHTML += `
                     <div class="post-card">
                         <div class="post-header">
@@ -169,7 +200,7 @@
                                 <span class="post-tag">${post.tag}</span>
                                 <h3 style="margin-top:6px; font-size: 1.15rem;">${post.title}</h3>
                             </div>
-                            <button onclick="deletePost(${post.id})" class="btn" style="background:#ef4444; padding: 6px 12px; font-size:0.85rem;">Delete</button>
+                            <button onclick="deleteCloudPost('${key}')" class="btn" style="background:#ef4444; padding: 6px 12px; font-size:0.85rem;">Delete</button>
                         </div>
                         <div class="post-date">📅 ${post.date}</div>
                         ${post.img ? `
@@ -180,45 +211,21 @@
                     </div>
                 `;
             });
+        } catch (e) {
+            container.innerHTML = "<p style='color:red;'>Failed to load posts.</p>";
         }
+    }
 
-        document.getElementById("postForm").addEventListener("submit", function(e) {
-            e.preventDefault();
-            const posts = getPosts();
-
-            const newPost = {
-                id: Date.now(),
-                title: document.getElementById("postTitle").value.trim(),
-                tag: document.getElementById("postTag").value,
-                img: base64ImageString,
-                content: document.getElementById("postContent").value.trim(),
-                date: new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })
-            };
-
-            posts.unshift(newPost);
-            
-            try {
-                localStorage.setItem("harsh_studio_posts", JSON.stringify(posts));
-                alert("Post published successfully with full photo!");
-                this.reset();
-                base64ImageString = "";
-                document.getElementById("previewContainer").style.display = "none";
-                renderAdminPosts();
-            } catch (err) {
-                alert("Storage limit reached! Please use a smaller size photo.");
-            }
-        });
-
-        function deletePost(id) {
-            if (confirm("Are you sure you want to delete this post?")) {
-                let posts = getPosts();
-                posts = posts.filter(p => p.id !== id);
-                localStorage.setItem("harsh_studio_posts", JSON.stringify(posts));
-                renderAdminPosts();
-            }
+    async function deleteCloudPost(key) {
+        if (confirm("Kya aap ise database se delete karna chahte hain?")) {
+            await fetch(`https://YOUR_FIREBASE_DB_URL/posts/${key}.json`, {
+                method: "DELETE"
+            });
+            loadAdminPosts();
         }
+    }
 
-        renderAdminPosts();
-    </script>
+    loadAdminPosts();
+</script>
 </body>
 </html>
