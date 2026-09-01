@@ -48,6 +48,8 @@ nav {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    flex-wrap: wrap;
+    gap: 0.8rem;
 }
 
 .logo-container {
@@ -80,7 +82,8 @@ nav {
 .nav-links {
     display: flex;
     list-style: none;
-    gap: 1.5rem;
+    gap: 0.6rem;
+    align-items: center;
 }
 
 .nav-links a {
@@ -88,14 +91,19 @@ nav {
     text-decoration: none;
     font-weight: 500;
     font-size: 0.95rem;
-    transition: 0.3s ease;
-    padding: 6px 0;
+    transition: 0.2s ease;
+    padding: 6px 12px;
+    border-radius: 6px;
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
 }
 
 .nav-links a:hover,
 .nav-links a.active {
     color: var(--white);
-    border-bottom: 2px solid var(--accent);
+    background: var(--accent);
 }
 
 /* --- Buttons --- */
@@ -122,12 +130,29 @@ nav {
     background: transparent;
     border: 2px solid var(--accent);
     color: var(--accent);
-    margin-left: 10px;
 }
 
 .btn-outline:hover {
     background: var(--accent);
     color: var(--white);
+}
+
+.btn-back-home {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--primary);
+    color: var(--white);
+    padding: 8px 16px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: 0.2s;
+}
+
+.btn-back-home:hover {
+    background: var(--accent);
 }
 
 /* --- Sections --- */
@@ -175,7 +200,7 @@ nav {
     box-shadow: 0 12px 20px -3px rgba(0, 0, 0, 0.08);
 }
 
-/* --- About Section Profile Responsive Structure --- */
+/* --- About Profile Layout --- */
 .about-grid {
     display: grid;
     grid-template-columns: 320px 1fr;
@@ -236,7 +261,7 @@ nav {
     margin: 0 auto 2.2rem auto;
 }
 
-/* --- Stats Counter Box --- */
+/* --- Stats Bar --- */
 .stats-bar {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -304,27 +329,12 @@ nav {
     transform: scale(1.05);
 }
 
-.gallery-content {
-    padding: 1.2rem;
-}
-
-.gallery-content h4 {
-    color: var(--text-dark);
-    margin-bottom: 0.3rem;
-}
-
-.gallery-content p {
-    color: var(--text-muted);
-    font-size: 0.9rem;
-}
-
 /* --- Reviews Styling --- */
 .review-card {
     background: var(--white);
     padding: 2rem;
     border-radius: 12px;
     border: 1px solid var(--border);
-    position: relative;
     box-shadow: 0 4px 6px rgba(0,0,0,0.03);
 }
 
@@ -431,130 +441,213 @@ nav {
     box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
 }
 
-/* --- Footer --- */
+/* Form Status Alerts */
+.status-msg {
+    display: none;
+    margin-top: 15px;
+    padding: 14px;
+    border-radius: 8px;
+    font-size: 1.05rem;
+    font-weight: 700;
+    text-align: center;
+}
+.status-msg.success {
+    display: block !important;
+    background: #dcfce7 !important;
+    color: #15803d !important;
+    border: 2px solid #86efac !important;
+}
+.status-msg.error {
+    display: block !important;
+    background: #fee2e2 !important;
+    color: #b91c1c !important;
+    border: 2px solid #fca5a5 !important;
+}
+
+/* --- Posts & Feed Styles --- */
+.post-card {
+    background: var(--white);
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    padding: 1.5rem;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.04);
+    margin-bottom: 1.5rem;
+    transition: 0.2s;
+}
+
+.post-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.8rem;
+}
+
+.post-tag {
+    background: #e0f2fe;
+    color: #0284c7;
+    font-size: 0.8rem;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 12px;
+}
+
+.post-date {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+./* --- Post Photo Full View (No Crop) --- */
+.post-img-wrapper {
+    width: 100%;
+    margin: 1.2rem 0;
+    background: #0f172a;
+    border-radius: 10px;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid var(--border);
+}
+
+.post-img {
+    width: 100%;
+    max-height: 520px;
+    height: auto;
+    object-fit: contain; /* Photo poori dikhegi bina cut huye */
+    display: block;
+    border-radius: 8px;
+}
+/* --- Classic Long & Spacious Footer --- */
 footer {
     margin-top: auto;
-    background: var(--primary);
-    color: #94a3b8;
-    padding: 3rem 0 1.5rem 0;
+    background: #090e1a;
+    color: #cbd5e1;
+    padding: 4.5rem 0 2rem 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .footer-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 2rem;
-    margin-bottom: 2rem;
+    grid-template-columns: 1.5fr 1fr 1fr 1.2fr;
+    gap: 2.5rem;
+    margin-bottom: 3.5rem;
 }
 
 .footer-col h4 {
-    color: var(--white);
-    margin-bottom: 1rem;
-    font-size: 1.1rem;
+    color: #ffffff;
+    font-size: 1.15rem;
+    font-weight: 700;
+    margin-bottom: 1.4rem;
+    letter-spacing: 0.5px;
+    position: relative;
+    padding-bottom: 8px;
 }
 
+.footer-col h4::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 28px;
+    height: 3px;
+    background: var(--accent);
+    border-radius: 2px;
+}
+
+.footer-col p {
+    font-size: 0.95rem;
+    line-height: 1.7;
+    color: #94a3b8;
+    margin-bottom: 1rem;
+}
+
+/* Classic List Links - 100% White */
 .footer-col ul {
     list-style: none;
 }
 
 .footer-col ul li {
-    margin-bottom: 0.6rem;
+    margin-bottom: 0.8rem;
 }
 
 .footer-col ul li a {
-    color: #94a3b8;
+    color: #ffffff !important;
     text-decoration: none;
-    transition: 0.2s;
+    font-size: 0.95rem;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.25s ease;
 }
 
 .footer-col ul li a:hover {
-    color: var(--white);
+    color: #60a5fa !important;
+    transform: translateX(5px);
 }
 
+.footer-contact-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 1rem;
+    color: #ffffff;
+    font-size: 0.95rem;
+}
+
+.footer-contact-item a {
+    color: #ffffff !important;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.footer-contact-item a:hover {
+    color: #60a5fa !important;
+}
+
+/* Bottom Copyright Bar */
 .footer-bottom {
-    text-align: center;
-    border-top: 1px solid #334155;
-    padding-top: 1.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
     font-size: 0.9rem;
+    color: #94a3b8;
 }
 
-/* --- Mobile Responsive Fix --- */
-@media (max-width: 860px) {
-    nav {
-        flex-direction: column;
-        align-items: center;
-        gap: 0.8rem;
+.footer-bottom a {
+    color: #ffffff !important;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.footer-bottom a:hover {
+    color: #60a5fa !important;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+    footer {
+        padding: 3.5rem 0 1.5rem 0;
     }
 
-    .nav-links {
-        display: flex;
-        width: 100%;
-        justify-content: flex-start;
-        overflow-x: auto;
-        white-space: nowrap;
-        gap: 0.6rem;
-        padding: 4px 0;
-        -webkit-overflow-scrolling: touch;
-        scrollbar-width: none;
-    }
-
-    .nav-links::-webkit-scrollbar {
-        display: none;
-    }
-
-    .nav-links a {
-        padding: 6px 12px;
-        background: var(--primary-light);
-        border-radius: 6px;
-        font-size: 0.85rem;
-        border-bottom: none;
-    }
-
-    .nav-links a:hover,
-    .nav-links a.active {
-        background: var(--accent);
-        color: var(--white);
-        border-bottom: none;
-    }
-
-    /* About Photo Mobile Alignment */
-    .about-grid {
-        grid-template-columns: 1fr;
+    .footer-grid {
+        grid-template-columns: repeat(2, 1fr);
         gap: 2rem;
     }
+}
 
-    .about-profile-card {
-        max-width: 280px;
-        margin: 0 auto;
-        padding: 1.2rem;
-    }
-
-    .about-img-box {
-        max-width: 220px;
-    }
-
-    .hero {
-        padding: 3.5rem 0;
-    }
-
-    .hero h1 {
-        font-size: 2.2rem;
-    }
-
-    .hero p {
-        font-size: 1rem;
-    }
-
-    .contact-layout {
+@media (max-width: 580px) {
+    .footer-grid {
         grid-template-columns: 1fr;
+        gap: 2.2rem;
     }
 
-    .btn-outline {
-        margin-left: 0;
-        margin-top: 10px;
-    }
-
-    .stats-bar {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 1rem;
+    .footer-bottom {
+        flex-direction: column;
+        text-align: center;
     }
 }
