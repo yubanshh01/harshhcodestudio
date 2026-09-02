@@ -49,20 +49,20 @@
         </div>
     </footer>
 <script>
-    const GITHUB_USERNAME = "YOUR_GITHUB_USERNAME";
-    const GITHUB_REPO = "YOUR_REPO_NAME";
-    const GITHUB_BRANCH = "main";
+    const CLOUD_FEED_URL = "https://kvdb.io/4yKq27JgqP8d6zUe8xWp5v/harshcode_studio_feed";
 
     async function loadPublicPosts() {
         const container = document.getElementById("publicPostsContainer");
         container.innerHTML = "<p style='text-align:center;'>Fetching live updates...</p>";
 
         try {
-            // Raw GitHub URL with cache-buster
-            const res = await fetch(`https://raw.githubusercontent.com/${GITHUB_USERNAME}/${GITHUB_REPO}/${GITHUB_BRANCH}/posts.json?cb=${Date.now()}`);
+            const res = await fetch(CLOUD_FEED_URL + "?cb=" + Date.now());
             
-            if (!res.ok) throw new Error("Could not load posts.");
-            
+            if (!res.ok) {
+                container.innerHTML = "<p style='text-align:center; color:var(--text-muted);'>No posts published yet.</p>";
+                return;
+            }
+
             const posts = await res.json();
             container.innerHTML = "";
 
@@ -93,7 +93,6 @@
     }
 
     loadPublicPosts();
-</script>
- 
+</script> 
 </body>
 </html>
