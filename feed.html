@@ -49,24 +49,25 @@
         </div>
     </footer>
 <script>
-    const CLOUD_FEED_URL = "https://kvdb.io/N7cmQg1DwZbADh2Hu3NncF";
+    const PANTRY_ID = "d3429f66-e569-4a31-bfdb-48dbade8acc7";
+    const API_URL = `https://getpantry.cloud/apiv1/pantry/${d3429f66-e569-4a31-bfdb-48dbade8acc7}/basket/posts`;
 
     async function loadPublicPosts() {
         const container = document.getElementById("publicPostsContainer");
         container.innerHTML = "<p style='text-align:center;'>Fetching live updates...</p>";
 
         try {
-            const res = await fetch(CLOUD_FEED_URL + "?cb=" + Date.now());
-            
+            const res = await fetch(API_URL);
             if (!res.ok) {
                 container.innerHTML = "<p style='text-align:center; color:var(--text-muted);'>No posts published yet.</p>";
                 return;
             }
 
-            const posts = await res.json();
+            const data = await res.json();
+            const posts = data.posts || [];
             container.innerHTML = "";
 
-            if (!posts || posts.length === 0) {
+            if (posts.length === 0) {
                 container.innerHTML = "<p style='text-align:center; color:var(--text-muted);'>No posts published yet.</p>";
                 return;
             }
@@ -93,6 +94,6 @@
     }
 
     loadPublicPosts();
-</script> 
+</script>
 </body>
 </html>
