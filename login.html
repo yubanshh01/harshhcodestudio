@@ -43,9 +43,8 @@
         </div>
     </header>
 
-    <div class="container">
+    <main class="container">
         <div class="login-wrapper">
-            
             <div class="login-box">
                 <div style="text-align: center; margin-bottom: 1.5rem;">
                     <span style="font-size: 2.2rem;">🔒</span>
@@ -55,14 +54,14 @@
 
                 <form id="loginForm">
                     <div class="form-group">
-                        <label>Username</label>
-                        <input type="text" id="username" placeholder="Enter username" required autocomplete="username">
+                        <label for="username">User ID / Mobile</label>
+                        <input type="text" id="username" placeholder="Enter Admin User ID" required autocomplete="username">
                     </div>
                     <div class="form-group">
-                        <label>Password</label>
-                        <input type="password" id="password" placeholder="Enter password" required autocomplete="current-password">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" placeholder="Enter secure password" required autocomplete="current-password">
                     </div>
-                    <button type="submit" class="btn" style="width: 100%; margin-top: 10px;">Login to Dashboard</button>
+                    <button type="submit" id="loginBtn" class="btn" style="width: 100%; margin-top: 10px;">Login to Dashboard</button>
                 </form>
 
                 <div id="loginError" style="color: #dc2626; font-size: 0.9rem; margin-top: 12px; display: none; text-align: center; font-weight: 600;">
@@ -77,9 +76,8 @@
                     </a>
                 </div>
             </div>
-
         </div>
-    </div>
+    </main>
 
     <footer>
         <div class="container">
@@ -90,23 +88,45 @@
     </footer>
 
     <script>
-        // Check if already logged in (Persistent Session)
-        if (localStorage.getItem("harsh_admin_logged") === "true") {
+        // Web Crypto API SHA-256 Engine
+        async function computeSHA256(str) {
+            const encoder = new TextEncoder();
+            const data = encoder.encode(str);
+            const hashBuffer = await crypto.subtle.digest("SHA-256", data);
+            return Array.from(new Uint8Array(hashBuffer)).map(b => b.toString(16).padStart(2, '0')).join('');
+        }
+
+        // Target Hashes for ID: 9412078091 and Pass: yubanshh01
+        const HASH_TARGET_USER = "4b292e3a19b0270b2cb9e1e19488a08d0e7e174b0b13cf14a1fa397c11f7c461";
+        const HASH_TARGET_PASS = "6a0f7c220023a1a5b46d0352efc15053dd5c4ec4d9da8ef7f168fecaa1efd9a9";
+
+        // Persistent Session Check
+        if (localStorage.getItem("harsh_admin_token") === HASH_TARGET_PASS) {
             window.location.href = "admin.html";
         }
 
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
             e.preventDefault();
-            const user = document.getElementById('username').value.trim();
-            const pass = document.getElementById('password').value.trim();
+            const btn = document.getElementById('loginBtn');
+            const err = document.getElementById('loginError');
+            btn.disabled = true;
+            btn.innerText = "Authenticating...";
+            err.style.display = 'none';
 
-            if (user === "yubanshh01" && pass === "Salklanji@1234") {
-                // Persistent Login Storage
-                localStorage.setItem("harsh_admin_logged", "true");
+            const userVal = document.getElementById('username').value.trim();
+            const passVal = document.getElementById('password').value.trim();
+
+            const inputUserHash = await computeSHA256(userVal);
+            const inputPassHash = await computeSHA256(passVal);
+
+            if (inputUserHash === HASH_TARGET_USER && inputPassHash === HASH_TARGET_PASS) {
+                localStorage.setItem("harsh_admin_token", inputPassHash);
                 alert("Login Successful! Welcome Harsh.");
                 window.location.href = "admin.html";
             } else {
-                document.getElementById('loginError').style.display = "block";
+                err.style.display = "block";
+                btn.disabled = false;
+                btn.innerText = "Login to Dashboard";
             }
         });
     </script>
