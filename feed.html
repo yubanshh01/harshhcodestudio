@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Posts & Updates | HarshCode Studio</title>
     <link rel="stylesheet" href="style.css">
+    <!-- Supabase JS Client Engine -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 
@@ -29,17 +31,17 @@
         </div>
     </header>
 
-    <section class="section">
+    <main class="section">
         <div class="container" style="max-width: 800px;">
-            <div class="section-header">
+            <div class="section-header" style="text-align: center; margin-bottom: 2rem;">
                 <h2>Latest Posts & Updates</h2>
-                <p>Projects, announcements aur technical updates by Harsh Chaudhary Tomar.</p>
+                <p style="color: var(--text-muted); margin-top: 4px;">Projects, announcements aur technical updates by Harsh Chaudhary Tomar.</p>
             </div>
             <div id="publicPostsContainer">
-                <!-- Posts yahan load hongi -->
+                <!-- Live Posts load yahan hongi -->
             </div>
         </div>
-    </section>
+    </main>
 
     <footer>
         <div class="container">
@@ -48,52 +50,55 @@
             </div>
         </div>
     </footer>
-<script>
-    const PANTRY_ID = "d3429f66-e569-4a31-bfdb-48dbade8acc7";
-    const API_URL = `https://getpantry.cloud/apiv1/pantry/${PANTRY_ID}/basket/posts`;
 
-    async function loadPublicPosts() {
-        const container = document.getElementById("publicPostsContainer");
-        container.innerHTML = "<p style='text-align:center;'>Fetching live updates...</p>";
+    <script>
+        // Activated Supabase Config
+        const SUPABASE_URL = "https://rbbryqshvycrstzrtytp.supabase.co";
+        const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJiYnJ5cXNodnljcnN0enJ0eXRwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg3MTI1MjYsImV4cCI6MjEwNDI4ODUyNn0.WzH2ju9G2nW8iOKnh77OFF0N3G0ECHx1iLBjcPISItc";
 
-        try {
-            const res = await fetch(API_URL);
-            if (!res.ok) {
-                container.innerHTML = "<p style='text-align:center; color:var(--text-muted);'>No posts published yet.</p>";
-                return;
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        async function loadPublicPosts() {
+            const container = document.getElementById("publicPostsContainer");
+            container.innerHTML = "<p style='text-align:center; color:var(--text-muted);'>Fetching live updates...</p>";
+
+            try {
+                const { data: posts, error } = await supabaseClient
+                    .from('posts')
+                    .select('*')
+                    .order('id', { ascending: false });
+
+                if (error) throw error;
+
+                container.innerHTML = "";
+
+                if (!posts || posts.length === 0) {
+                    container.innerHTML = "<p style='text-align:center; color:var(--text-muted);'>No posts published yet.</p>";
+                    return;
+                }
+
+                posts.forEach(post => {
+                    container.innerHTML += `
+                        <article class="post-card">
+                            <div class="post-header">
+                                <span class="post-tag">${post.tag}</span>
+                                <span class="post-date">📅 ${post.date}</span>
+                            </div>
+                            <h3 style="font-size:1.3rem; margin-bottom: 0.5rem; color: var(--text-dark);">${post.title}</h3>
+                            ${post.img ? `
+                                <div class="post-img-wrapper">
+                                    <img src="${post.img}" class="post-img" alt="${post.title}" loading="lazy">
+                                </div>` : ''}
+                            <p style="color:#334155; line-height: 1.6; margin-top: 10px;">${post.content}</p>
+                        </article>
+                    `;
+                });
+            } catch (err) {
+                container.innerHTML = "<p style='text-align:center; color:red;'>Failed to load live feed: " + err.message + "</p>";
             }
-
-            const data = await res.json();
-            const posts = data.posts || [];
-            container.innerHTML = "";
-
-            if (posts.length === 0) {
-                container.innerHTML = "<p style='text-align:center; color:var(--text-muted);'>No posts published yet.</p>";
-                return;
-            }
-
-            posts.forEach(post => {
-                container.innerHTML += `
-                    <div class="post-card">
-                        <div class="post-header">
-                            <span class="post-tag">${post.tag}</span>
-                            <span class="post-date">📅 ${post.date}</span>
-                        </div>
-                        <h3 style="font-size:1.3rem; margin-bottom: 0.5rem; color: var(--text-dark);">${post.title}</h3>
-                        ${post.img ? `
-                            <div class="post-img-wrapper">
-                                <img src="${post.img}" class="post-img" alt="${post.title}">
-                            </div>` : ''}
-                        <p style="color:#334155; line-height: 1.6; margin-top: 10px;">${post.content}</p>
-                    </div>
-                `;
-            });
-        } catch (err) {
-            container.innerHTML = "<p style='text-align:center; color:red;'>Failed to load live feed.</p>";
         }
-    }
 
-    loadPublicPosts();
-</script>
+        loadPublicPosts();
+    </script>
 </body>
 </html>
