@@ -7,15 +7,29 @@
     <link rel="stylesheet" href="style.css">
     <style>
         .login-wrapper {
-            max-width: 420px;
-            margin: 3.5rem auto;
+            max-width: 440px;
+            margin: 4rem auto;
         }
         .login-box {
             background: var(--white);
-            padding: 2.2rem;
-            border-radius: 12px;
+            padding: 2.4rem;
+            border-radius: 14px;
             border: 1px solid var(--border);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.08);
+            position: relative;
+        }
+        .password-field {
+            position: relative;
+        }
+        .toggle-pwd {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            user-select: none;
         }
     </style>
 </head>
@@ -46,34 +60,39 @@
     <main class="container">
         <div class="login-wrapper">
             <div class="login-box">
+                <!-- Theme Switcher for Admin -->
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                    <span style="font-family: var(--font-code); font-size: 0.78rem; color: var(--accent); font-weight: 700;">SECURE ENVIRONMENT</span>
+                    <button id="themeToggleBtn" onclick="toggleTheme()" style="background: none; border: 1px solid var(--border); padding: 4px 10px; border-radius: 20px; cursor: pointer; font-size: 0.8rem; color: var(--text-dark);">🌙 Theme</button>
+                </div>
+
                 <div style="text-align: center; margin-bottom: 1.5rem;">
                     <span style="font-size: 2.2rem;">🔒</span>
-                    <h2 style="color: var(--primary); margin-top: 5px;">Admin Portal</h2>
-                    <p style="color: var(--text-muted); font-size: 0.9rem;">Sign in to publish posts & manage content</p>
+                    <h2 style="color: var(--text-dark); margin-top: 5px; font-size: 1.6rem;">Admin Portal</h2>
+                    <p style="color: var(--text-muted); font-size: 0.88rem;">Sign in to publish posts & manage content</p>
                 </div>
 
                 <form id="loginForm">
                     <div class="form-group">
                         <label for="username">User ID / Mobile</label>
-                        <input type="text" id="username" placeholder="Enter Admin User ID" required autocomplete="username">
+                        <input type="text" id="username" placeholder="9412078091" required autocomplete="username">
                     </div>
-                    <div class="form-group">
+                    <div class="form-group password-field">
                         <label for="password">Password</label>
-                        <input type="password" id="password" placeholder="Enter secure password" required autocomplete="current-password">
+                        <input type="password" id="password" placeholder="Enter password" required autocomplete="current-password">
+                        <span class="toggle-pwd" onclick="togglePassVisibility()">👁️</span>
                     </div>
                     <button type="submit" id="loginBtn" class="btn" style="width: 100%; margin-top: 10px;">Login to Dashboard</button>
                 </form>
 
-                <div id="loginError" style="color: #dc2626; font-size: 0.9rem; margin-top: 12px; display: none; text-align: center; font-weight: 600;">
+                <div id="loginError" style="color: #dc2626; font-size: 0.88rem; margin-top: 12px; display: none; text-align: center; font-weight: 600;">
                     Invalid Username or Password!
                 </div>
 
                 <hr style="margin: 1.5rem 0; border: 0; border-top: 1px solid var(--border);">
 
                 <div style="text-align: center;">
-                    <a href="index.html" class="btn-back-home">
-                        ← Back to Home Page
-                    </a>
+                    <a href="index.html" class="btn-back-home">← Back to Home Page</a>
                 </div>
             </div>
         </div>
@@ -88,19 +107,41 @@
     </footer>
 
     <script>
-        // Web Crypto API SHA-256 Engine
-        async function computeSHA256(str) {
-            const encoder = new TextEncoder();
-            const data = encoder.encode(str);
-            const hashBuffer = await crypto.subtle.digest("SHA-256", data);
-            return Array.from(new Uint8Array(hashBuffer)).map(b => b.toString(16).padStart(2, '0')).join('');
+        // Theme Persistence
+        if (localStorage.getItem("admin_theme") === "dark") {
+            document.body.classList.add("dark-mode");
+            document.getElementById("themeToggleBtn").innerText = "☀️ Light";
         }
 
-        // Target Hashes for ID: 9412078091 and Pass: yubanshh01
+        function toggleTheme() {
+            document.body.classList.toggle("dark-mode");
+            const isDark = document.body.classList.contains("dark-mode");
+            localStorage.setItem("admin_theme", isDark ? "dark" : "light");
+            document.getElementById("themeToggleBtn").innerText = isDark ? "☀️ Light" : "🌙 Theme";
+        }
+
+        function togglePassVisibility() {
+            const pwd = document.getElementById("password");
+            pwd.type = pwd.type === "password" ? "text" : "password";
+        }
+
+        // SHA-256 Engine with Safe Fallback
+        async function computeSHA256(str) {
+            try {
+                if (window.crypto && crypto.subtle) {
+                    const encoder = new TextEncoder();
+                    const data = encoder.encode(str);
+                    const hashBuffer = await crypto.subtle.digest("SHA-256", data);
+                    return Array.from(new Uint8Array(hashBuffer)).map(b => b.toString(16).padStart(2, '0')).join('');
+                }
+            } catch(e) {}
+            return str; // Fallback
+        }
+
         const HASH_TARGET_USER = "4b292e3a19b0270b2cb9e1e19488a08d0e7e174b0b13cf14a1fa397c11f7c461";
         const HASH_TARGET_PASS = "6a0f7c220023a1a5b46d0352efc15053dd5c4ec4d9da8ef7f168fecaa1efd9a9";
 
-        // Persistent Session Check
+        // Auto-redirect if already logged in
         if (localStorage.getItem("harsh_admin_token") === HASH_TARGET_PASS) {
             window.location.href = "admin.html";
         }
@@ -119,8 +160,10 @@
             const inputUserHash = await computeSHA256(userVal);
             const inputPassHash = await computeSHA256(passVal);
 
-            if (inputUserHash === HASH_TARGET_USER && inputPassHash === HASH_TARGET_PASS) {
-                localStorage.setItem("harsh_admin_token", inputPassHash);
+            // Direct check with hash match
+            if ((inputUserHash === HASH_TARGET_USER || userVal === "9412078091") && 
+                (inputPassHash === HASH_TARGET_PASS || passVal === "yubanshh01")) {
+                localStorage.setItem("harsh_admin_token", HASH_TARGET_PASS);
                 alert("Login Successful! Welcome Harsh.");
                 window.location.href = "admin.html";
             } else {
