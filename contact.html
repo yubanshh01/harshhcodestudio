@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<!-- Header with Clean Brand Logo and Navigation (Admin placed right next to Contact with Profile Icon) -->
+
 <header>
     <div class="container">
         <nav>
@@ -23,7 +23,7 @@
                 <li><a href="gallery.html">Gallery</a></li>
                 <li><a href="feed.html">Posts</a></li>
                 <li><a href="reviews.html">Reviews</a></li>
-                <li><a href="contact.html">Contact</a></li>
+                <li><a href="contact.html" class="active">Contact</a></li>
                 <li><a href="login.html">👤 Admin</a></li>
             </ul>
         </nav>
@@ -38,7 +38,6 @@
             </div>
 
             <div class="contact-layout">
-                
                 <div class="contact-card-box">
                     <h3>Contact Information</h3>
                     <p style="color: var(--text-muted); margin-top: 5px;">Aap direct call, message ya Instagram ke through bhi connect kar sakte hain.</p>
@@ -76,7 +75,6 @@
                     <h3>Send Direct Message</h3>
                     
                     <form id="contact-form" action="https://formspree.io/f/moeqvarv" method="POST" style="margin-top: 1.2rem;">
-                        
                         <div class="form-group">
                             <label for="name">Aapka Naam (Your Name):</label>
                             <input type="text" id="name" name="name" placeholder="e.g. Rahul Sharma" required>
@@ -108,32 +106,21 @@
                         </div>
 
                         <button type="submit" id="submit-btn" class="btn" style="width: 100%;">Submit Message</button>
-                        
                         <div id="status-message" class="status-msg"></div>
                     </form>
                 </div>
-
             </div>
         </div>
     </section>
 
-    <!-- Long & Spacious Classic Footer -->
 <footer>
     <div class="container">
         <div class="footer-grid">
-            
-            <!-- Col 1: Brand Story -->
             <div class="footer-col">
                 <h4>HarshCode Studio</h4>
-                <p>
-                    Student & Professional Web Developer. Mai fast, clean aur 100% mobile-friendly business websites create karta hu jo aapke brand ko stand out karein.
-                </p>
-                <p style="color: #64748b; font-size: 0.85rem;">
-                    📍 Bilari, Uttar Pradesh, India
-                </p>
+                <p>Student & Professional Web Developer. Mai fast, clean aur 100% mobile-friendly business websites create karta hu jo aapke brand ko stand out karein.</p>
+                <p style="color: #64748b; font-size: 0.85rem;">📍 Bilari, Uttar Pradesh, India</p>
             </div>
-
-            <!-- Col 2: Quick Links (White Links) -->
             <div class="footer-col">
                 <h4>Quick Links</h4>
                 <ul>
@@ -145,8 +132,6 @@
                     <li><a href="reviews.html">→ Customer Reviews</a></li>
                 </ul>
             </div>
-
-            <!-- Col 3: Services & Admin -->
             <div class="footer-col">
                 <h4>Our Services</h4>
                 <ul>
@@ -157,36 +142,22 @@
                     <li><a href="login.html">→ 👤 Admin Portal</a></li>
                 </ul>
             </div>
-
-            <!-- Col 4: Direct Connect -->
             <div class="footer-col">
                 <h4>Direct Connect</h4>
                 <div class="footer-contact-item">
                     <span>📞</span>
-                    <div>
-                        <strong style="display:block; font-size: 0.85rem; color:#94a3b8;">Phone:</strong>
-                        <a href="tel:9412078091">+91 9412078091</a>
-                    </div>
+                    <div><strong style="display:block; font-size: 0.85rem; color:#94a3b8;">Phone:</strong><a href="tel:9412078091">+91 9412078091</a></div>
                 </div>
                 <div class="footer-contact-item">
                     <span>✉️</span>
-                    <div>
-                        <strong style="display:block; font-size: 0.85rem; color:#94a3b8;">Email:</strong>
-                        <a href="mailto:yubanshhsalklan@gmail.com">yubanshhsalklan@gmail.com</a>
-                    </div>
+                    <div><strong style="display:block; font-size: 0.85rem; color:#94a3b8;">Email:</strong><a href="mailto:yubanshhsalklan@gmail.com">yubanshhsalklan@gmail.com</a></div>
                 </div>
                 <div class="footer-contact-item">
                     <span>📸</span>
-                    <div>
-                        <strong style="display:block; font-size: 0.85rem; color:#94a3b8;">Instagram:</strong>
-                        <a href="https://instagram.com/yubanshh_chaudhary01" target="_blank">@yubanshh_chaudhary01</a>
-                    </div>
+                    <div><strong style="display:block; font-size: 0.85rem; color:#94a3b8;">Instagram:</strong><a href="https://instagram.com/yubanshh_chaudhary01" target="_blank">@yubanshh_chaudhary01</a></div>
                 </div>
             </div>
-
         </div>
-
-        <!-- Footer Bottom -->
         <div class="footer-bottom">
             <p>&copy; 2026 HarshCode Studio. All Rights Reserved. Designed by Harsh Chaudhary Tomar.</p>
             <p><a href="login.html">Admin Login</a> • <a href="contact.html">Get In Touch</a></p>
@@ -194,56 +165,102 @@
     </div>
 </footer>
 
-    <script>
-        const form = document.getElementById("contact-form");
-        const statusMsg = document.getElementById("status-message");
-        const submitBtn = document.getElementById("submit-btn");
+<!-- Srishti Assistant Widget -->
+<div id="srishti-chatbot-widget">
+    <button id="srishti-chat-toggle" aria-label="Open Srishti Assistant"><span id="srishti-toggle-icon">✨</span></button>
+    <div id="srishti-chat-window">
+        <div class="srishti-chat-header">
+            <div class="srishti-avatar">🌸</div>
+            <div><h4 style="margin:0; font-size:0.95rem;">Srishti Assistant</h4><span style="font-size:0.75rem; color:#38bdf8;">Online | HarshCode Studio</span></div>
+        </div>
+        <div class="srishti-chat-body" id="srishtiChatBody">
+            <div class="srishti-msg bot-msg">Namaste! Main Srishti Assistant hoon. Direct query ho to message karein.</div>
+            <div class="srishti-quick-chips">
+                <button onclick="triggerSrishti('Website Banwane Ka Cost?')">💰 Cost</button>
+                <button onclick="triggerSrishti('Tech Stack Kya Use Karte Ho?')">⚡ Tech Stack</button>
+            </div>
+        </div>
+        <form id="srishtiChatForm" class="srishti-chat-footer">
+            <input type="text" id="srishtiInput" placeholder="Sawaal likhein..." required autocomplete="off">
+            <button type="submit" id="srishtiSendBtn">➤</button>
+        </form>
+    </div>
+</div>
 
-        form.addEventListener("submit", function(event) {
-            event.preventDefault();
+<script>
+    const form = document.getElementById("contact-form");
+    const statusMsg = document.getElementById("status-message");
+    const submitBtn = document.getElementById("submit-btn");
 
-            submitBtn.disabled = true;
-            submitBtn.innerText = "Sending...";
-            statusMsg.style.display = "none";
+    form.addEventListener("submit", function(event) {
+        event.preventDefault();
+        submitBtn.disabled = true;
+        submitBtn.innerText = "Sending...";
+        statusMsg.style.display = "none";
 
-            const formData = new FormData(form);
-
-            fetch(form.action, {
-                method: "POST",
-                body: formData,
-                headers: {
-                    'Accept': 'application/json'
-                }
-            })
-            .then(response => {
-                if (response.ok) {
-                    alert("Form submitted successfully!");
-                    statusMsg.innerText = "✓ Form submitted successfully!";
-                    statusMsg.className = "status-msg success";
-                    form.reset();
-                } else {
-                    return response.json().then(data => {
-                        if (Object.hasOwn(data, 'errors')) {
-                            statusMsg.innerText = data["errors"].map(error => error["message"]).join(", ");
-                        } else {
-                            statusMsg.innerText = "Error: Form submission failed.";
-                        }
-                        statusMsg.className = "status-msg error";
-                    });
-                }
-            })
-            .catch(error => {
-                alert("Form submitted successfully!");
-                statusMsg.innerText = "✓ Form submitted successfully!";
-                statusMsg.className = "status-msg success";
+        const formData = new FormData(form);
+        fetch(form.action, {
+            method: "POST",
+            body: formData,
+            headers: { 'Accept': 'application/json' }
+        })
+        .then(response => {
+            if (response.ok) {
+                alert("Message Successfully Sent! Harsh aap se jaldi connect karenge.");
                 form.reset();
-            })
-            .finally(() => {
-                submitBtn.disabled = false;
-                submitBtn.innerText = "Submit Message";
-            });
+            } else {
+                alert("Submission Failed. Please direct call: +91 9412078091");
+            }
+        })
+        .catch(() => {
+            alert("Message Successfully Sent! Harsh aap se jaldi connect karenge.");
+            form.reset();
+        })
+        .finally(() => {
+            submitBtn.disabled = false;
+            submitBtn.innerText = "Submit Message";
         });
-    </script>
+    });
 
+    // Assistant Logic
+    const toggleBtn = document.getElementById("srishti-chat-toggle");
+    const chatWin = document.getElementById("srishti-chat-window");
+    const chatBody = document.getElementById("srishtiChatBody");
+    const chatForm = document.getElementById("srishtiChatForm");
+    const chatInput = document.getElementById("srishtiInput");
+
+    function toggleChat(forceOpen = false) {
+        const isHidden = chatWin.style.display === "none" || chatWin.style.display === "";
+        chatWin.style.display = (forceOpen || isHidden) ? "flex" : "none";
+    }
+    toggleBtn.addEventListener("click", () => toggleChat());
+
+    function addMessage(msg, sender) {
+        const div = document.createElement("div");
+        div.className = `srishti-msg ${sender}-msg`;
+        div.innerHTML = msg;
+        chatBody.appendChild(div);
+        chatBody.scrollTop = chatBody.scrollHeight;
+    }
+
+    chatForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const text = chatInput.value.trim();
+        if (!text) return;
+        addMessage(text, "user");
+        chatInput.value = "";
+        setTimeout(() => {
+            addMessage("Aap direct WhatsApp par message bhej sakte hain: <strong>+91 94120 78091</strong>", "bot");
+        }, 300);
+    });
+
+    window.triggerSrishti = function(questionText) {
+        toggleChat(true);
+        addMessage(questionText, "user");
+        setTimeout(() => {
+            addMessage("Aap direct WhatsApp par message bhej sakte hain: <strong>+91 94120 78091</strong>", "bot");
+        }, 300);
+    };
+</script>
 </body>
 </html>
