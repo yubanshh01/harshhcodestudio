@@ -8,7 +8,6 @@
 </head>
 <body>
 
-  <!-- Header with Clean Brand Logo and Navigation (Admin placed right next to Contact with Profile Icon) -->
 <header>
     <div class="container">
         <nav>
@@ -23,7 +22,7 @@
                 <li><a href="services.html">Services</a></li>
                 <li><a href="gallery.html">Gallery</a></li>
                 <li><a href="feed.html">Posts</a></li>
-                <li><a href="reviews.html">Reviews</a></li>
+                <li><a href="reviews.html" class="active">Reviews</a></li>
                 <li><a href="contact.html">Contact</a></li>
                 <li><a href="login.html">👤 Admin</a></li>
             </ul>
@@ -39,7 +38,6 @@
             </div>
 
             <div class="grid">
-                
                 <div class="review-card">
                     <div class="stars">★★★★★</div>
                     <p class="review-text">"Harsh bhai ne meri dukaan ke liye bahut badiya responsive website banayi. Mobile me load hone me bilkul time nahi leti. Kaam time par deliver kiya!"</p>
@@ -87,28 +85,18 @@
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
     </section>
 
-   <!-- Long & Spacious Classic Footer -->
 <footer>
     <div class="container">
         <div class="footer-grid">
-            
-            <!-- Col 1: Brand Story -->
             <div class="footer-col">
                 <h4>HarshCode Studio</h4>
-                <p>
-                    Student & Professional Web Developer. Mai fast, clean aur 100% mobile-friendly business websites create karta hu jo aapke brand ko stand out karein.
-                </p>
-                <p style="color: #64748b; font-size: 0.85rem;">
-                    📍 Bilari, Uttar Pradesh, India
-                </p>
+                <p>Student & Professional Web Developer. Mai fast, clean aur 100% mobile-friendly business websites create karta hu jo aapke brand ko stand out karein.</p>
+                <p style="color: #64748b; font-size: 0.85rem;">📍 Bilari, Uttar Pradesh, India</p>
             </div>
-
-            <!-- Col 2: Quick Links (White Links) -->
             <div class="footer-col">
                 <h4>Quick Links</h4>
                 <ul>
@@ -120,8 +108,6 @@
                     <li><a href="reviews.html">→ Customer Reviews</a></li>
                 </ul>
             </div>
-
-            <!-- Col 3: Services & Admin -->
             <div class="footer-col">
                 <h4>Our Services</h4>
                 <ul>
@@ -132,36 +118,22 @@
                     <li><a href="login.html">→ 👤 Admin Portal</a></li>
                 </ul>
             </div>
-
-            <!-- Col 4: Direct Connect -->
             <div class="footer-col">
                 <h4>Direct Connect</h4>
                 <div class="footer-contact-item">
                     <span>📞</span>
-                    <div>
-                        <strong style="display:block; font-size: 0.85rem; color:#94a3b8;">Phone:</strong>
-                        <a href="tel:9412078091">+91 9412078091</a>
-                    </div>
+                    <div><strong style="display:block; font-size: 0.85rem; color:#94a3b8;">Phone:</strong><a href="tel:9412078091">+91 9412078091</a></div>
                 </div>
                 <div class="footer-contact-item">
                     <span>✉️</span>
-                    <div>
-                        <strong style="display:block; font-size: 0.85rem; color:#94a3b8;">Email:</strong>
-                        <a href="mailto:yubanshhsalklan@gmail.com">yubanshhsalklan@gmail.com</a>
-                    </div>
+                    <div><strong style="display:block; font-size: 0.85rem; color:#94a3b8;">Email:</strong><a href="mailto:yubanshhsalklan@gmail.com">yubanshhsalklan@gmail.com</a></div>
                 </div>
                 <div class="footer-contact-item">
                     <span>📸</span>
-                    <div>
-                        <strong style="display:block; font-size: 0.85rem; color:#94a3b8;">Instagram:</strong>
-                        <a href="https://instagram.com/yubanshh_chaudhary01" target="_blank">@yubanshh_chaudhary01</a>
-                    </div>
+                    <div><strong style="display:block; font-size: 0.85rem; color:#94a3b8;">Instagram:</strong><a href="https://instagram.com/yubanshh_chaudhary01" target="_blank">@yubanshh_chaudhary01</a></div>
                 </div>
             </div>
-
         </div>
-
-        <!-- Footer Bottom -->
         <div class="footer-bottom">
             <p>&copy; 2026 HarshCode Studio. All Rights Reserved. Designed by Harsh Chaudhary Tomar.</p>
             <p><a href="login.html">Admin Login</a> • <a href="contact.html">Get In Touch</a></p>
@@ -169,5 +141,67 @@
     </div>
 </footer>
 
+<!-- Srishti Assistant Widget -->
+<div id="srishti-chatbot-widget">
+    <button id="srishti-chat-toggle" aria-label="Open Srishti Assistant"><span id="srishti-toggle-icon">✨</span></button>
+    <div id="srishti-chat-window">
+        <div class="srishti-chat-header">
+            <div class="srishti-avatar">🌸</div>
+            <div><h4 style="margin:0; font-size:0.95rem;">Srishti Assistant</h4><span style="font-size:0.75rem; color:#38bdf8;">Online | HarshCode Studio</span></div>
+        </div>
+        <div class="srishti-chat-body" id="srishtiChatBody">
+            <div class="srishti-msg bot-msg">Namaste! Hamare projects ya client reviews ke baare me kuch bhi poochein.</div>
+            <div class="srishti-quick-chips">
+                <button onclick="triggerSrishti('Website Banwane Ka Cost?')">💰 Cost</button>
+                <button onclick="triggerSrishti('Direct Harsh Se Kaise Contact Karein?')">📞 Contact</button>
+            </div>
+        </div>
+        <form id="srishtiChatForm" class="srishti-chat-footer">
+            <input type="text" id="srishtiInput" placeholder="Sawaal likhein..." required autocomplete="off">
+            <button type="submit" id="srishtiSendBtn">➤</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    const toggleBtn = document.getElementById("srishti-chat-toggle");
+    const chatWin = document.getElementById("srishti-chat-window");
+    const chatBody = document.getElementById("srishtiChatBody");
+    const chatForm = document.getElementById("srishtiChatForm");
+    const chatInput = document.getElementById("srishtiInput");
+
+    function toggleChat(forceOpen = false) {
+        const isHidden = chatWin.style.display === "none" || chatWin.style.display === "";
+        chatWin.style.display = (forceOpen || isHidden) ? "flex" : "none";
+    }
+    toggleBtn.addEventListener("click", () => toggleChat());
+
+    function addMessage(msg, sender) {
+        const div = document.createElement("div");
+        div.className = `srishti-msg ${sender}-msg`;
+        div.innerHTML = msg;
+        chatBody.appendChild(div);
+        chatBody.scrollTop = chatBody.scrollHeight;
+    }
+
+    chatForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const text = chatInput.value.trim();
+        if (!text) return;
+        addMessage(text, "user");
+        chatInput.value = "";
+        setTimeout(() => {
+            addMessage("Dhanyawaad! Direct Harsh se judne ke liye call/WhatsApp karein: <strong>+91 94120 78091</strong>", "bot");
+        }, 300);
+    });
+
+    window.triggerSrishti = function(questionText) {
+        toggleChat(true);
+        addMessage(questionText, "user");
+        setTimeout(() => {
+            addMessage("Dhanyawaad! Direct Harsh se judne ke liye call/WhatsApp karein: <strong>+91 94120 78091</strong>", "bot");
+        }, 300);
+    };
+</script>
 </body>
 </html>
