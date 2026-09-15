@@ -6,6 +6,23 @@
     <title>About Me | Harsh Chaudhary Tomar</title>
     <link rel="stylesheet" href="style.css">
     <style>
+        /* Circular Profile Photo Styling */
+        .about-img-box {
+            width: 170px !important;
+            height: 170px !important;
+            margin: 0 auto !important;
+            border-radius: 50% !important;
+            overflow: hidden !important;
+            border: 4px solid #0284c7 !important;
+            box-shadow: 0 10px 25px rgba(2, 132, 199, 0.3) !important;
+        }
+
+        .about-img-box img {
+            width: 100% !important;
+            height: 100% !important;
+            object-fit: cover !important;
+        }
+
         /* Srishti Assistant Widget Styling */
         #srishti-chatbot-widget {
             position: fixed !important;
@@ -201,7 +218,7 @@
 </head>
 <body>
 
-<!-- Header with Clean Brand Logo and Navigation -->
+   <!-- Header with Clean Brand Logo and Navigation -->
 <header>
     <div class="container">
         <nav>
@@ -224,49 +241,60 @@
     </div>
 </header>
 
-<section class="section">
-    <div class="container">
-        <div class="section-header">
-            <h2>About Me</h2>
-            <p>Know more about my journey, technical stack, and student vision.</p>
-        </div>
-
-        <div class="about-grid">
-            
-            <div class="about-profile-card">
-                <div class="about-img-box">
-                    <img src="images/my-profile.jpeg" alt="Harsh Chaudhary Tomar" onerror="this.src='images/my-profile.jpg'">
-                </div>
-                <h3 style="margin-top: 15px; font-size: 1.25rem;">Harsh Chaudhary Tomar</h3>
-                <p style="color: var(--accent); font-weight: 600; font-size: 0.95rem;">Student & Web Developer</p>
-                <button onclick="triggerSrishti('Direct Harsh Se Kaise Contact Karein?')" class="btn" style="margin-top: 12px; font-size: 0.85rem; padding: 6px 14px; background: #0f172a; border: 1px solid #38bdf8;">Talk with Srishti AI ✨</button>
+    <section class="section">
+        <div class="container">
+            <div class="section-header">
+                <h2>About Me</h2>
+                <p>Know more about my journey, technical stack, and student vision.</p>
             </div>
 
-            <div>
-                <h3 style="font-size: 1.8rem; margin-bottom: 1rem;">Introduction & Mission</h3>
-                <p style="color: var(--text-muted); margin-bottom: 1rem;">
-                    Hello! Mera naam <strong>Harsh Chaudhary Tomar</strong> hai. Mai ek dedicated student hu aur coding & web technology me deep interest rakhta hu. Mai modern business requirements ke according custom websites aur landing pages design karta hu.
-                </p>
-                <p style="color: var(--text-muted); margin-bottom: 1.5rem;">
-                    Mera goal simple hai: clean code, fast loading time, aur attractive responsive layouts create karna taaki clients ka kaam automated aur digital ban sake.
-                </p>
+            <div class="about-grid">
+                
+                <div class="about-profile-card">
+                    <!-- Circle Profile Image Box -->
+                    <div class="about-img-box">
+                        <img src="images/my-profile.jpeg" alt="Harsh Chaudhary Tomar" onerror="this.src='images/my-profile.jpg'">
+                    </div>
+                    <h3 style="margin-top: 15px; font-size: 1.25rem;">Harsh Chaudhary Tomar</h3>
+                    <p style="color: var(--accent); font-weight: 600; font-size: 0.95rem;">Student & Web Developer</p>
+                    
+                    <!-- Location & Availability Badges -->
+                    <div style="margin-top: 12px; display: flex; justify-content: center; gap: 8px; flex-wrap: wrap;">
+                        <span style="font-size: 0.78rem; background: #f1f5f9; color: #475569; padding: 4px 10px; border-radius: 12px; font-weight: 600;">📍 Bilari (UP)</span>
+                        <span style="font-size: 0.78rem; background: #dcfce7; color: #15803d; padding: 4px 10px; border-radius: 12px; font-weight: 600;">🟢 Open to Work</span>
+                    </div>
 
-                <h4>Key Skills & Technology:</h4>
-                <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 12px;">
-                    <span style="background: #e2e8f0; padding: 6px 14px; border-radius: 20px; font-size: 0.9rem; font-weight: 600;">HTML5 / CSS3</span>
-                    <span style="background: #e2e8f0; padding: 6px 14px; border-radius: 20px; font-size: 0.9rem; font-weight: 600;">JavaScript</span>
-                    <span style="background: #e0f2fe; color:#0369a1; padding: 6px 14px; border-radius: 20px; font-size: 0.9rem; font-weight: 600;">Supabase Cloud DB</span>
-                    <span style="background: #e2e8f0; padding: 6px 14px; border-radius: 20px; font-size: 0.9rem; font-weight: 600;">SHA-256 Auth</span>
-                    <span style="background: #e2e8f0; padding: 6px 14px; border-radius: 20px; font-size: 0.9rem; font-weight: 600;">Responsive UI Design</span>
-                    <span style="background: #e2e8f0; padding: 6px 14px; border-radius: 20px; font-size: 0.9rem; font-weight: 600;">Website Optimization</span>
+                    <!-- Direct Chatbot Trigger -->
+                    <div style="margin-top: 15px;">
+                        <button onclick="triggerSrishti('Direct Harsh Se Kaise Contact Karein?')" class="btn" style="font-size: 0.85rem; padding: 8px 16px; background: #0f172a; border: 1px solid #38bdf8; width: 100%;">Talk with Srishti AI ✨</button>
+                    </div>
                 </div>
+
+                <div>
+                    <h3 style="font-size: 1.8rem; margin-bottom: 1rem;">Introduction & Mission</h3>
+                    <p style="color: var(--text-muted); margin-bottom: 1rem;">
+                        Hello! Mera naam <strong>Harsh Chaudhary Tomar</strong> hai. Mai ek dedicated student hu aur coding & web technology me deep interest rakhta hu. Mai modern business requirements ke according custom websites aur landing pages design karta hu.
+                    </p>
+                    <p style="color: var(--text-muted); margin-bottom: 1.5rem;">
+                        Mera goal simple hai: clean code, fast loading time, aur attractive responsive layouts create karna taaki clients ka kaam automated aur digital ban sake.
+                    </p>
+
+                    <h4>Key Skills & Technology:</h4>
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 12px;">
+                        <span style="background: #e2e8f0; padding: 6px 14px; border-radius: 20px; font-size: 0.9rem; font-weight: 600;">HTML5 / CSS3</span>
+                        <span style="background: #e2e8f0; padding: 6px 14px; border-radius: 20px; font-size: 0.9rem; font-weight: 600;">JavaScript</span>
+                        <span style="background: #e0f2fe; color: #0369a1; padding: 6px 14px; border-radius: 20px; font-size: 0.9rem; font-weight: 600;">Supabase Cloud DB</span>
+                        <span style="background: #e2e8f0; padding: 6px 14px; border-radius: 20px; font-size: 0.9rem; font-weight: 600;">SHA-256 Auth</span>
+                        <span style="background: #e2e8f0; padding: 6px 14px; border-radius: 20px; font-size: 0.9rem; font-weight: 600;">Responsive UI Design</span>
+                        <span style="background: #e2e8f0; padding: 6px 14px; border-radius: 20px; font-size: 0.9rem; font-weight: 600;">Website Optimization</span>
+                    </div>
+                </div>
+
             </div>
-
         </div>
-    </div>
-</section>
+    </section>
 
-<!-- Long & Spacious Classic Footer (100% Unchanged) -->
+   <!-- Long & Spacious Classic Footer (100% Intact) -->
 <footer>
     <div class="container">
         <div class="footer-grid">
@@ -343,7 +371,7 @@
     </div>
 </footer>
 
-<!-- Srishti Assistant Floating Widget (Cross icon permanently removed) -->
+<!-- Srishti Assistant Floating Widget (Cross Icon Permanently Removed) -->
 <div id="srishti-chatbot-widget">
     <button id="srishti-chat-toggle" aria-label="Open Srishti Assistant">
         <span id="srishti-toggle-icon">✨</span>
