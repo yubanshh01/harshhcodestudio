@@ -132,7 +132,6 @@ nav {
     background: var(--accent);
 }
 
-/* Dropdown Menu CSS */
 .nav-dropdown {
     position: relative;
     display: inline-block;
@@ -237,27 +236,6 @@ nav {
 }
 .card:hover { transform: translateY(-4px); }
 
-/* Profile Layout */
-.about-grid { display: grid; grid-template-columns: 320px 1fr; gap: 2.5rem; align-items: start; }
-.about-profile-card {
-    background: var(--white);
-    padding: 2rem 1.5rem;
-    border-radius: 14px;
-    border: 1px solid var(--border);
-    box-shadow: var(--card-shadow);
-    text-align: center;
-}
-.about-img-box {
-    width: 170px !important;
-    height: 170px !important;
-    margin: 0 auto !important;
-    border-radius: 50% !important;
-    overflow: hidden !important;
-    border: 4px solid var(--accent) !important;
-    box-shadow: 0 10px 25px var(--accent-glow) !important;
-}
-.about-img-box img { width: 100% !important; height: 100% !important; object-fit: cover !important; }
-
 /* Hero */
 .hero {
     background: radial-gradient(circle at top right, #1e293b, #0b1329);
@@ -286,28 +264,7 @@ nav {
 .stat-item h3 { font-size: 2rem; color: var(--accent); font-weight: 800; font-family: var(--font-code); }
 .stat-item p { color: var(--text-muted); font-weight: 600; font-size: 0.88rem; }
 
-/* Gallery & Reviews */
-.gallery-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
-.gallery-card { background: var(--white); border-radius: 12px; overflow: hidden; border: 1px solid var(--border); }
-.gallery-img-wrapper { width: 100%; height: 250px; background: #0f172a; display: flex; align-items: center; justify-content: center; }
-.gallery-img-wrapper img { width: 100%; height: 100%; object-fit: cover; }
-
-.review-card { background: var(--white); padding: 1.8rem; border-radius: 12px; border: 1px solid var(--border); }
-.stars { color: var(--star); font-size: 1.1rem; margin-bottom: 0.8rem; }
-.client-info { display: flex; align-items: center; gap: 12px; }
-.client-avatar {
-    width: 44px; height: 44px; background: var(--accent); color: #ffffff;
-    border-radius: 50%; display: flex; align-items: center; justify-content: center;
-    font-weight: 700; font-family: var(--font-code);
-}
-
-/* Contact */
-.contact-layout { display: grid; grid-template-columns: 1fr 1.3fr; gap: 2.2rem; }
-.contact-card-box { background: var(--white); padding: 2rem; border-radius: 12px; border: 1px solid var(--border); }
-.contact-links-list { list-style: none; margin-top: 1.5rem; }
-.contact-links-list li { margin-bottom: 1.2rem; display: flex; align-items: flex-start; gap: 12px; }
-.contact-links-list a { color: var(--accent); text-decoration: none; font-weight: 600; }
-
+/* Form Controls */
 .form-group { margin-bottom: 1.1rem; }
 .form-group label { display: block; margin-bottom: 0.4rem; font-weight: 600; font-size: 0.88rem; }
 .form-group input, .form-group textarea, .form-group select {
@@ -317,17 +274,6 @@ nav {
 .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
     border-color: var(--accent); background: var(--white);
 }
-
-.status-msg { display: none; margin-top: 15px; padding: 12px; border-radius: 8px; font-size: 0.95rem; font-weight: 700; text-align: center; }
-.status-msg.success { background: #dcfce7; color: #15803d; border: 1px solid #86efac; display: block; }
-.status-msg.error { background: #fee2e2; color: #b91c1c; border: 1px solid #fca5a5; display: block; }
-
-/* Posts Feed */
-.post-card { background: var(--white); border-radius: 12px; border: 1px solid var(--border); padding: 1.6rem; margin-bottom: 1.5rem; }
-.post-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.8rem; }
-.post-tag { background: rgba(2, 132, 199, 0.12); color: var(--accent); font-size: 0.78rem; font-weight: 700; padding: 4px 10px; border-radius: 12px; font-family: var(--font-code); }
-.post-img-wrapper { width: 100%; margin: 1rem 0; background: #0b1329; border-radius: 8px; overflow: hidden; display: flex; justify-content: center; }
-.post-img { width: 100%; max-height: 500px; object-fit: contain; }
 
 /* Footer */
 footer { margin-top: auto; background: #060a12; color: #cbd5e1; padding: 4rem 0 2rem 0; border-top: 1px solid rgba(255, 255, 255, 0.08); }
@@ -342,7 +288,7 @@ footer { margin-top: auto; background: #060a12; color: #cbd5e1; padding: 4rem 0 
 .footer-bottom a { color: #94a3b8 !important; text-decoration: none; }
 
 /* Srishti Floating Widget */
-#srishti-chatbot-widget { position: fixed !important; bottom: 24px !important; right: 24px !important; z-index: 999999 !important; font-family: var(--font-main) !important; }
+#srishti-chatbot-widget { position: fixed !important; bottom: 24px !important; right: 24px !important; z-index: 999999 !important; }
 #srishti-chat-toggle {
     width: 58px; height: 58px; border-radius: 50%;
     background: linear-gradient(135deg, #0284c7, #0b1329); color: #ffffff;
@@ -369,45 +315,86 @@ footer { margin-top: auto; background: #060a12; color: #cbd5e1; padding: 4rem 0 
 #srishtiInput { flex: 1; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 20px; font-size: 0.86rem; outline: none; }
 #srishtiSendBtn { width: 36px; height: 36px; background: var(--accent); color: #ffffff; border: none; border-radius: 50%; cursor: pointer; }
 
-/* Fullscreen Access Denied Lockout Modal */
+/* Fullscreen Cyber Matrix Access Denied Overlay */
 #accessDeniedOverlay {
     display: none;
     position: fixed;
-    top: 0; left: 0;
-    width: 100vw; height: 100vh;
-    background: #090000;
-    z-index: 9999999;
-    color: #ff3333;
+    top: 0; 
+    left: 0;
+    width: 100vw; 
+    height: 100vh;
+    background: #000000;
+    z-index: 99999999;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     text-align: center;
     padding: 20px;
     font-family: var(--font-code);
-}
-#accessDeniedOverlay h1 { font-size: 3.5rem; letter-spacing: 4px; margin-bottom: 10px; animation: glitch 0.3s infinite alternate; }
-#accessDeniedOverlay p { font-size: 1.2rem; color: #ff9999; max-width: 600px; margin-bottom: 25px; }
-
-@keyframes glitch {
-    from { transform: skewX(-2deg); }
-    to { transform: skewX(2deg); }
+    overflow: hidden;
 }
 
-/* Mobile Nav Optimization */
-@media (max-width: 900px) {
-    .about-grid, .contact-layout { grid-template-columns: 1fr; }
-    .footer-grid { grid-template-columns: repeat(2, 1fr); }
+#matrixCanvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    opacity: 0.85;
+}
+
+.denied-content {
+    position: relative;
+    z-index: 2;
+    background: rgba(10, 0, 0, 0.88);
+    border: 2px solid #ef4444;
+    box-shadow: 0 0 50px rgba(239, 68, 68, 0.7), inset 0 0 20px rgba(239, 68, 68, 0.4);
+    padding: 2.5rem;
+    border-radius: 12px;
+    max-width: 650px;
+    backdrop-filter: blur(8px);
+}
+
+.denied-glitch {
+    font-size: 3.2rem;
+    font-weight: 900;
+    color: #ff3333;
+    letter-spacing: 6px;
+    text-shadow: 0 0 10px #ff0000, 0 0 20px #ff0000;
+    animation: textFlicker 0.15s infinite alternate;
+}
+
+@keyframes textFlicker {
+    0% { opacity: 0.85; transform: skewX(-1deg); }
+    100% { opacity: 1; transform: skewX(1deg); }
+}
+
+/* Pure Borderless Auto-Play Frame */
+.direct-video-frame {
+    display: none;
+    margin: 2.2rem auto 0 auto;
+    max-width: 820px;
+    width: 100%;
+    border-radius: 16px;
+    overflow: hidden;
+    background: #000;
+    border: 2px solid rgba(56, 189, 248, 0.4);
+    box-shadow: 0 15px 40px rgba(2, 132, 199, 0.35);
+}
+
+.direct-video-frame video {
+    width: 100%;
+    height: auto;
+    max-height: 480px;
+    display: block;
+    object-fit: cover;
 }
 
 @media (max-width: 768px) {
     nav { flex-wrap: wrap; justify-content: space-between; }
-    .nav-links { gap: 0.2rem; }
     .nav-links a, .dropdown-btn { padding: 6px 10px; font-size: 0.84rem; }
     .hero h1 { font-size: 2.1rem; }
     .stats-bar { grid-template-columns: repeat(2, 1fr); }
-}
-
-@media (max-width: 580px) {
-    .stats-bar { grid-template-columns: 1fr; }
-    .footer-grid { grid-template-columns: 1fr; }
+    .denied-glitch { font-size: 2.2rem; }
 }
