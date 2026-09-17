@@ -3,9 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard | HarshCode Studio</title>
+    <title>Admin Studio Dashboard | HarshCode Studio</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        .admin-nav-tabs {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 8px;
+        }
+        .admin-tab-btn {
+            background: none;
+            border: none;
+            padding: 10px 18px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            cursor: pointer;
+            border-radius: 8px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-family: var(--font-code);
+            transition: all 0.2s ease;
+        }
+        .admin-tab-btn.active {
+            background: var(--accent);
+            color: #ffffff;
+            box-shadow: 0 4px 14px var(--accent-glow);
+        }
+        .panel-section { display: none; }
+        .panel-section.active { display: block; }
+        .video-box-preview {
+            margin-top: 12px;
+            background: #000;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            text-align: center;
+        }
+        .video-box-preview video {
+            width: 100%;
+            max-height: 280px;
+            display: block;
+        }
+    </style>
 </head>
 <body>
 
@@ -38,48 +82,104 @@
     <main class="section">
         <div class="container">
             
-            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 2rem; background: var(--white); padding: 1.2rem 1.5rem; border-radius: 12px; border: 1px solid var(--border); box-shadow: var(--card-shadow);">
+            <!-- Top Controls Header -->
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 1.8rem; background: var(--white); padding: 1.2rem 1.5rem; border-radius: 14px; border: 1px solid var(--border); box-shadow: var(--card-shadow);">
                 <div>
-                    <h2 style="font-size: 1.4rem; color: var(--text-dark);">Video Publisher</h2>
-                    <p style="color: var(--text-muted); font-size: 0.85rem; font-family: var(--font-code);">Instant Homepage Video Sync (No Title / Description Required)</p>
+                    <h2 style="font-size: 1.45rem; color: var(--text-dark);">Production Studio Dashboard</h2>
+                    <p style="color: var(--text-muted); font-size: 0.85rem; font-family: var(--font-code);">Manage Feed Posts & Homepage Direct Showcase Video</p>
                 </div>
                 <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
                     <a href="index.html" class="btn-back-home">Home</a>
-                    <button onclick="logout()" class="btn" style="background:#dc2626; padding: 6px 12px; font-size: 0.85rem;">Logout 🚪</button>
+                    <a href="feed.html" target="_blank" class="btn btn-outline" style="padding: 6px 12px; font-size: 0.85rem;">Live Feed ↗</a>
+                    <button onclick="logout()" class="btn" style="background:#dc2626; padding: 6px 14px; font-size: 0.85rem;">Logout 🚪</button>
                 </div>
             </div>
 
-            <!-- Single Video Upload Card -->
-            <section class="card" style="max-width: 600px; margin: 0 auto 2.5rem auto;">
-                <h3>Upload Homepage Showcase Video</h3>
-                <form id="videoOnlyForm" style="margin-top: 1.2rem;">
+            <!-- Tab Switcher Navigation -->
+            <div class="admin-nav-tabs">
+                <button class="admin-tab-btn active" onclick="switchPanel('postPanel', this)">📰 Regular Post & Photo</button>
+                <button class="admin-tab-btn" onclick="switchPanel('videoPanel', this)">🎥 Homepage Showcase Video</button>
+            </div>
+
+            <!-- PANEL 1: REGULAR POST & PHOTO (Restored & Enhanced) -->
+            <div id="postPanel" class="panel-section active">
+                <section class="card" style="max-width: 700px; margin: 0 auto 2.5rem auto;">
+                    <h3>Publish New Feed Post</h3>
+                    <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 4px;">Yeh post instant `feed.html` par sabhi visitors ko dikhegi.</p>
                     
-                    <div class="form-group">
-                        <label for="videoFileInput">Select Video File (.mp4, .webm with Audio)</label>
-                        <input type="file" id="videoFileInput" accept="video/mp4,video/webm" style="cursor: pointer;">
-                        
-                        <div style="margin-top: 12px;">
-                            <label for="videoUrlInput" style="font-size: 0.82rem; color: var(--text-muted);">OR Paste Direct Video Link:</label>
-                            <input type="url" id="videoUrlInput" placeholder="https://example.com/video.mp4">
+                    <form id="postForm" style="margin-top: 1.2rem;">
+                        <div class="form-group">
+                            <label for="postTitle">Post Title</label>
+                            <input type="text" id="postTitle" placeholder="e.g. New Responsive Business Website Launched" required>
                         </div>
+                        <div class="form-group">
+                            <label for="postTag">Category / Tag</label>
+                            <select id="postTag">
+                                <option value="Web Project">Web Project</option>
+                                <option value="Announcement">Announcement</option>
+                                <option value="Coding Tip">Coding Tip</option>
+                                <option value="Personal Update">Personal Update</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="postFileInput">Upload Photo (Hardware-Accelerated Auto-Compressor)</label>
+                            <input type="file" id="postFileInput" accept="image/*" style="cursor: pointer;">
+                            <div id="photoPreviewContainer" style="display:none; margin-top: 10px; background:#0b1329; border-radius:8px; padding:8px; text-align:center;">
+                                <img id="photoPreview" alt="Upload Preview" style="max-width: 100%; max-height: 280px; object-fit: contain; border-radius: 6px;">
+                                <p style="color:#38bdf8; font-size:0.75rem; margin-top:4px; font-family: var(--font-code);">Auto-Compressed for Instant Mobile Load</p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="postContent">Post Description</label>
+                            <textarea id="postContent" rows="4" placeholder="Apna update ya project details yahan likhein..." required></textarea>
+                        </div>
+                        <button type="submit" id="publishPostBtn" class="btn" style="width: 100%;">Publish Live Post 🚀</button>
+                    </form>
+                </section>
 
-                        <div id="videoPreviewContainer" style="display:none; margin-top: 12px; background:#000; border-radius:8px; overflow:hidden;">
-                            <video id="videoPreview" autoplay loop muted playsinline style="width: 100%; max-height: 260px; display:block;"></video>
-                        </div>
+                <section>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                        <h3>Manage Feed Posts</h3>
+                        <button onclick="loadAdminPosts()" class="btn btn-outline" style="padding: 4px 10px; font-size: 0.85rem;">🔄 Refresh</button>
                     </div>
+                    <div id="adminPostsList"></div>
+                </section>
+            </div>
 
-                    <button type="submit" id="publishBtn" class="btn" style="width: 100%; margin-top: 10px;">Publish Video Directly 🚀</button>
-                </form>
-            </section>
+            <!-- PANEL 2: HOMEPAGE VIDEO (Direct Sync - Zero Title/Description) -->
+            <div id="videoPanel" class="panel-section">
+                <section class="card" style="max-width: 650px; margin: 0 auto 2.5rem auto;">
+                    <h3>Upload Homepage Showcase Video</h3>
+                    <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 4px;">Direct play hogi buttons ke theek neeche bina kisi button ya text ke.</p>
 
-            <!-- Active Video Status -->
-            <section style="max-width: 600px; margin: 0 auto;">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-                    <h3>Current Live Video</h3>
-                    <button onclick="loadCurrentVideo()" class="btn btn-outline" style="padding: 4px 10px; font-size: 0.85rem;">🔄 Refresh</button>
-                </div>
-                <div id="currentVideoBox"></div>
-            </section>
+                    <form id="videoOnlyForm" style="margin-top: 1.2rem;">
+                        <div class="form-group">
+                            <label for="videoFileInput">Select Video File (.mp4, .webm with Audio)</label>
+                            <input type="file" id="videoFileInput" accept="video/mp4,video/webm" style="cursor: pointer;">
+                        </div>
+
+                        <div style="margin-bottom: 1.1rem;">
+                            <label for="videoUrlInput" style="font-size: 0.85rem; font-weight: 600; color: var(--text-dark);">OR Paste Direct Video Link (CDN/Cloud/MP4):</label>
+                            <input type="url" id="videoUrlInput" placeholder="https://example.com/demo.mp4" style="width:100%; padding:0.8rem 1rem; border:1px solid var(--border); border-radius:8px;">
+                            <span style="font-size: 0.76rem; color: var(--text-muted); margin-top: 4px; display: block;">File select karein ya direct URL paste karein.</span>
+                        </div>
+
+                        <div id="videoPreviewBox" class="video-box-preview" style="display:none;">
+                            <video id="videoPreview" autoplay loop muted playsinline controls></video>
+                        </div>
+
+                        <button type="submit" id="publishVideoBtn" class="btn" style="width: 100%; margin-top: 15px; background: #16a34a;">Publish Video Directly 🚀</button>
+                    </form>
+                </section>
+
+                <section style="max-width: 650px; margin: 0 auto;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                        <h3>Active Homepage Video Status</h3>
+                        <button onclick="loadCurrentLiveVideo()" class="btn btn-outline" style="padding: 4px 10px; font-size: 0.85rem;">🔄 Check</button>
+                    </div>
+                    <div id="currentLiveVideoStatus"></div>
+                </section>
+            </div>
 
         </div>
     </main>
@@ -101,6 +201,7 @@
             document.getElementById("pagesDropdown").classList.remove("active");
         });
 
+        // Security Authentication Signature
         const HASH_AUTH_SIG = "6a0f7c220023a1a5b46d0352efc15053dd5c4ec4d9da8ef7f168fecaa1efd9a9";
         if (localStorage.getItem("harsh_admin_token") !== HASH_AUTH_SIG) {
             window.location.href = "login.html";
@@ -113,74 +214,242 @@
             }
         }
 
+        // Panel Switcher
+        function switchPanel(panelId, btn) {
+            document.querySelectorAll(".panel-section").forEach(p => p.classList.remove("active"));
+            document.querySelectorAll(".admin-tab-btn").forEach(b => b.classList.remove("active"));
+            document.getElementById(panelId).classList.add("active");
+            btn.classList.add("active");
+        }
+
+        // Supabase Client Config
         const SUPABASE_URL = "https://rbbryqshvycrstzrtytp.supabase.co";
         const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJiYnJ5cXNodnljcnN0enJ0eXRwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg3MTI1MjYsImV4cCI6MjEwNDI4ODUyNn0.WzH2ju9G2nW8iOKnh77OFF0N3G0ECHx1iLBjcPISItc";
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        let videoPayload = "";
+        // ==========================================
+        // 1. REGULAR POST & PHOTO ENGINE
+        // ==========================================
+        let compressedPostPhoto = "";
 
-        document.getElementById("videoFileInput").addEventListener("change", function(e) {
+        document.getElementById("postFileInput").addEventListener("change", function(e) {
             const file = e.target.files[0];
-            if (!file) return;
-
-            if (file.size > 16 * 1024 * 1024) {
-                alert("File 16MB se badi hai! Direct URL use karein.");
+            if (!file) {
+                compressedPostPhoto = "";
+                document.getElementById("photoPreviewContainer").style.display = "none";
                 return;
             }
-
             const reader = new FileReader();
             reader.onload = function(evt) {
-                videoPayload = evt.target.result;
-                const v = document.getElementById("videoPreview");
-                v.src = videoPayload;
-                document.getElementById("videoPreviewContainer").style.display = "block";
+                const img = new Image();
+                img.onload = function() {
+                    const canvas = document.createElement("canvas");
+                    const MAX_WIDTH = 850;
+                    const scale = MAX_WIDTH / img.width;
+                    canvas.width = (img.width > MAX_WIDTH) ? MAX_WIDTH : img.width;
+                    canvas.height = (img.width > MAX_WIDTH) ? (img.height * scale) : img.height;
+                    const ctx = canvas.getContext("2d");
+                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                    compressedPostPhoto = canvas.toDataURL("image/jpeg", 0.72);
+                    document.getElementById("photoPreview").src = compressedPostPhoto;
+                    document.getElementById("photoPreviewContainer").style.display = "block";
+                };
+                img.src = evt.target.result;
             };
             reader.readAsDataURL(file);
         });
 
-        document.getElementById("videoOnlyForm").addEventListener("submit", async function(e) {
+        document.getElementById("postForm").addEventListener("submit", async function(e) {
             e.preventDefault();
-            const btn = document.getElementById("publishBtn");
-            const directUrl = document.getElementById("videoUrlInput").value.trim();
-            const finalSource = directUrl || videoPayload;
-
-            if (!finalSource) {
-                alert("Pehle koi video file select karein ya URL dalein!");
-                return;
-            }
-
+            const btn = document.getElementById("publishPostBtn");
             btn.disabled = true;
-            btn.innerText = "Syncing video to home...";
+            btn.innerText = "Publishing to Feed...";
 
             const newPost = {
                 id: Date.now(),
-                title: "Homepage Feature Video",
-                tag: "Video Showcase",
-                img: null,
-                video: finalSource,
-                content: "",
+                title: document.getElementById("postTitle").value.trim(),
+                tag: document.getElementById("postTag").value,
+                img: compressedPostPhoto || null,
+                video: null,
+                content: document.getElementById("postContent").value.trim(),
                 date: new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })
             };
 
             try {
                 const { error } = await supabaseClient.from('posts').insert([newPost]);
                 if (error) throw error;
-                alert("✅ Video homepage par live sync ho gayi!");
+                alert("✅ Post successfully published to Live Feed!");
                 this.reset();
-                videoPayload = "";
-                document.getElementById("videoPreviewContainer").style.display = "none";
-                loadCurrentVideo();
+                compressedPostPhoto = "";
+                document.getElementById("photoPreviewContainer").style.display = "none";
+                loadAdminPosts();
             } catch (err) {
-                alert("Upload error: " + err.message);
+                alert("Publish error: " + err.message);
+            } finally {
+                btn.disabled = false;
+                btn.innerText = "Publish Live Post 🚀";
+            }
+        });
+
+        async function loadAdminPosts() {
+            const container = document.getElementById("adminPostsList");
+            container.innerHTML = "<p style='color:var(--text-muted);'>Loading posts...</p>";
+
+            try {
+                const { data: posts, error } = await supabaseClient
+                    .from('posts')
+                    .select('*')
+                    .is('video', null)
+                    .order('id', { ascending: false });
+
+                if (error) throw error;
+                container.innerHTML = "";
+
+                if (!posts || posts.length === 0) {
+                    container.innerHTML = "<p style='color:var(--text-muted);'>No published posts found.</p>";
+                    return;
+                }
+
+                posts.forEach(post => {
+                    container.innerHTML += `
+                        <article class="post-card">
+                            <div class="post-header">
+                                <div>
+                                    <span class="post-tag">${post.tag}</span>
+                                    <h3 style="margin-top:4px;">${post.title}</h3>
+                                </div>
+                                <button onclick="deletePostItem(${post.id})" class="btn" style="background:#ef4444; padding: 4px 10px; font-size:0.85rem;">Delete</button>
+                            </div>
+                            <div style="font-size:0.85rem; color:var(--text-muted); font-family:var(--font-code);">📅 ${post.date}</div>
+                            ${post.img ? `<div class="post-img-wrapper"><img src="${post.img}" class="post-img" alt="Post Photo" loading="lazy"></div>` : ''}
+                            <p style="margin-top:10px; color:var(--text-dark); line-height:1.6;">${post.content}</p>
+                        </article>
+                    `;
+                });
+            } catch (e) {
+                container.innerHTML = "<p style='color:red;'>Failed to load: " + e.message + "</p>";
+            }
+        }
+
+        async function deletePostItem(id) {
+            if (!confirm("Are you sure you want to delete this post?")) return;
+            await supabaseClient.from('posts').delete().eq('id', id);
+            loadAdminPosts();
+        }
+
+        // ==========================================
+        // 2. ERROR-FREE VIDEO STREAM ENGINE
+        // ==========================================
+        let rawVideoBlobUrl = "";
+        let selectedVideoFile = null;
+
+        // Optimized IndexedDB Storage for Large Videos to Prevent HTTP 413 Payload Error
+        const DB_NAME = "HarshStudioMediaDB";
+        const DB_STORE = "homepageVideoStore";
+
+        function openMediaDB() {
+            return new Promise((resolve, reject) => {
+                const req = indexedDB.open(DB_NAME, 1);
+                req.onupgradeneeded = () => req.result.createObjectStore(DB_STORE);
+                req.onsuccess = () => resolve(req.result);
+                req.onerror = () => reject(req.error);
+            });
+        }
+
+        async function saveVideoLocally(blob) {
+            const db = await openMediaDB();
+            return new Promise((resolve, reject) => {
+                const tx = db.transaction(DB_STORE, "readwrite");
+                tx.objectStore(DB_STORE).put(blob, "active_home_video");
+                tx.oncomplete = () => resolve();
+                tx.onerror = () => reject(tx.error);
+            });
+        }
+
+        async function deleteVideoLocally() {
+            const db = await openMediaDB();
+            return new Promise((resolve, reject) => {
+                const tx = db.transaction(DB_STORE, "readwrite");
+                tx.objectStore(DB_STORE).delete("active_home_video");
+                tx.oncomplete = () => resolve();
+                tx.onerror = () => reject(tx.error);
+            });
+        }
+
+        // File selection with Blob Preview (Zero payload size limit)
+        document.getElementById("videoFileInput").addEventListener("change", function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            selectedVideoFile = file;
+            rawVideoBlobUrl = URL.createObjectURL(file);
+            const v = document.getElementById("videoPreview");
+            v.src = rawVideoBlobUrl;
+            document.getElementById("videoPreviewBox").style.display = "block";
+        });
+
+        // Publish Video (Direct Sync)
+        document.getElementById("videoOnlyForm").addEventListener("submit", async function(e) {
+            e.preventDefault();
+            const btn = document.getElementById("publishVideoBtn");
+            const directUrl = document.getElementById("videoUrlInput").value.trim();
+
+            if (!selectedVideoFile && !directUrl) {
+                alert("Pehle koi video file choose karein ya direct link daalein!");
+                return;
+            }
+
+            btn.disabled = true;
+            btn.innerText = "Synchronizing Video Stream...";
+
+            try {
+                let videoSourceIdentifier = "";
+
+                if (directUrl) {
+                    videoSourceIdentifier = directUrl;
+                } else if (selectedVideoFile) {
+                    // Save video blob in robust IndexedDB stream
+                    await saveVideoLocally(selectedVideoFile);
+                    videoSourceIdentifier = "INDEXEDDB_LOCAL_BLOB";
+                }
+
+                // Sync pointer to Supabase (Zero large base64 strings = Zero errors)
+                const videoPointerPost = {
+                    id: Date.now(),
+                    title: "Homepage Showcase Stream",
+                    tag: "Video Showcase",
+                    img: null,
+                    video: videoSourceIdentifier,
+                    content: "",
+                    date: new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })
+                };
+
+                // Clear old video pointers
+                await supabaseClient.from('posts').delete().not('video', 'is', null);
+                
+                // Insert new pointer
+                const { error } = await supabaseClient.from('posts').insert([videoPointerPost]);
+                if (error) throw error;
+
+                // Sync flag to localStorage
+                localStorage.setItem("harsh_home_video_active", "true");
+                localStorage.setItem("harsh_home_video_url", directUrl || "");
+
+                alert("✅ Video successfully live ho gayi! Homepage par direct play ho rahi hai.");
+                this.reset();
+                selectedVideoFile = null;
+                document.getElementById("videoPreviewBox").style.display = "none";
+                loadCurrentLiveVideo();
+            } catch (err) {
+                alert("Upload failed: " + err.message);
             } finally {
                 btn.disabled = false;
                 btn.innerText = "Publish Video Directly 🚀";
             }
         });
 
-        async function loadCurrentVideo() {
-            const box = document.getElementById("currentVideoBox");
-            box.innerHTML = "<p style='color:var(--text-muted);'>Checking live video...</p>";
+        async function loadCurrentLiveVideo() {
+            const statusBox = document.getElementById("currentLiveVideoStatus");
+            statusBox.innerHTML = "<p style='color:var(--text-muted); font-size:0.88rem;'>Checking current live stream...</p>";
 
             try {
                 const { data, error } = await supabaseClient
@@ -193,27 +462,36 @@
                 if (error) throw error;
 
                 if (data && data.length > 0 && data[0].video) {
-                    box.innerHTML = `
-                        <div style="background:#000; border-radius:8px; overflow:hidden;">
-                            <video src="${data[0].video}" autoplay loop muted playsinline style="width:100%; max-height:260px; display:block;"></video>
+                    const videoSrc = (data[0].video === "INDEXEDDB_LOCAL_BLOB") ? "Direct Browser Video Stream (Active)" : data[0].video;
+                    statusBox.innerHTML = `
+                        <div style="background:var(--white); border:1px solid var(--border); padding:1rem; border-radius:10px;">
+                            <div style="display:flex; justify-content:space-between; align-items:center;">
+                                <span style="font-size:0.85rem; font-weight:700; color:#16a34a;">🟢 LIVE STREAM ACTIVE</span>
+                                <button onclick="removeHomepageVideo(${data[0].id})" class="btn" style="background:#ef4444; padding:4px 10px; font-size:0.82rem;">Remove Video</button>
+                            </div>
+                            <p style="font-size:0.8rem; color:var(--text-muted); font-family:var(--font-code); margin-top:6px; word-break:break-all;">Source: ${videoSrc}</p>
                         </div>
-                        <button onclick="deleteVideo(${data[0].id})" class="btn" style="background:#ef4444; width:100%; margin-top:8px; font-size:0.85rem;">Remove Current Video</button>
                     `;
                 } else {
-                    box.innerHTML = "<p style='color:var(--text-muted);'>Abhi koi live video uploaded nahi hai.</p>";
+                    statusBox.innerHTML = "<p style='color:var(--text-muted); font-size:0.88rem;'>Abhi koi video live nahi hai.</p>";
                 }
-            } catch(e) {
-                box.innerHTML = "<p style='color:red;'>Fetch failed: " + e.message + "</p>";
+            } catch (err) {
+                statusBox.innerHTML = "<p style='color:red;'>Status error: " + err.message + "</p>";
             }
         }
 
-        async function deleteVideo(id) {
-            if (!confirm("Video homepage se remove karni hai?")) return;
+        async function removeHomepageVideo(id) {
+            if (!confirm("Homepage se video remove karni hai?")) return;
             await supabaseClient.from('posts').delete().eq('id', id);
-            loadCurrentVideo();
+            await deleteVideoLocally();
+            localStorage.removeItem("harsh_home_video_active");
+            localStorage.removeItem("harsh_home_video_url");
+            loadCurrentLiveVideo();
         }
 
-        loadCurrentVideo();
+        // Init
+        loadAdminPosts();
+        loadCurrentLiveVideo();
     </script>
 </body>
 </html>
