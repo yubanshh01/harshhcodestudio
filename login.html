@@ -195,7 +195,7 @@
             btn.innerText = "Send OTP to Email ✉️";
         }
 
-        // Step 1 Submission
+        // Step 1: Mobile + Password Check
         document.getElementById("loginStep1Form").addEventListener("submit", async function(e) {
             e.preventDefault();
             const mob = document.getElementById("adminMobile").value.trim();
@@ -243,7 +243,7 @@
             }
         });
 
-        // Step 2 OTP Verification
+        // Step 2: OTP Verification
         document.getElementById("loginStep2Form").addEventListener("submit", function(e) {
             e.preventDefault();
             const enteredOtp = document.getElementById("emailOtp").value.trim();
