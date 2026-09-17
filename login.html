@@ -15,14 +15,15 @@
             box-shadow: 0 12px 30px rgba(0,0,0,0.08);
         }
         .step-2-otp { display: none; }
+        .hint-text { font-size: 0.82rem; color: var(--text-muted); margin-top: 6px; text-align: center; }
     </style>
 </head>
 <body>
 
-    <!-- Fullscreen Access Denied Overlay -->
+    <!-- Fullscreen Access Denied Security Modal -->
     <div id="accessDeniedOverlay">
         <h1>ACCESS DENIED</h1>
-        <p>⚠️ SECURITY BREACH DETECTED: Invalid Credentials or Unverified OTP. This unauthorized attempt has been logged.</p>
+        <p>⚠️ SECURITY BREACH DETECTED: Invalid Credentials or Unverified OTP. This attempt has been logged.</p>
         <button onclick="dismissDenied()" class="btn" style="background:#dc2626; border: 1px solid #ff9999;">← Retry Authentication</button>
     </div>
 
@@ -59,7 +60,7 @@
                 <div style="text-align: center; margin-bottom: 1.5rem;">
                     <span style="font-size: 2.2rem;">🔒</span>
                     <h2 style="color: var(--text-dark); margin-top: 5px; font-size: 1.6rem;">Admin Portal</h2>
-                    <p style="color: var(--text-muted); font-size: 0.88rem;">Mobile & Password with 2-Factor OTP Auth</p>
+                    <p style="color: var(--text-muted); font-size: 0.88rem;">2-Factor OTP Auth via Formspree Email</p>
                 </div>
 
                 <!-- Step 1: Mobile & Password Form -->
@@ -72,17 +73,18 @@
                         <label for="adminPassword">Security Password</label>
                         <input type="password" id="adminPassword" placeholder="Enter your account password" required autocomplete="current-password">
                     </div>
-                    <button type="submit" id="step1Btn" class="btn" style="width: 100%; margin-top: 10px;">Proceed & Send OTP 📲</button>
+                    <button type="submit" id="step1Btn" class="btn" style="width: 100%; margin-top: 10px;">Send OTP to Email ✉️</button>
                 </form>
 
-                <!-- Step 2: Mobile OTP Verification -->
+                <!-- Step 2: Formspree Email OTP Verification Form -->
                 <form id="loginStep2Form" class="step-2-otp">
                     <div class="form-group">
-                        <label for="smsOtp">Enter OTP sent to Mobile</label>
-                        <input type="text" id="smsOtp" placeholder="••••••" maxlength="6" required style="font-family: var(--font-code); font-size: 1.25rem; letter-spacing: 4px; text-align: center;">
+                        <label for="emailOtp">Enter 6-Digit Email OTP</label>
+                        <input type="text" id="emailOtp" placeholder="••••••" maxlength="6" required style="font-family: var(--font-code); font-size: 1.25rem; letter-spacing: 4px; text-align: center;">
+                        <p class="hint-text">OTP aapki registered email par bhej diya gaya hai.</p>
                     </div>
                     <button type="submit" id="step2Btn" class="btn" style="width: 100%; margin-top: 10px; background:#16a34a;">Verify OTP & Enter Dashboard 🚀</button>
-                    <button type="button" onclick="cancelOtp()" style="width: 100%; background: none; border: none; margin-top: 10px; color: var(--text-muted); cursor: pointer; font-size: 0.85rem;">← Change Mobile / Password</button>
+                    <button type="button" onclick="cancelOtp()" style="width: 100%; background: none; border: none; margin-top: 12px; color: var(--text-muted); cursor: pointer; font-size: 0.85rem;">← Back to Login</button>
                 </form>
 
                 <hr style="margin: 1.5rem 0; border: 0; border-top: 1px solid var(--border);">
@@ -111,14 +113,17 @@
             document.getElementById("pagesDropdown").classList.remove("active");
         });
 
-        // Hashed Master Signatures (Zero plain credentials visible in placeholders)
+        // Target Credentials & Tokens
         const MASTER_MOBILE = "9412078091";
         const MASTER_PASS = "yubanshh01";
         const SESSION_TOKEN = "6a0f7c220023a1a5b46d0352efc15053dd5c4ec4d9da8ef7f168fecaa1efd9a9";
+        
+        // Aapka Formspree Endpoint (Same as contact page)
+        const FORMSPREE_ENDPOINT = "https://formspree.io/f/moeqvarv";
 
         let generatedOtp = null;
 
-        // Auto-redirect if already authenticated
+        // Auto-redirect if already logged in
         if (localStorage.getItem("harsh_admin_token") === SESSION_TOKEN) {
             window.location.href = "admin.html";
         }
@@ -133,35 +138,76 @@
             document.getElementById("loginStep2Form").reset();
             document.getElementById("loginStep2Form").style.display = "none";
             document.getElementById("loginStep1Form").style.display = "block";
+            const btn = document.getElementById("step1Btn");
+            btn.disabled = false;
+            btn.innerText = "Send OTP to Email ✉️";
         }
 
-        // Step 1 Submission
-        document.getElementById("loginStep1Form").addEventListener("submit", function(e) {
+        // Step 1: Mobile + Password Check and Send Email OTP via Formspree
+        document.getElementById("loginStep1Form").addEventListener("submit", async function(e) {
             e.preventDefault();
             const mob = document.getElementById("adminMobile").value.trim();
             const pwd = document.getElementById("adminPassword").value.trim();
+            const btn = document.getElementById("step1Btn");
 
             if (mob === MASTER_MOBILE && pwd === MASTER_PASS) {
-                // Generate 6-digit OTP and send to device
+                btn.disabled = true;
+                btn.innerText = "Generating & Sending OTP...";
+
+                // Generate 6-digit secure random OTP
                 generatedOtp = Math.floor(100000 + Math.random() * 900000).toString();
-                alert("🔒 OTP SENT TO REGISTERED MOBILE NUMBER (+91 " + mob.slice(0, 3) + "******" + mob.slice(8) + "):\n\nYour Verification OTP is: " + generatedOtp);
-                document.getElementById("loginStep1Form").style.display = "none";
-                document.getElementById("loginStep2Form").style.display = "block";
+
+                try {
+                    // Formspree API Request
+                    const response = await fetch(FORMSPREE_ENDPOINT, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Accept": "application/json"
+                        },
+                        body: JSON.stringify({
+                            subject: "🔐 Admin Login OTP - HarshCode Studio",
+                            auth_type: "Admin Dashboard Login",
+                            login_mobile: mob,
+                            generated_otp: generatedOtp,
+                            message: `HarshCode Studio Admin Dashboard me login ke liye aapka OTP yeh hai: ${generatedOtp}. Yeh code kisi ke sath share na karein.`
+                        })
+                    });
+
+                    if (response.ok) {
+                        alert("✅ OTP aapki email (yubanshhsalklan@gmail.com) par bhej diya gaya hai! Kripya apna Inbox ya Spam folder check karein.");
+                        document.getElementById("loginStep1Form").style.display = "none";
+                        document.getElementById("loginStep2Form").style.display = "block";
+                    } else {
+                        alert("Formspree service busy hai. Kripya thodi der baad koshish karein.");
+                        btn.disabled = false;
+                        btn.innerText = "Send OTP to Email ✉️";
+                    }
+                } catch (err) {
+                    alert("Network Error: OTP deliver nahi ho saka. Connection check karein.");
+                    btn.disabled = false;
+                    btn.innerText = "Send OTP to Email ✉️";
+                }
             } else {
+                // Wrong Mobile or Password -> Show Fullscreen Access Denied
                 triggerAccessDenied();
             }
         });
 
-        // Step 2 OTP Verification
+        // Step 2: Verify OTP
         document.getElementById("loginStep2Form").addEventListener("submit", function(e) {
             e.preventDefault();
-            const enteredOtp = document.getElementById("smsOtp").value.trim();
+            const enteredOtp = document.getElementById("emailOtp").value.trim();
+            const btn = document.getElementById("step2Btn");
 
-            if (enteredOtp === generatedOtp) {
+            if (enteredOtp === generatedOtp && generatedOtp !== null) {
+                btn.disabled = true;
+                btn.innerText = "Verifying...";
                 localStorage.setItem("harsh_admin_token", SESSION_TOKEN);
-                alert("Verification Successful! Redirecting to Admin Dashboard...");
+                alert("✅ OTP Verified Successfully! Welcome to HarshCode Admin Dashboard.");
                 window.location.href = "admin.html";
             } else {
+                // Wrong OTP -> Show Fullscreen Access Denied
                 triggerAccessDenied();
             }
         });
@@ -170,6 +216,9 @@
             generatedOtp = null;
             document.getElementById("loginStep2Form").style.display = "none";
             document.getElementById("loginStep1Form").style.display = "block";
+            const btn = document.getElementById("step1Btn");
+            btn.disabled = false;
+            btn.innerText = "Send OTP to Email ✉️";
         }
     </script>
 </body>
