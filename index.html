@@ -20,6 +20,7 @@
                 <li><a href="index.html" class="active">Home</a></li>
                 <li><a href="about.html">About</a></li>
                 <li><a href="contact.html">Contact</a></li>
+                <!-- Dropdown for Other Pages -->
                 <li class="nav-dropdown" id="pagesDropdown">
                     <button class="dropdown-btn" onclick="toggleDropdown(event)">Pages ▾</button>
                     <div class="dropdown-content" id="dropdownMenu">
@@ -39,17 +40,16 @@
         <div class="container">
             <h1>Hi, I'm <span>Harsh Chaudhary Tomar</span></h1>
             <p>Student & Professional Website Developer. Mai fast, mobile-friendly aur modern business websites banata hu jo aapke brand ko grow karne me madad karein.</p>
-            
             <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
                 <a href="services.html" class="btn">Explore My Work</a>
                 <a href="contact.html" class="btn btn-outline">Let's Talk</a>
             </div>
 
             <!-- =========================================================
-                 VIDEO SHOWCASE SECTION (Change video name/path below)
+                 HOMEPAGE SHOWCASE VIDEO (YAHAN APNI VIDEO KA NAAM BADLEIN)
                  ========================================================= -->
             <div class="direct-video-frame">
-                <!-- AGAR APNI VIDEO KA NAAM BADALNA HO TOH NEECHE 'videos/intro.mp4' KO BADAL DEIN -->
+                <!-- Agar video ka naam badalna ho toh 'videos/intro.mp4' ki jagah apna file path likhein -->
                 <video id="heroVideoPlayer" controls autoplay loop playsinline poster="images/photo1.jpeg">
                     <source src="videos/intro.mp4" type="video/mp4">
                     Your browser does not support the video tag.
@@ -192,6 +192,7 @@
 </div>
 
 <script>
+    // Dropdown toggle
     function toggleDropdown(e) {
         e.stopPropagation();
         document.getElementById("pagesDropdown").classList.toggle("active");
@@ -200,24 +201,25 @@
         document.getElementById("pagesDropdown").classList.remove("active");
     });
 
-    // Auto Play policy handling with sound
+    // Browser audio policy handling for video
     const video = document.getElementById("heroVideoPlayer");
     if (video) {
         const playPromise = video.play();
         if (playPromise !== undefined) {
             playPromise.catch(() => {
-                // If browser blocks autoplay with sound, start muted
                 video.muted = true;
                 video.play();
             });
         }
     }
 
+    // Trained Knowledge Engine
     const srishtiKB = [
         { k: ["cost", "price", "kitne", "paisa", "rate", "fees"], r: "Website pricing estimate:<br>• <strong>Landing Page / Portfolio:</strong> ₹2,500 – ₹5,000<br>• <strong>Business Multi-Page Website:</strong> ₹6,000 – ₹12,000<br>• <strong>Custom Cloud Web App:</strong> ₹12,000+.<br>Direct enquiry ke liye Contact page visit karein!" },
         { k: ["tech", "stack", "technology", "code", "database", "supabase"], r: "HarshCode Studio modern stack use karta hai:<br>• <strong>Frontend:</strong> HTML5, CSS3, Modern JavaScript (ES6+), Tailwind CSS.<br>• <strong>Database:</strong> Supabase (Real-Time Cloud PostgreSQL), IndexedDB.<br>• <strong>Security:</strong> SHA-256 Cryptographic Auth." },
         { k: ["time", "kitne din", "duration", "timeline", "kab tak"], r: "Standard project timeline:<br>• <strong>Single Page / Portfolio:</strong> 24 se 48 ghante.<br>• <strong>Full Business Website:</strong> 3 se 5 din.<br>• <strong>Custom Web App:</strong> 7 se 10 din." },
-        { k: ["contact", "harsh", "number", "call", "whatsapp", "phone", "address"], r: "Direct Details:<br>• <strong>Call / WhatsApp:</strong> +91 94120 78091<br>• <strong>Address:</strong> NEAR CO OFFICE , SHAHABAD ROAD BILARI<br>• <strong>Email:</strong> yubanshhsalklan@gmail.com" }
+        { k: ["contact", "harsh", "number", "call", "whatsapp", "phone"], r: "Direct Harsh Chaudhary Tomar se judne ke liye:<br>• <strong>Call / WhatsApp:</strong> +91 94120 78091<br>• <strong>Instagram:</strong> @yubanshh_chaudhary01<br>• <strong>Email:</strong> yubanshhsalklan@gmail.com<br>• <strong>Address:</strong> NEAR CO OFFICE , SHAHABAD ROAD BILARI" },
+        { k: ["mobile", "responsive", "phone", "tablet"], r: "Haan! HarshCode Studio ki banayi gayi har website 100% mobile-friendly aur responsive hoti hai jo har phone aur screen par smooth chalti hai." }
     ];
 
     const toggleBtn = document.getElementById("srishti-chat-toggle");
@@ -244,10 +246,13 @@
         const lower = query.toLowerCase();
         let answer = null;
         for (let item of srishtiKB) {
-            if (item.k.some(key => lower.includes(key))) { answer = item.r; break; }
+            if (item.k.some(key => lower.includes(key))) {
+                answer = item.r;
+                break;
+            }
         }
         setTimeout(() => {
-            addMessage(answer || "Yeh badhiya sawaal hai! Direct Harsh se judne ke liye <strong>+91 94120 78091</strong> par call/WhatsApp karein.", "bot");
+            addMessage(answer || "Yeh badhiya sawaal hai! Is requirement ke liye aap direct Harsh se <strong>+91 94120 78091</strong> par call/WhatsApp karein ya <a href='contact.html' style='color:#0284c7; font-weight:bold;'>Contact Page</a> dekhein.", "bot");
         }, 300);
     }
 
