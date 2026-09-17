@@ -19,12 +19,17 @@
             <ul class="nav-links">
                 <li><a href="index.html">Home</a></li>
                 <li><a href="about.html">About</a></li>
-                <li><a href="services.html">Services</a></li>
-                <li><a href="gallery.html">Gallery</a></li>
-                <li><a href="feed.html">Posts</a></li>
-                <li><a href="reviews.html">Reviews</a></li>
                 <li><a href="contact.html" class="active">Contact</a></li>
-                <li><a href="login.html">👤 Admin</a></li>
+                <li class="nav-dropdown" id="pagesDropdown">
+                    <button class="dropdown-btn" onclick="toggleDropdown(event)">Pages ▾</button>
+                    <div class="dropdown-content" id="dropdownMenu">
+                        <a href="services.html">Services</a>
+                        <a href="gallery.html">Gallery</a>
+                        <a href="feed.html">Posts</a>
+                        <a href="reviews.html">Reviews</a>
+                        <a href="login.html">👤 Admin Portal</a>
+                    </div>
+                </li>
             </ul>
         </nav>
     </div>
@@ -40,9 +45,16 @@
             <div class="contact-layout">
                 <div class="contact-card-box">
                     <h3>Contact Information</h3>
-                    <p style="color: var(--text-muted); margin-top: 5px;">Aap direct call, message ya Instagram ke through bhi connect kar sakte hain.</p>
+                    <p style="color: var(--text-muted); margin-top: 5px;">Aap direct call, visit, message ya Instagram ke through connect kar sakte hain.</p>
                     
                     <ul class="contact-links-list">
+                        <li>
+                            <span>📍</span>
+                            <div>
+                                <strong>Office / Studio Address:</strong><br>
+                                <span style="color: #0284c7; font-weight: 600;">NEAR CO OFFICE , SHAHABAD ROAD BILARI, UTTAR PRADESH</span>
+                            </div>
+                        </li>
                         <li>
                             <span>📞</span>
                             <div>
@@ -77,17 +89,17 @@
                     <form id="contact-form" action="https://formspree.io/f/moeqvarv" method="POST" style="margin-top: 1.2rem;">
                         <div class="form-group">
                             <label for="name">Aapka Naam (Your Name):</label>
-                            <input type="text" id="name" name="name" placeholder="e.g. Rahul Sharma" required>
+                            <input type="text" id="name" name="name" placeholder="Enter your full name" required>
                         </div>
 
                         <div class="form-group">
                             <label for="phone">Mobile Number:</label>
-                            <input type="tel" id="phone" name="phone" placeholder="e.g. 9876543210" required>
+                            <input type="tel" id="phone" name="phone" placeholder="Enter 10-digit phone number" required>
                         </div>
 
                         <div class="form-group">
                             <label for="email">Email Address:</label>
-                            <input type="email" id="email" name="_replyto" placeholder="e.g. yourname@gmail.com" required>
+                            <input type="email" id="email" name="_replyto" placeholder="Enter your email" required>
                         </div>
 
                         <div class="form-group">
@@ -102,7 +114,7 @@
 
                         <div class="form-group">
                             <label for="message">Aapka Message / Project Detail:</label>
-                            <textarea id="message" name="message" rows="4" placeholder="Apne project ke baare me thoda batayein..." required></textarea>
+                            <textarea id="message" name="message" rows="4" placeholder="Apne project ke baare me details likhein..." required></textarea>
                         </div>
 
                         <button type="submit" id="submit-btn" class="btn" style="width: 100%;">Submit Message</button>
@@ -119,7 +131,7 @@
             <div class="footer-col">
                 <h4>HarshCode Studio</h4>
                 <p>Student & Professional Web Developer. Mai fast, clean aur 100% mobile-friendly business websites create karta hu jo aapke brand ko stand out karein.</p>
-                <p style="color: #64748b; font-size: 0.85rem;">📍 Bilari, Uttar Pradesh, India</p>
+                <p style="color: #64748b; font-size: 0.85rem;">📍 NEAR CO OFFICE , SHAHABAD ROAD BILARI</p>
             </div>
             <div class="footer-col">
                 <h4>Quick Links</h4>
@@ -165,7 +177,6 @@
     </div>
 </footer>
 
-<!-- Srishti Assistant Widget -->
 <div id="srishti-chatbot-widget">
     <button id="srishti-chat-toggle" aria-label="Open Srishti Assistant"><span id="srishti-toggle-icon">✨</span></button>
     <div id="srishti-chat-window">
@@ -174,10 +185,12 @@
             <div><h4 style="margin:0; font-size:0.95rem;">Srishti Assistant</h4><span style="font-size:0.75rem; color:#38bdf8;">Online | HarshCode Studio</span></div>
         </div>
         <div class="srishti-chat-body" id="srishtiChatBody">
-            <div class="srishti-msg bot-msg">Namaste! Main Srishti Assistant hoon. Direct query ho to message karein.</div>
+            <div class="srishti-msg bot-msg">
+                Hello! MERA NAAM SRISHTI HAI. Main HarshCode Studio ki AI assistant hoon. Website banwane ya address/contact details ke baare me kuch bhi poochein!
+            </div>
             <div class="srishti-quick-chips">
                 <button onclick="triggerSrishti('Website Banwane Ka Cost?')">💰 Cost</button>
-                <button onclick="triggerSrishti('Tech Stack Kya Use Karte Ho?')">⚡ Tech Stack</button>
+                <button onclick="triggerSrishti('Direct Harsh Se Kaise Contact Karein?')">📞 Contact</button>
             </div>
         </div>
         <form id="srishtiChatForm" class="srishti-chat-footer">
@@ -188,6 +201,14 @@
 </div>
 
 <script>
+    function toggleDropdown(e) {
+        e.stopPropagation();
+        document.getElementById("pagesDropdown").classList.toggle("active");
+    }
+    window.addEventListener("click", () => {
+        document.getElementById("pagesDropdown").classList.remove("active");
+    });
+
     const form = document.getElementById("contact-form");
     const statusMsg = document.getElementById("status-message");
     const submitBtn = document.getElementById("submit-btn");
@@ -222,7 +243,11 @@
         });
     });
 
-    // Assistant Logic
+    const srishtiKB = [
+        { k: ["cost", "price", "kitne", "paisa", "rate", "fees"], r: "Website pricing estimate:<br>• <strong>Landing Page / Portfolio:</strong> ₹2,500 – ₹5,000<br>• <strong>Business Multi-Page Website:</strong> ₹6,000 – ₹12,000<br>• <strong>Custom Cloud Web App:</strong> ₹12,000+." },
+        { k: ["contact", "harsh", "number", "call", "whatsapp", "address"], r: "Direct Details:<br>• <strong>Call / WhatsApp:</strong> +91 94120 78091<br>• <strong>Address:</strong> NEAR CO OFFICE , SHAHABAD ROAD BILARI<br>• <strong>Email:</strong> yubanshhsalklan@gmail.com" }
+    ];
+
     const toggleBtn = document.getElementById("srishti-chat-toggle");
     const chatWin = document.getElementById("srishti-chat-window");
     const chatBody = document.getElementById("srishtiChatBody");
@@ -243,23 +268,30 @@
         chatBody.scrollTop = chatBody.scrollHeight;
     }
 
+    function processQuestion(query) {
+        const lower = query.toLowerCase();
+        let answer = null;
+        for (let item of srishtiKB) {
+            if (item.k.some(key => lower.includes(key))) { answer = item.r; break; }
+        }
+        setTimeout(() => {
+            addMessage(answer || "Direct connect karne ke liye Harsh se <strong>+91 94120 78091</strong> par call/WhatsApp karein!", "bot");
+        }, 300);
+    }
+
     chatForm.addEventListener("submit", (e) => {
         e.preventDefault();
         const text = chatInput.value.trim();
         if (!text) return;
         addMessage(text, "user");
         chatInput.value = "";
-        setTimeout(() => {
-            addMessage("Aap direct WhatsApp par message bhej sakte hain: <strong>+91 94120 78091</strong>", "bot");
-        }, 300);
+        processQuestion(text);
     });
 
     window.triggerSrishti = function(questionText) {
         toggleChat(true);
         addMessage(questionText, "user");
-        setTimeout(() => {
-            addMessage("Aap direct WhatsApp par message bhej sakte hain: <strong>+91 94120 78091</strong>", "bot");
-        }, 300);
+        processQuestion(questionText);
     };
 </script>
 </body>
