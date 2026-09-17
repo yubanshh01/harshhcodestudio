@@ -40,18 +40,19 @@
         <div class="container">
             <h1>Hi, I'm <span>Harsh Chaudhary Tomar</span></h1>
             <p>Student & Professional Website Developer. Mai fast, mobile-friendly aur modern business websites banata hu jo aapke brand ko grow karne me madad karein.</p>
+            
             <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
                 <a href="services.html" class="btn">Explore My Work</a>
                 <a href="contact.html" class="btn btn-outline">Let's Talk</a>
             </div>
 
             <!-- =========================================================
-                 HOMEPAGE SHOWCASE VIDEO (YAHAN APNI VIDEO KA NAAM BADLEIN)
+                 HOMEPAGE SHOWCASE VIDEO (DIRECT MAIN FOLDER PATH)
                  ========================================================= -->
             <div class="direct-video-frame">
-                <!-- Agar video ka naam badalna ho toh 'videos/intro.mp4' ki jagah apna file path likhein -->
+                <!-- Path set to 'intro.mp4' directly for main branch -->
                 <video id="heroVideoPlayer" controls autoplay loop playsinline poster="images/photo1.jpeg">
-                    <source src="videos/intro.mp4" type="video/mp4">
+                    <source src="intro.mp4" type="video/mp4">
                     Your browser does not support the video tag.
                 </video>
             </div>
@@ -201,12 +202,13 @@
         document.getElementById("pagesDropdown").classList.remove("active");
     });
 
-    // Browser audio policy handling for video
+    // Browser audio policy handling for video auto-play
     const video = document.getElementById("heroVideoPlayer");
     if (video) {
         const playPromise = video.play();
         if (playPromise !== undefined) {
             playPromise.catch(() => {
+                // Mute fallback if auto-play with sound is blocked
                 video.muted = true;
                 video.play();
             });
