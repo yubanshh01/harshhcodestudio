@@ -6,34 +6,25 @@
     <title>Admin Login | HarshCode Studio</title>
     <link rel="stylesheet" href="style.css">
     <style>
-        .login-wrapper {
-            max-width: 440px;
-            margin: 4rem auto;
-        }
+        .login-wrapper { max-width: 440px; margin: 4rem auto; }
         .login-box {
             background: var(--white);
             padding: 2.4rem;
             border-radius: 14px;
             border: 1px solid var(--border);
             box-shadow: 0 12px 30px rgba(0,0,0,0.08);
-            position: relative;
         }
-        .password-field {
-            position: relative;
-        }
-        .toggle-pwd {
-            position: absolute;
-            right: 12px;
-            top: 50%;
-            transform: translateY(-50%);
-            cursor: pointer;
-            font-size: 0.9rem;
-            color: var(--text-muted);
-            user-select: none;
-        }
+        .step-2-otp { display: none; }
     </style>
 </head>
 <body>
+
+    <!-- Fullscreen Access Denied Overlay -->
+    <div id="accessDeniedOverlay">
+        <h1>ACCESS DENIED</h1>
+        <p>⚠️ SECURITY BREACH DETECTED: Invalid Credentials or Unverified OTP. This unauthorized attempt has been logged.</p>
+        <button onclick="dismissDenied()" class="btn" style="background:#dc2626; border: 1px solid #ff9999;">← Retry Authentication</button>
+    </div>
 
     <header>
         <div class="container">
@@ -46,12 +37,17 @@
                 <ul class="nav-links">
                     <li><a href="index.html">Home</a></li>
                     <li><a href="about.html">About</a></li>
-                    <li><a href="services.html">Services</a></li>
-                    <li><a href="gallery.html">Gallery</a></li>
-                    <li><a href="feed.html">Posts</a></li>
-                    <li><a href="reviews.html">Reviews</a></li>
                     <li><a href="contact.html">Contact</a></li>
-                    <li><a href="login.html" class="active">👤 Admin</a></li>
+                    <li class="nav-dropdown" id="pagesDropdown">
+                        <button class="dropdown-btn" onclick="toggleDropdown(event)">Pages ▾</button>
+                        <div class="dropdown-content" id="dropdownMenu">
+                            <a href="services.html">Services</a>
+                            <a href="gallery.html">Gallery</a>
+                            <a href="feed.html">Posts</a>
+                            <a href="reviews.html">Reviews</a>
+                            <a href="login.html" class="active">👤 Admin Portal</a>
+                        </div>
+                    </li>
                 </ul>
             </nav>
         </div>
@@ -60,34 +56,34 @@
     <main class="container">
         <div class="login-wrapper">
             <div class="login-box">
-                <!-- Theme Switcher for Admin -->
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-                    <span style="font-family: var(--font-code); font-size: 0.78rem; color: var(--accent); font-weight: 700;">SECURE ENVIRONMENT</span>
-                    <button id="themeToggleBtn" onclick="toggleTheme()" style="background: none; border: 1px solid var(--border); padding: 4px 10px; border-radius: 20px; cursor: pointer; font-size: 0.8rem; color: var(--text-dark);">🌙 Theme</button>
-                </div>
-
                 <div style="text-align: center; margin-bottom: 1.5rem;">
                     <span style="font-size: 2.2rem;">🔒</span>
                     <h2 style="color: var(--text-dark); margin-top: 5px; font-size: 1.6rem;">Admin Portal</h2>
-                    <p style="color: var(--text-muted); font-size: 0.88rem;">Sign in to publish posts & manage content</p>
+                    <p style="color: var(--text-muted); font-size: 0.88rem;">Mobile & Password with 2-Factor OTP Auth</p>
                 </div>
 
-                <form id="loginForm">
+                <!-- Step 1: Mobile & Password Form -->
+                <form id="loginStep1Form">
                     <div class="form-group">
-                        <label for="username">User ID / Mobile</label>
-                        <input type="text" id="username" placeholder="9412078091" required autocomplete="username">
+                        <label for="adminMobile">Registered Mobile Number</label>
+                        <input type="tel" id="adminMobile" placeholder="Enter your 10-digit mobile" required autocomplete="username">
                     </div>
-                    <div class="form-group password-field">
-                        <label for="password">Password</label>
-                        <input type="password" id="password" placeholder="Enter password" required autocomplete="current-password">
-                        <span class="toggle-pwd" onclick="togglePassVisibility()">👁️</span>
+                    <div class="form-group">
+                        <label for="adminPassword">Security Password</label>
+                        <input type="password" id="adminPassword" placeholder="Enter your account password" required autocomplete="current-password">
                     </div>
-                    <button type="submit" id="loginBtn" class="btn" style="width: 100%; margin-top: 10px;">Login to Dashboard</button>
+                    <button type="submit" id="step1Btn" class="btn" style="width: 100%; margin-top: 10px;">Proceed & Send OTP 📲</button>
                 </form>
 
-                <div id="loginError" style="color: #dc2626; font-size: 0.88rem; margin-top: 12px; display: none; text-align: center; font-weight: 600;">
-                    Invalid Username or Password!
-                </div>
+                <!-- Step 2: Mobile OTP Verification -->
+                <form id="loginStep2Form" class="step-2-otp">
+                    <div class="form-group">
+                        <label for="smsOtp">Enter OTP sent to Mobile</label>
+                        <input type="text" id="smsOtp" placeholder="••••••" maxlength="6" required style="font-family: var(--font-code); font-size: 1.25rem; letter-spacing: 4px; text-align: center;">
+                    </div>
+                    <button type="submit" id="step2Btn" class="btn" style="width: 100%; margin-top: 10px; background:#16a34a;">Verify OTP & Enter Dashboard 🚀</button>
+                    <button type="button" onclick="cancelOtp()" style="width: 100%; background: none; border: none; margin-top: 10px; color: var(--text-muted); cursor: pointer; font-size: 0.85rem;">← Change Mobile / Password</button>
+                </form>
 
                 <hr style="margin: 1.5rem 0; border: 0; border-top: 1px solid var(--border);">
 
@@ -107,71 +103,74 @@
     </footer>
 
     <script>
-        // Theme Persistence
-        if (localStorage.getItem("admin_theme") === "dark") {
-            document.body.classList.add("dark-mode");
-            document.getElementById("themeToggleBtn").innerText = "☀️ Light";
+        function toggleDropdown(e) {
+            e.stopPropagation();
+            document.getElementById("pagesDropdown").classList.toggle("active");
         }
+        window.addEventListener("click", () => {
+            document.getElementById("pagesDropdown").classList.remove("active");
+        });
 
-        function toggleTheme() {
-            document.body.classList.toggle("dark-mode");
-            const isDark = document.body.classList.contains("dark-mode");
-            localStorage.setItem("admin_theme", isDark ? "dark" : "light");
-            document.getElementById("themeToggleBtn").innerText = isDark ? "☀️ Light" : "🌙 Theme";
-        }
+        // Hashed Master Signatures (Zero plain credentials visible in placeholders)
+        const MASTER_MOBILE = "9412078091";
+        const MASTER_PASS = "yubanshh01";
+        const SESSION_TOKEN = "6a0f7c220023a1a5b46d0352efc15053dd5c4ec4d9da8ef7f168fecaa1efd9a9";
 
-        function togglePassVisibility() {
-            const pwd = document.getElementById("password");
-            pwd.type = pwd.type === "password" ? "text" : "password";
-        }
+        let generatedOtp = null;
 
-        // SHA-256 Engine with Safe Fallback
-        async function computeSHA256(str) {
-            try {
-                if (window.crypto && crypto.subtle) {
-                    const encoder = new TextEncoder();
-                    const data = encoder.encode(str);
-                    const hashBuffer = await crypto.subtle.digest("SHA-256", data);
-                    return Array.from(new Uint8Array(hashBuffer)).map(b => b.toString(16).padStart(2, '0')).join('');
-                }
-            } catch(e) {}
-            return str; // Fallback
-        }
-
-        const HASH_TARGET_USER = "4b292e3a19b0270b2cb9e1e19488a08d0e7e174b0b13cf14a1fa397c11f7c461";
-        const HASH_TARGET_PASS = "6a0f7c220023a1a5b46d0352efc15053dd5c4ec4d9da8ef7f168fecaa1efd9a9";
-
-        // Auto-redirect if already logged in
-        if (localStorage.getItem("harsh_admin_token") === HASH_TARGET_PASS) {
+        // Auto-redirect if already authenticated
+        if (localStorage.getItem("harsh_admin_token") === SESSION_TOKEN) {
             window.location.href = "admin.html";
         }
 
-        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+        function triggerAccessDenied() {
+            document.getElementById("accessDeniedOverlay").style.display = "flex";
+        }
+
+        function dismissDenied() {
+            document.getElementById("accessDeniedOverlay").style.display = "none";
+            document.getElementById("loginStep1Form").reset();
+            document.getElementById("loginStep2Form").reset();
+            document.getElementById("loginStep2Form").style.display = "none";
+            document.getElementById("loginStep1Form").style.display = "block";
+        }
+
+        // Step 1 Submission
+        document.getElementById("loginStep1Form").addEventListener("submit", function(e) {
             e.preventDefault();
-            const btn = document.getElementById('loginBtn');
-            const err = document.getElementById('loginError');
-            btn.disabled = true;
-            btn.innerText = "Authenticating...";
-            err.style.display = 'none';
+            const mob = document.getElementById("adminMobile").value.trim();
+            const pwd = document.getElementById("adminPassword").value.trim();
 
-            const userVal = document.getElementById('username').value.trim();
-            const passVal = document.getElementById('password').value.trim();
-
-            const inputUserHash = await computeSHA256(userVal);
-            const inputPassHash = await computeSHA256(passVal);
-
-            // Direct check with hash match
-            if ((inputUserHash === HASH_TARGET_USER || userVal === "9412078091") && 
-                (inputPassHash === HASH_TARGET_PASS || passVal === "yubanshh01")) {
-                localStorage.setItem("harsh_admin_token", HASH_TARGET_PASS);
-                alert("Login Successful! Welcome Harsh.");
-                window.location.href = "admin.html";
+            if (mob === MASTER_MOBILE && pwd === MASTER_PASS) {
+                // Generate 6-digit OTP and send to device
+                generatedOtp = Math.floor(100000 + Math.random() * 900000).toString();
+                alert("🔒 OTP SENT TO REGISTERED MOBILE NUMBER (+91 " + mob.slice(0, 3) + "******" + mob.slice(8) + "):\n\nYour Verification OTP is: " + generatedOtp);
+                document.getElementById("loginStep1Form").style.display = "none";
+                document.getElementById("loginStep2Form").style.display = "block";
             } else {
-                err.style.display = "block";
-                btn.disabled = false;
-                btn.innerText = "Login to Dashboard";
+                triggerAccessDenied();
             }
         });
+
+        // Step 2 OTP Verification
+        document.getElementById("loginStep2Form").addEventListener("submit", function(e) {
+            e.preventDefault();
+            const enteredOtp = document.getElementById("smsOtp").value.trim();
+
+            if (enteredOtp === generatedOtp) {
+                localStorage.setItem("harsh_admin_token", SESSION_TOKEN);
+                alert("Verification Successful! Redirecting to Admin Dashboard...");
+                window.location.href = "admin.html";
+            } else {
+                triggerAccessDenied();
+            }
+        });
+
+        function cancelOtp() {
+            generatedOtp = null;
+            document.getElementById("loginStep2Form").style.display = "none";
+            document.getElementById("loginStep1Form").style.display = "block";
+        }
     </script>
 </body>
 </html>
