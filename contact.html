@@ -5,6 +5,112 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contact Us | HarshCode Studio</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        /* Contact Page Specific Modern UI Enhancements */
+        .contact-layout { 
+            display: grid; 
+            grid-template-columns: 1fr 1.3fr; 
+            gap: 2.5rem; 
+            margin-top: 1rem;
+        }
+        
+        .contact-info-card {
+            background: linear-gradient(135deg, #0b1329 0%, #16203c 100%);
+            padding: 2.5rem; 
+            border-radius: 16px; 
+            border: 1px solid rgba(56, 189, 248, 0.25);
+            box-shadow: 0 15px 35px rgba(2, 132, 199, 0.2);
+            color: #ffffff;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .contact-info-card::before {
+            content: '';
+            position: absolute;
+            top: -50px;
+            right: -50px;
+            width: 150px;
+            height: 150px;
+            background: radial-gradient(circle, rgba(56, 189, 248, 0.15) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+
+        .contact-icon-wrapper {
+            width: 48px;
+            height: 48px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            flex-shrink: 0;
+            transition: all 0.3s ease;
+        }
+
+        .contact-links-list li { 
+            margin-bottom: 1.5rem; 
+            display: flex; 
+            align-items: flex-start; 
+            gap: 15px; 
+        }
+
+        .contact-links-list li:hover .contact-icon-wrapper {
+            background: var(--accent);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px var(--accent-glow);
+        }
+
+        .contact-links-list a { 
+            color: #e0f2fe; 
+            text-decoration: none; 
+            font-weight: 500; 
+            transition: color 0.2s;
+        }
+        
+        .contact-links-list a:hover { color: #38bdf8; }
+
+        .modern-form-card {
+            background: var(--white); 
+            padding: 2.5rem; 
+            border-radius: 16px; 
+            border: 1px solid var(--border);
+            box-shadow: var(--card-shadow);
+        }
+
+        .form-group input, .form-group textarea, .form-group select {
+            padding: 14px 16px;
+            border-radius: 10px;
+            background: var(--bg-light);
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+            border-color: rgba(2, 132, 199, 0.4);
+            background: var(--white);
+            box-shadow: 0 0 0 4px rgba(2, 132, 199, 0.1);
+        }
+
+        .badge {
+            display: inline-block;
+            background: rgba(2, 132, 199, 0.1);
+            color: var(--accent);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        @media (max-width: 850px) {
+            .contact-layout { grid-template-columns: 1fr; }
+        }
+    </style>
 </head>
 <body>
 
@@ -38,55 +144,59 @@
     <section class="section">
         <div class="container">
             <div class="section-header">
-                <h2>Get In Touch With Me</h2>
+                <span class="badge">Support & Enquiry</span>
+                <h2 style="margin-top: 5px;">Get In Touch With Me</h2>
                 <p>Kisi bhi project enquiry ke liye form bharein ya direct call karein.</p>
             </div>
 
             <div class="contact-layout">
-                <div class="contact-card-box">
-                    <h3>Contact Information</h3>
-                    <p style="color: var(--text-muted); margin-top: 5px;">Aap direct call, visit, message ya Instagram ke through connect kar sakte hain.</p>
+                
+                <!-- Left Premium Contact Info Card -->
+                <div class="contact-info-card">
+                    <h3 style="font-size: 1.5rem; margin-bottom: 8px;">Contact Information</h3>
+                    <p style="color: #94a3b8; font-size: 0.9rem; margin-bottom: 2rem;">Aap direct call, visit, message ya Instagram ke through connect kar sakte hain.</p>
                     
                     <ul class="contact-links-list">
                         <li>
-                            <span>📍</span>
+                            <div class="contact-icon-wrapper">📍</div>
                             <div>
-                                <strong>Office / Studio Address:</strong><br>
-                                <span style="color: #0284c7; font-weight: 600;">NEAR CO OFFICE , SHAHABAD ROAD BILARI, UTTAR PRADESH</span>
+                                <strong style="color: #38bdf8; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px;">Office / Studio Address</strong><br>
+                                <span style="font-size: 0.95rem; line-height: 1.5; display: inline-block; margin-top: 4px;">NEAR CO OFFICE, SHAHABAD ROAD<br>BILARI, UTTAR PRADESH</span>
                             </div>
                         </li>
                         <li>
-                            <span>📞</span>
+                            <div class="contact-icon-wrapper">📞</div>
                             <div>
-                                <strong>Mobile Number:</strong><br>
-                                <a href="tel:9412078091">+91 9412078091</a>
+                                <strong style="color: #38bdf8; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px;">Mobile Number</strong><br>
+                                <a href="tel:9412078091" style="font-size: 1.1rem; display: inline-block; margin-top: 4px;">+91 9412078091</a>
                             </div>
                         </li>
                         <li>
-                            <span>✉️</span>
+                            <div class="contact-icon-wrapper">✉️</div>
                             <div>
-                                <strong>Email Address:</strong><br>
-                                <a href="mailto:yubanshhsalklan@gmail.com">yubanshhsalklan@gmail.com</a>
+                                <strong style="color: #38bdf8; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px;">Email Address</strong><br>
+                                <a href="mailto:yubanshhsalklan@gmail.com" style="display: inline-block; margin-top: 4px;">yubanshhsalklan@gmail.com</a>
                             </div>
                         </li>
                         <li>
-                            <span>📸</span>
+                            <div class="contact-icon-wrapper">📸</div>
                             <div>
-                                <strong>Instagram Handle:</strong><br>
-                                <a href="https://instagram.com/yubanshh_chaudhary01" target="_blank">@yubanshh_chaudhary01</a>
+                                <strong style="color: #38bdf8; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px;">Instagram Handle</strong><br>
+                                <a href="https://instagram.com/yubanshh_chaudhary01" target="_blank" style="display: inline-block; margin-top: 4px;">@yubanshh_chaudhary01</a>
                             </div>
                         </li>
                     </ul>
 
-                    <div style="margin-top: 2rem;">
-                        <a href="https://wa.me/919412078091" target="_blank" class="btn" style="background: #22c55e; display: block; text-align: center;">💬 WhatsApp Par Baat Karein</a>
+                    <div style="margin-top: 2.5rem;">
+                        <a href="https://wa.me/919412078091" target="_blank" class="btn" style="background: linear-gradient(135deg, #22c55e, #16a34a); box-shadow: 0 8px 20px rgba(34, 197, 94, 0.3); border: 1px solid #4ade80; display: block; text-align: center; border-radius: 10px;">💬 WhatsApp Par Baat Karein</a>
                     </div>
                 </div>
 
-                <div class="contact-card-box">
-                    <h3>Send Direct Message</h3>
+                <!-- Right Modern Form Card -->
+                <div class="modern-form-card">
+                    <h3 style="font-size: 1.5rem; margin-bottom: 1.5rem; color: var(--text-dark);">Send Direct Message</h3>
                     
-                    <form id="contact-form" action="https://formspree.io/f/moeqvarv" method="POST" style="margin-top: 1.2rem;">
+                    <form id="contact-form" action="https://formspree.io/f/moeqvarv" method="POST">
                         <div class="form-group">
                             <label for="name">Aapka Naam (Your Name):</label>
                             <input type="text" id="name" name="name" placeholder="Enter your full name" required>
@@ -99,7 +209,7 @@
 
                         <div class="form-group">
                             <label for="email">Email Address:</label>
-                            <input type="email" id="email" name="_replyto" placeholder="Enter your email" required>
+                            <input type="email" id="email" name="_replyto" placeholder="Enter your email address" required>
                         </div>
 
                         <div class="form-group">
@@ -117,7 +227,7 @@
                             <textarea id="message" name="message" rows="4" placeholder="Apne project ke baare me details likhein..." required></textarea>
                         </div>
 
-                        <button type="submit" id="submit-btn" class="btn" style="width: 100%;">Submit Message</button>
+                        <button type="submit" id="submit-btn" class="btn" style="width: 100%; padding: 14px; font-size: 1rem; border-radius: 10px; margin-top: 10px;">Submit Message 🚀</button>
                         <div id="status-message" class="status-msg"></div>
                     </form>
                 </div>
@@ -216,7 +326,7 @@
     form.addEventListener("submit", function(event) {
         event.preventDefault();
         submitBtn.disabled = true;
-        submitBtn.innerText = "Sending...";
+        submitBtn.innerText = "Sending Securely...";
         statusMsg.style.display = "none";
 
         const formData = new FormData(form);
@@ -239,7 +349,7 @@
         })
         .finally(() => {
             submitBtn.disabled = false;
-            submitBtn.innerText = "Submit Message";
+            submitBtn.innerText = "Submit Message 🚀";
         });
     });
 
