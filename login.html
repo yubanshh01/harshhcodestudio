@@ -20,11 +20,23 @@
 </head>
 <body>
 
-    <!-- Fullscreen Access Denied Security Modal -->
+    <!-- Fullscreen Matrix Hacking Access Denied Overlay -->
     <div id="accessDeniedOverlay">
-        <h1>ACCESS DENIED</h1>
-        <p>⚠️ SECURITY BREACH DETECTED: Invalid Credentials or Unverified OTP. This attempt has been logged.</p>
-        <button onclick="dismissDenied()" class="btn" style="background:#dc2626; border: 1px solid #ff9999;">← Retry Authentication</button>
+        <canvas id="matrixCanvas"></canvas>
+        <div class="denied-content">
+            <div style="font-size: 2.5rem; margin-bottom: 5px;">☠️</div>
+            <h1 class="denied-glitch">ACCESS DENIED</h1>
+            <p style="color: #00ff66; font-family: var(--font-code); font-size: 0.95rem; margin: 15px 0;">
+                [SYSTEM ALERT] : UNAUTHORIZED INTRUSION DETECTED<br>
+                FIREWALL STATUS: LOCKED | IP & ATTEMPT LOGGED
+            </p>
+            <p style="color: #fca5a5; font-size: 0.88rem; margin-bottom: 25px;">
+                Invalid Security Credentials or Unverified OTP!
+            </p>
+            <button onclick="dismissDenied()" class="btn" style="background: #dc2626; border: 1px solid #ff9999; box-shadow: 0 0 15px rgba(220,38,38,0.6);">
+                ← Re-authenticate Terminal
+            </button>
+        </div>
     </div>
 
     <header>
@@ -67,11 +79,11 @@
                 <form id="loginStep1Form">
                     <div class="form-group">
                         <label for="adminMobile">Registered Mobile Number</label>
-                        <input type="tel" id="adminMobile" placeholder="Enter your 10-digit mobile" required autocomplete="username">
+                        <input type="tel" id="adminMobile" placeholder="Enter registered mobile" required autocomplete="username">
                     </div>
                     <div class="form-group">
                         <label for="adminPassword">Security Password</label>
-                        <input type="password" id="adminPassword" placeholder="Enter your account password" required autocomplete="current-password">
+                        <input type="password" id="adminPassword" placeholder="Enter account password" required autocomplete="current-password">
                     </div>
                     <button type="submit" id="step1Btn" class="btn" style="width: 100%; margin-top: 10px;">Send OTP to Email ✉️</button>
                 </form>
@@ -113,26 +125,66 @@
             document.getElementById("pagesDropdown").classList.remove("active");
         });
 
-        // Target Credentials & Tokens
         const MASTER_MOBILE = "9412078091";
         const MASTER_PASS = "yubanshh01";
         const SESSION_TOKEN = "6a0f7c220023a1a5b46d0352efc15053dd5c4ec4d9da8ef7f168fecaa1efd9a9";
-        
-        // Aapka Formspree Endpoint (Same as contact page)
         const FORMSPREE_ENDPOINT = "https://formspree.io/f/moeqvarv";
 
         let generatedOtp = null;
+        let matrixInterval = null;
 
-        // Auto-redirect if already logged in
         if (localStorage.getItem("harsh_admin_token") === SESSION_TOKEN) {
             window.location.href = "admin.html";
         }
 
+        // --- Cyber Binary Rain Matrix Animation ---
+        function startMatrixEffect() {
+            const canvas = document.getElementById("matrixCanvas");
+            const ctx = canvas.getContext("2d");
+
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+            const binaryChars = "011010010101011001010010101010110101010101";
+            const fontSize = 16;
+            const columns = Math.floor(canvas.width / fontSize);
+            const drops = Array(columns).fill(1);
+
+            function draw() {
+                ctx.fillStyle = "rgba(0, 0, 0, 0.07)";
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                for (let i = 0; i < drops.length; i++) {
+                    const text = binaryChars.charAt(Math.floor(Math.random() * binaryChars.length));
+                    ctx.fillStyle = (Math.random() > 0.85) ? "#ff3333" : "#00ff66";
+                    ctx.font = fontSize + "px 'Fira Code', monospace";
+                    ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+                    if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                        drops[i] = 0;
+                    }
+                    drops[i]++;
+                }
+            }
+
+            if (matrixInterval) clearInterval(matrixInterval);
+            matrixInterval = setInterval(draw, 35);
+        }
+
+        function stopMatrixEffect() {
+            if (matrixInterval) {
+                clearInterval(matrixInterval);
+                matrixInterval = null;
+            }
+        }
+
         function triggerAccessDenied() {
             document.getElementById("accessDeniedOverlay").style.display = "flex";
+            startMatrixEffect();
         }
 
         function dismissDenied() {
+            stopMatrixEffect();
             document.getElementById("accessDeniedOverlay").style.display = "none";
             document.getElementById("loginStep1Form").reset();
             document.getElementById("loginStep2Form").reset();
@@ -143,7 +195,7 @@
             btn.innerText = "Send OTP to Email ✉️";
         }
 
-        // Step 1: Mobile + Password Check and Send Email OTP via Formspree
+        // Step 1 Submission
         document.getElementById("loginStep1Form").addEventListener("submit", async function(e) {
             e.preventDefault();
             const mob = document.getElementById("adminMobile").value.trim();
@@ -154,11 +206,9 @@
                 btn.disabled = true;
                 btn.innerText = "Generating & Sending OTP...";
 
-                // Generate 6-digit secure random OTP
                 generatedOtp = Math.floor(100000 + Math.random() * 900000).toString();
 
                 try {
-                    // Formspree API Request
                     const response = await fetch(FORMSPREE_ENDPOINT, {
                         method: "POST",
                         headers: {
@@ -175,26 +225,25 @@
                     });
 
                     if (response.ok) {
-                        alert("✅ OTP aapki email (yubanshhsalklan@gmail.com) par bhej diya gaya hai! Kripya apna Inbox ya Spam folder check karein.");
+                        alert("✅ OTP aapki email (yubanshhsalklan@gmail.com) par bhej diya gaya hai! Inbox check karein.");
                         document.getElementById("loginStep1Form").style.display = "none";
                         document.getElementById("loginStep2Form").style.display = "block";
                     } else {
-                        alert("Formspree service busy hai. Kripya thodi der baad koshish karein.");
+                        alert("Service busy hai. Thodi der baad koshish karein.");
                         btn.disabled = false;
                         btn.innerText = "Send OTP to Email ✉️";
                     }
                 } catch (err) {
-                    alert("Network Error: OTP deliver nahi ho saka. Connection check karein.");
+                    alert("Network Error: OTP deliver nahi ho saka.");
                     btn.disabled = false;
                     btn.innerText = "Send OTP to Email ✉️";
                 }
             } else {
-                // Wrong Mobile or Password -> Show Fullscreen Access Denied
                 triggerAccessDenied();
             }
         });
 
-        // Step 2: Verify OTP
+        // Step 2 OTP Verification
         document.getElementById("loginStep2Form").addEventListener("submit", function(e) {
             e.preventDefault();
             const enteredOtp = document.getElementById("emailOtp").value.trim();
@@ -204,10 +253,9 @@
                 btn.disabled = true;
                 btn.innerText = "Verifying...";
                 localStorage.setItem("harsh_admin_token", SESSION_TOKEN);
-                alert("✅ OTP Verified Successfully! Welcome to HarshCode Admin Dashboard.");
+                alert("✅ OTP Verified! Welcome Harsh.");
                 window.location.href = "admin.html";
             } else {
-                // Wrong OTP -> Show Fullscreen Access Denied
                 triggerAccessDenied();
             }
         });
