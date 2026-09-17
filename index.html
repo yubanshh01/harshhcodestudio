@@ -19,12 +19,18 @@
             <ul class="nav-links">
                 <li><a href="index.html" class="active">Home</a></li>
                 <li><a href="about.html">About</a></li>
-                <li><a href="services.html">Services</a></li>
-                <li><a href="gallery.html">Gallery</a></li>
-                <li><a href="feed.html">Posts</a></li>
-                <li><a href="reviews.html">Reviews</a></li>
                 <li><a href="contact.html">Contact</a></li>
-                <li><a href="login.html">👤 Admin</a></li>
+                <!-- Dropdown for Other Pages -->
+                <li class="nav-dropdown" id="pagesDropdown">
+                    <button class="dropdown-btn" onclick="toggleDropdown(event)">Pages ▾</button>
+                    <div class="dropdown-content" id="dropdownMenu">
+                        <a href="services.html">Services</a>
+                        <a href="gallery.html">Gallery</a>
+                        <a href="feed.html">Posts</a>
+                        <a href="reviews.html">Reviews</a>
+                        <a href="login.html">👤 Admin Portal</a>
+                    </div>
+                </li>
             </ul>
         </nav>
     </div>
@@ -101,7 +107,7 @@
             <div class="footer-col">
                 <h4>HarshCode Studio</h4>
                 <p>Student & Professional Web Developer. Mai fast, clean aur 100% mobile-friendly business websites create karta hu jo aapke brand ko stand out karein.</p>
-                <p style="color: #64748b; font-size: 0.85rem;">📍 Bilari, Uttar Pradesh, India</p>
+                <p style="color: #64748b; font-size: 0.85rem;">📍 NEAR CO OFFICE , SHAHABAD ROAD BILARI</p>
             </div>
             <div class="footer-col">
                 <h4>Quick Links</h4>
@@ -156,7 +162,9 @@
             <div><h4 style="margin:0; font-size:0.95rem;">Srishti Assistant</h4><span style="font-size:0.75rem; color:#38bdf8;">Online | HarshCode Studio</span></div>
         </div>
         <div class="srishti-chat-body" id="srishtiChatBody">
-            <div class="srishti-msg bot-msg">Namaste! Main <strong>Srishti Assistant</strong> hoon. HarshCode Studio se jude kisi bhi sawaal ya website cost ke baare me poochein!</div>
+            <div class="srishti-msg bot-msg">
+                Hello! MERA NAAM SRISHTI HAI. Main HarshCode Studio ki AI assistant hoon. Website development, pricing, timelines ya Harsh Chaudhary Tomar ke baare me kuch bhi poochein!
+            </div>
             <div class="srishti-quick-chips">
                 <button onclick="triggerSrishti('Website Banwane Ka Cost?')">💰 Cost</button>
                 <button onclick="triggerSrishti('Tech Stack Kya Use Karte Ho?')">⚡ Tech Stack</button>
@@ -172,12 +180,24 @@
 </div>
 
 <script>
+    // Dropdown toggle
+    function toggleDropdown(e) {
+        e.stopPropagation();
+        document.getElementById("pagesDropdown").classList.toggle("active");
+    }
+    window.addEventListener("click", () => {
+        document.getElementById("pagesDropdown").classList.remove("active");
+    });
+
+    // Trained Knowledge Engine
     const srishtiKB = [
-        { k: ["cost", "price", "kitne", "paisa", "rate", "fees"], r: "Website pricing:<br>• <strong>Portfolio / Single Page:</strong> ₹2,500 – ₹5,000<br>• <strong>Business Multi-Page Website:</strong> ₹6,000 – ₹12,000<br>• <strong>Custom Cloud App:</strong> ₹12,000+." },
-        { k: ["tech", "stack", "code", "database", "supabase"], r: "Hamara core stack:<br>• <strong>Frontend:</strong> HTML5, CSS3, Modern JavaScript, Tailwind CSS.<br>• <strong>Database:</strong> Supabase (PostgreSQL Cloud) & IndexedDB.<br>• <strong>Security:</strong> SHA-256 Auth." },
-        { k: ["time", "kitne din", "duration", "timeline", "kab tak"], r: "Delivery timeline:<br>• Portfolio: 24 - 48 ghante.<br>• Full Business: 3 - 5 din.<br>• Custom App: 7 - 10 din." },
-        { k: ["contact", "harsh", "number", "call", "whatsapp"], r: "Direct Harsh Chaudhary Tomar se connect karein:<br>• <strong>Call / WhatsApp:</strong> +91 94120 78091<br>• <strong>Instagram:</strong> @yubanshh_chaudhary01" }
+        { k: ["cost", "price", "kitne", "paisa", "rate", "fees"], r: "Website pricing estimate:<br>• <strong>Landing Page / Portfolio:</strong> ₹2,500 – ₹5,000<br>• <strong>Business Multi-Page Website:</strong> ₹6,000 – ₹12,000<br>• <strong>Custom Cloud Web App:</strong> ₹12,000+.<br>Direct enquiry ke liye Contact page visit karein!" },
+        { k: ["tech", "stack", "technology", "code", "database", "supabase"], r: "HarshCode Studio modern stack use karta hai:<br>• <strong>Frontend:</strong> HTML5, CSS3, Modern JavaScript (ES6+), Tailwind CSS.<br>• <strong>Database:</strong> Supabase (Real-Time Cloud PostgreSQL), IndexedDB.<br>• <strong>Security:</strong> SHA-256 Cryptographic Auth." },
+        { k: ["time", "kitne din", "duration", "timeline", "kab tak"], r: "Standard project timeline:<br>• <strong>Single Page / Portfolio:</strong> 24 se 48 ghante.<br>• <strong>Full Business Website:</strong> 3 se 5 din.<br>• <strong>Custom Web App:</strong> 7 se 10 din." },
+        { k: ["contact", "harsh", "number", "call", "whatsapp", "phone"], r: "Direct Harsh Chaudhary Tomar se judne ke liye:<br>• <strong>Call / WhatsApp:</strong> +91 94120 78091<br>• <strong>Instagram:</strong> @yubanshh_chaudhary01<br>• <strong>Email:</strong> yubanshhsalklan@gmail.com<br>• <strong>Address:</strong> NEAR CO OFFICE , SHAHABAD ROAD BILARI" },
+        { k: ["mobile", "responsive", "phone", "tablet"], r: "Haan! HarshCode Studio ki banayi gayi har website 100% mobile-friendly aur responsive hoti hai jo har phone aur screen par smooth chalti hai." }
     ];
+
     const toggleBtn = document.getElementById("srishti-chat-toggle");
     const chatWin = document.getElementById("srishti-chat-window");
     const chatBody = document.getElementById("srishtiChatBody");
@@ -202,10 +222,13 @@
         const lower = query.toLowerCase();
         let answer = null;
         for (let item of srishtiKB) {
-            if (item.k.some(key => lower.includes(key))) { answer = item.r; break; }
+            if (item.k.some(key => lower.includes(key))) {
+                answer = item.r;
+                break;
+            }
         }
         setTimeout(() => {
-            addMessage(answer || "Is specific requirement ke liye aap direct Harsh se <strong>+91 94120 78091</strong> par call/WhatsApp karein ya Contact page par details bhej dein!", "bot");
+            addMessage(answer || "Yeh badhiya sawaal hai! Is requirement ke liye aap direct Harsh se <strong>+91 94120 78091</strong> par call/WhatsApp karein ya <a href='contact.html' style='color:#0284c7; font-weight:bold;'>Contact Page</a> dekhein.", "bot");
         }, 300);
     }
 
