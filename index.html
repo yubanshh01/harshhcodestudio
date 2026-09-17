@@ -5,27 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HarshCode Studio | Harsh Chaudhary Tomar</title>
     <link rel="stylesheet" href="style.css">
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <style>
-        .direct-video-frame {
-            display: none;
-            margin: 2.2rem auto 0 auto;
-            max-width: 820px;
-            width: 100%;
-            border-radius: 16px;
-            overflow: hidden;
-            background: #000;
-            border: 2px solid rgba(56, 189, 248, 0.4);
-            box-shadow: 0 15px 40px rgba(2, 132, 199, 0.35);
-        }
-        .direct-video-frame video {
-            width: 100%;
-            height: auto;
-            max-height: 480px;
-            display: block;
-            object-fit: cover;
-        }
-    </style>
 </head>
 <body>
 
@@ -66,9 +45,15 @@
                 <a href="contact.html" class="btn btn-outline">Let's Talk</a>
             </div>
 
-            <!-- Direct Video Frame Under Hero Buttons (Pure Auto-Play / Audio Capable) -->
-            <div id="homeVideoContainer" class="direct-video-frame">
-                <video id="homeDirectVideo" autoplay loop playsinline></video>
+            <!-- =========================================================
+                 VIDEO SHOWCASE SECTION (Change video name/path below)
+                 ========================================================= -->
+            <div class="direct-video-frame">
+                <!-- AGAR APNI VIDEO KA NAAM BADALNA HO TOH NEECHE 'videos/intro.mp4' KO BADAL DEIN -->
+                <video id="heroVideoPlayer" controls autoplay loop playsinline poster="images/photo1.jpeg">
+                    <source src="videos/intro.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
             </div>
 
         </div>
@@ -215,70 +200,19 @@
         document.getElementById("pagesDropdown").classList.remove("active");
     });
 
-    // Supabase Config
-    const SUPABASE_URL = "https://rbbryqshvycrstzrtytp.supabase.co";
-    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJiYnJ5cXNodnljcnN0enJ0eXRwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg3MTI1MjYsImV4cCI6MjEwNDI4ODUyNn0.WzH2ju9G2nW8iOKnh77OFF0N3G0ECHx1iLBjcPISItc";
-    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-    // IndexedDB Media Loader
-    function getStoredBlob() {
-        return new Promise((resolve) => {
-            const req = indexedDB.open("HarshStudioMediaDB", 1);
-            req.onsuccess = () => {
-                const db = req.result;
-                if (!db.objectStoreNames.contains("homepageVideoStore")) return resolve(null);
-                const tx = db.transaction("homepageVideoStore", "readonly");
-                const getReq = tx.objectStore("homepageVideoStore").get("active_home_video");
-                getReq.onsuccess = () => resolve(getReq.result);
-                getReq.onerror = () => resolve(null);
-            };
-            req.onerror = () => resolve(null);
-        });
-    }
-
-    async function streamHomepageVideo() {
-        try {
-            const { data, error } = await supabaseClient
-                .from('posts')
-                .select('video')
-                .not('video', 'is', null)
-                .order('id', { ascending: false })
-                .limit(1);
-
-            if (error) throw error;
-
-            if (data && data.length > 0 && data[0].video) {
-                const pointer = data[0].video;
-                const container = document.getElementById("homeVideoContainer");
-                const videoEl = document.getElementById("homeDirectVideo");
-
-                if (pointer === "INDEXEDDB_LOCAL_BLOB") {
-                    const blob = await getStoredBlob();
-                    if (blob) {
-                        videoEl.src = URL.createObjectURL(blob);
-                        container.style.display = "block";
-                    }
-                } else if (pointer.startsWith("http")) {
-                    videoEl.src = pointer;
-                    container.style.display = "block";
-                }
-
-                // Autoplay with gentle browser audio fallback
-                const promise = videoEl.play();
-                if (promise !== undefined) {
-                    promise.catch(() => {
-                        videoEl.muted = true;
-                        videoEl.play();
-                    });
-                }
-            }
-        } catch (e) {
-            console.log("Stream info:", e);
+    // Auto Play policy handling with sound
+    const video = document.getElementById("heroVideoPlayer");
+    if (video) {
+        const playPromise = video.play();
+        if (playPromise !== undefined) {
+            playPromise.catch(() => {
+                // If browser blocks autoplay with sound, start muted
+                video.muted = true;
+                video.play();
+            });
         }
     }
-    streamHomepageVideo();
 
-    // AI Knowledge Engine
     const srishtiKB = [
         { k: ["cost", "price", "kitne", "paisa", "rate", "fees"], r: "Website pricing estimate:<br>• <strong>Landing Page / Portfolio:</strong> ₹2,500 – ₹5,000<br>• <strong>Business Multi-Page Website:</strong> ₹6,000 – ₹12,000<br>• <strong>Custom Cloud Web App:</strong> ₹12,000+.<br>Direct enquiry ke liye Contact page visit karein!" },
         { k: ["tech", "stack", "technology", "code", "database", "supabase"], r: "HarshCode Studio modern stack use karta hai:<br>• <strong>Frontend:</strong> HTML5, CSS3, Modern JavaScript (ES6+), Tailwind CSS.<br>• <strong>Database:</strong> Supabase (Real-Time Cloud PostgreSQL), IndexedDB.<br>• <strong>Security:</strong> SHA-256 Cryptographic Auth." },
