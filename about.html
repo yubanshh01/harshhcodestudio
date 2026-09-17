@@ -6,69 +6,30 @@
     <title>About Me | Harsh Chaudhary Tomar</title>
     <link rel="stylesheet" href="style.css">
     <style>
-        .about-card-wrapper {
-            display: grid;
-            grid-template-columns: 320px 1fr;
-            gap: 2.5rem;
-            align-items: start;
-        }
-        .profile-hero-card {
-            background: var(--white);
-            padding: 2.2rem 1.5rem;
-            border-radius: 16px;
-            border: 1px solid var(--border);
-            box-shadow: var(--card-shadow);
-            text-align: center;
-        }
-        .profile-avatar-frame {
-            width: 170px;
-            height: 170px;
-            margin: 0 auto;
-            border-radius: 50%;
-            overflow: hidden;
-            border: 4px solid var(--accent);
-            box-shadow: 0 10px 25px var(--accent-glow);
+        .about-img-box {
+            width: 170px !important;
+            height: 170px !important;
+            margin: 0 auto !important;
+            border-radius: 50% !important;
+            overflow: hidden !important;
+            border: 4px solid var(--accent) !important;
+            box-shadow: 0 10px 25px var(--accent-glow) !important;
             background: #0f172a;
             display: flex;
             align-items: center;
             justify-content: center;
         }
-        .profile-avatar-frame img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
+        .about-img-box img {
+            width: 100% !important;
+            height: 100% !important;
+            object-fit: cover !important;
             display: block;
         }
-        .profile-avatar-fallback {
+        .avatar-fallback-text {
             font-size: 3.5rem;
             color: #ffffff;
             font-weight: 800;
             font-family: var(--font-code);
-        }
-        .info-pill {
-            background: #f1f5f9;
-            color: #334155;
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            display: inline-block;
-        }
-        .spec-list {
-            list-style: none;
-            margin-top: 1rem;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 12px;
-        }
-        .spec-item {
-            background: var(--white);
-            border: 1px solid var(--border);
-            padding: 12px 16px;
-            border-radius: 10px;
-        }
-        @media (max-width: 850px) {
-            .about-card-wrapper { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -104,73 +65,47 @@
     <section class="section">
         <div class="container">
             <div class="section-header">
-                <h2>About The Developer</h2>
-                <p>Developer Bio, Technical Skills, and Vision at HarshCode Studio</p>
+                <h2>About Me</h2>
+                <p>Know more about my journey, technical stack, and student vision.</p>
             </div>
 
-            <div class="about-card-wrapper">
-                
-                <!-- Left Profile Card -->
-                <div class="profile-hero-card">
-                    <div class="profile-avatar-frame">
-                        <img id="myProfileImg" src="images/my-profile.jpeg" alt="Harsh Chaudhary Tomar" onerror="handleProfileFallback(this)">
+            <div class="about-grid">
+                <div class="about-profile-card">
+                    <div class="about-img-box">
+                        <img src="images/my-profile.jpeg" alt="Harsh Chaudhary Tomar" onerror="handleProfileFallback(this)">
                     </div>
-
-                    <h3 style="margin-top: 18px; font-size: 1.35rem; color: var(--text-dark);">Harsh Chaudhary Tomar</h3>
-                    <p style="color: var(--accent); font-weight: 700; font-family: var(--font-code); font-size: 0.95rem; margin-top: 2px;">Student & Web Developer</p>
+                    <h3 style="margin-top: 15px; font-size: 1.25rem;">Harsh Chaudhary Tomar</h3>
+                    <p style="color: var(--accent); font-weight: 600; font-size: 0.95rem;">Student & Web Developer</p>
                     
-                    <div style="margin-top: 14px; display: flex; justify-content: center; gap: 8px; flex-wrap: wrap;">
-                        <span class="info-pill" style="background:#e0f2fe; color:#0369a1;">📍 Bilari, Moradabad (UP)</span>
-                        <span class="info-pill" style="background:#dcfce7; color:#15803d;">🟢 Active Freelancer</span>
+                    <div style="margin-top: 12px; display: flex; justify-content: center; gap: 8px; flex-wrap: wrap;">
+                        <span style="font-size: 0.78rem; background: #f1f5f9; color: #475569; padding: 4px 10px; border-radius: 12px; font-weight: 600;">📍 Bilari (UP)</span>
+                        <span style="font-size: 0.78rem; background: #dcfce7; color: #15803d; padding: 4px 10px; border-radius: 12px; font-weight: 600;">🟢 Open to Work</span>
                     </div>
 
-                    <div style="margin-top: 20px; border-top: 1px solid var(--border); padding-top: 15px;">
-                        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 12px;">Got a question about web projects?</p>
-                        <button onclick="triggerSrishti('Direct Harsh Se Kaise Contact Karein?')" class="btn" style="width: 100%; font-size: 0.85rem; padding: 9px;">Talk with Srishti AI 🌸</button>
+                    <div style="margin-top: 15px;">
+                        <button onclick="triggerSrishti('Direct Harsh Se Kaise Contact Karein?')" class="btn" style="font-size: 0.85rem; padding: 8px 16px; background: #0f172a; border: 1px solid #38bdf8; width: 100%;">Talk with Srishti AI ✨</button>
                     </div>
                 </div>
 
-                <!-- Right Detailed Info Content -->
                 <div>
-                    <div class="card" style="margin-bottom: 1.5rem;">
-                        <h3 style="font-size: 1.45rem; color: var(--text-dark); margin-bottom: 0.8rem;">Introduction & Core Mission</h3>
-                        <p style="color: var(--text-muted); line-height: 1.7; margin-bottom: 1rem;">
-                            Namaste! Mera naam <strong>Harsh Chaudhary Tomar</strong> hai. Main Bilari (Uttar Pradesh) se ek passionate student aur modern web developer hoon. Main businesses, shop owners, aur creators ke liye clean, high-performance aur conversion-focused websites develop karta hoon.
-                        </p>
-                        <p style="color: var(--text-muted); line-height: 1.7;">
-                            Mera main focus yeh ensure karna hota hai ki website kisi bhi heavy bloated framework ke bina <strong>lightning-fast load ho (&lt; 1.5s)</strong>, har mobile aur tablet device par pixel-perfect chale, aur real-time cloud database (Supabase) ke sath synced rahe.
-                        </p>
-                    </div>
+                    <h3 style="font-size: 1.8rem; margin-bottom: 1rem;">Introduction & Mission</h3>
+                    <p style="color: var(--text-muted); margin-bottom: 1rem;">
+                        Hello! Mera naam <strong>Harsh Chaudhary Tomar</strong> hai. Mai ek dedicated student hu aur coding & web technology me deep interest rakhta hu. Mai modern business requirements ke according custom websites aur landing pages design karta hu.
+                    </p>
+                    <p style="color: var(--text-muted); margin-bottom: 1.5rem;">
+                        Mera goal simple hai: clean code, fast loading time, aur attractive responsive layouts create karna taaki clients ka kaam automated aur digital ban sake.
+                    </p>
 
-                    <div class="card">
-                        <h3 style="font-size: 1.25rem; margin-bottom: 1rem;">Core Technology & Stack</h3>
-                        <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 1.5rem;">
-                            <span class="info-pill">HTML5 & Semantic SEO</span>
-                            <span class="info-pill">Modern CSS3 & Animations</span>
-                            <span class="info-pill">Vanilla JavaScript (ES6+)</span>
-                            <span class="info-pill">Supabase PostgreSQL Cloud</span>
-                            <span class="info-pill">SHA-256 Auth Encryption</span>
-                            <span class="info-pill">Mobile UI Touch Optimization</span>
-                        </div>
-
-                        <h4 style="font-size: 1.1rem; margin-bottom: 0.8rem;">Studio Highlights:</h4>
-                        <div class="spec-list">
-                            <div class="spec-item">
-                                <strong style="color:var(--accent); display:block; font-size:1.1rem;">⚡ Ultra Fast</strong>
-                                <span style="font-size:0.84rem; color:var(--text-muted);">Zero unnecessary plugins for maximum speed</span>
-                            </div>
-                            <div class="spec-item">
-                                <strong style="color:#16a34a; display:block; font-size:1.1rem;">📱 100% Responsive</strong>
-                                <span style="font-size:0.84rem; color:var(--text-muted);">Tailored for modern Android and iPhones</span>
-                            </div>
-                            <div class="spec-item">
-                                <strong style="color:#f59e0b; display:block; font-size:1.1rem;">🔒 End-to-End Secure</strong>
-                                <span style="font-size:0.84rem; color:var(--text-muted);">Crypto-verified tokens & OTP verification</span>
-                            </div>
-                        </div>
+                    <h4>Key Skills & Technology:</h4>
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 12px;">
+                        <span style="background: #e2e8f0; padding: 6px 14px; border-radius: 20px; font-size: 0.9rem; font-weight: 600;">HTML5 / CSS3</span>
+                        <span style="background: #e2e8f0; padding: 6px 14px; border-radius: 20px; font-size: 0.9rem; font-weight: 600;">JavaScript</span>
+                        <span style="background: #e0f2fe; color: #0369a1; padding: 6px 14px; border-radius: 20px; font-size: 0.9rem; font-weight: 600;">Supabase Cloud DB</span>
+                        <span style="background: #e2e8f0; padding: 6px 14px; border-radius: 20px; font-size: 0.9rem; font-weight: 600;">SHA-256 Auth</span>
+                        <span style="background: #e2e8f0; padding: 6px 14px; border-radius: 20px; font-size: 0.9rem; font-weight: 600;">Responsive UI Design</span>
+                        <span style="background: #e2e8f0; padding: 6px 14px; border-radius: 20px; font-size: 0.9rem; font-weight: 600;">Website Optimization</span>
                     </div>
                 </div>
-
             </div>
         </div>
     </section>
@@ -227,7 +162,6 @@
     </div>
 </footer>
 
-<!-- Srishti Assistant Widget -->
 <div id="srishti-chatbot-widget">
     <button id="srishti-chat-toggle" aria-label="Open Srishti Assistant"><span id="srishti-toggle-icon">✨</span></button>
     <div id="srishti-chat-window">
@@ -237,7 +171,7 @@
         </div>
         <div class="srishti-chat-body" id="srishtiChatBody">
             <div class="srishti-msg bot-msg">
-                Hello! MERA NAAM SRISHTI HAI. Main HarshCode Studio ki AI assistant hoon. Harsh Chaudhary Tomar ya hamari web services ke baare me kuch bhi poochein!
+                Hello! MERA NAAM SRISHTI HAI. Main HarshCode Studio ki AI assistant hoon. Website development, pricing, timelines ya Harsh Chaudhary Tomar ke baare me kuch bhi poochein!
             </div>
             <div class="srishti-quick-chips">
                 <button onclick="triggerSrishti('Website Banwane Ka Cost?')">💰 Cost</button>
@@ -262,11 +196,12 @@
         document.getElementById("pagesDropdown").classList.remove("active");
     });
 
+    // Elegant avatar fallback if local profile picture fails to load
     function handleProfileFallback(img) {
         img.onerror = null;
         img.src = 'images/my-profile.jpg';
         img.onerror = function() {
-            this.parentElement.innerHTML = '<div class="profile-avatar-fallback">HC</div>';
+            this.parentElement.innerHTML = '<div class="avatar-fallback-text">HC</div>';
         };
     }
 
@@ -274,7 +209,8 @@
         { k: ["cost", "price", "kitne", "paisa", "rate", "fees"], r: "Website pricing estimate:<br>• <strong>Landing Page / Portfolio:</strong> ₹2,500 – ₹5,000<br>• <strong>Business Multi-Page Website:</strong> ₹6,000 – ₹12,000<br>• <strong>Custom Cloud Web App:</strong> ₹12,000+.<br>Direct enquiry ke liye Contact page visit karein!" },
         { k: ["tech", "stack", "technology", "code", "database", "supabase"], r: "HarshCode Studio modern stack use karta hai:<br>• <strong>Frontend:</strong> HTML5, CSS3, Modern JavaScript (ES6+), Tailwind CSS.<br>• <strong>Database:</strong> Supabase (Real-Time Cloud PostgreSQL), IndexedDB.<br>• <strong>Security:</strong> SHA-256 Cryptographic Auth." },
         { k: ["time", "kitne din", "duration", "timeline", "kab tak"], r: "Standard project timeline:<br>• <strong>Single Page / Portfolio:</strong> 24 se 48 ghante.<br>• <strong>Full Business Website:</strong> 3 se 5 din.<br>• <strong>Custom Web App:</strong> 7 se 10 din." },
-        { k: ["contact", "harsh", "number", "call", "whatsapp", "phone", "address"], r: "Direct Details:<br>• <strong>Call / WhatsApp:</strong> +91 94120 78091<br>• <strong>Address:</strong> NEAR CO OFFICE , SHAHABAD ROAD BILARI<br>• <strong>Email:</strong> yubanshhsalklan@gmail.com" }
+        { k: ["contact", "harsh", "number", "call", "whatsapp", "phone"], r: "Direct Harsh Chaudhary Tomar se judne ke liye:<br>• <strong>Call / WhatsApp:</strong> +91 94120 78091<br>• <strong>Instagram:</strong> @yubanshh_chaudhary01<br>• <strong>Email:</strong> yubanshhsalklan@gmail.com<br>• <strong>Address:</strong> NEAR CO OFFICE , SHAHABAD ROAD BILARI" },
+        { k: ["mobile", "responsive", "phone", "tablet"], r: "Haan! HarshCode Studio ki banayi gayi har website 100% mobile-friendly aur responsive hoti hai jo har phone aur screen par smooth chalti hai." }
     ];
 
     const toggleBtn = document.getElementById("srishti-chat-toggle");
@@ -304,7 +240,7 @@
             if (item.k.some(key => lower.includes(key))) { answer = item.r; break; }
         }
         setTimeout(() => {
-            addMessage(answer || "Yeh badhiya sawaal hai! Direct Harsh se judne ke liye <strong>+91 94120 78091</strong> par call/WhatsApp karein.", "bot");
+            addMessage(answer || "Yeh badhiya sawaal hai! Is requirement ke liye aap direct Harsh se <strong>+91 94120 78091</strong> par call/WhatsApp karein ya <a href='contact.html' style='color:#0284c7; font-weight:bold;'>Contact Page</a> dekhein.", "bot");
         }, 300);
     }
 
