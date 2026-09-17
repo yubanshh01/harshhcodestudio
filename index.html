@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HarshCode Studio | Harsh Chaudhary Tomar</title>
     <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 
@@ -20,7 +21,6 @@
                 <li><a href="index.html" class="active">Home</a></li>
                 <li><a href="about.html">About</a></li>
                 <li><a href="contact.html">Contact</a></li>
-                <!-- Dropdown for Other Pages -->
                 <li class="nav-dropdown" id="pagesDropdown">
                     <button class="dropdown-btn" onclick="toggleDropdown(event)">Pages ▾</button>
                     <div class="dropdown-content" id="dropdownMenu">
@@ -40,10 +40,17 @@
         <div class="container">
             <h1>Hi, I'm <span>Harsh Chaudhary Tomar</span></h1>
             <p>Student & Professional Website Developer. Mai fast, mobile-friendly aur modern business websites banata hu jo aapke brand ko grow karne me madad karein.</p>
+            
             <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
                 <a href="services.html" class="btn">Explore My Work</a>
                 <a href="contact.html" class="btn btn-outline">Let's Talk</a>
             </div>
+
+            <!-- Direct Video Frame (No controls / continuous loop) -->
+            <div id="homeVideoContainer" class="direct-video-frame">
+                <video id="homeDirectVideo" autoplay loop playsinline></video>
+            </div>
+
         </div>
     </section>
 
@@ -180,7 +187,6 @@
 </div>
 
 <script>
-    // Dropdown toggle
     function toggleDropdown(e) {
         e.stopPropagation();
         document.getElementById("pagesDropdown").classList.toggle("active");
@@ -189,13 +195,46 @@
         document.getElementById("pagesDropdown").classList.remove("active");
     });
 
-    // Trained Knowledge Engine
+    const SUPABASE_URL = "https://rbbryqshvycrstzrtytp.supabase.co";
+    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJiYnJ5cXNodnljcnN0enJ0eXRwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg3MTI1MjYsImV4cCI6MjEwNDI4ODUyNn0.WzH2ju9G2nW8iOKnh77OFF0N3G0ECHx1iLBjcPISItc";
+    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    async function loadDirectVideo() {
+        try {
+            const { data, error } = await supabaseClient
+                .from('posts')
+                .select('video')
+                .not('video', 'is', null)
+                .order('id', { ascending: false })
+                .limit(1);
+
+            if (error) throw error;
+
+            if (data && data.length > 0 && data[0].video) {
+                const box = document.getElementById("homeVideoContainer");
+                const video = document.getElementById("homeDirectVideo");
+                video.src = data[0].video;
+                box.style.display = "block";
+
+                // Play attempt with sound
+                const playPromise = video.play();
+                if (playPromise !== undefined) {
+                    playPromise.catch(() => {
+                        // Browser audio policy fallback: if sound autoplay is blocked, start muted
+                        video.muted = true;
+                        video.play();
+                    });
+                }
+            }
+        } catch(e) {}
+    }
+    loadDirectVideo();
+
     const srishtiKB = [
         { k: ["cost", "price", "kitne", "paisa", "rate", "fees"], r: "Website pricing estimate:<br>• <strong>Landing Page / Portfolio:</strong> ₹2,500 – ₹5,000<br>• <strong>Business Multi-Page Website:</strong> ₹6,000 – ₹12,000<br>• <strong>Custom Cloud Web App:</strong> ₹12,000+.<br>Direct enquiry ke liye Contact page visit karein!" },
         { k: ["tech", "stack", "technology", "code", "database", "supabase"], r: "HarshCode Studio modern stack use karta hai:<br>• <strong>Frontend:</strong> HTML5, CSS3, Modern JavaScript (ES6+), Tailwind CSS.<br>• <strong>Database:</strong> Supabase (Real-Time Cloud PostgreSQL), IndexedDB.<br>• <strong>Security:</strong> SHA-256 Cryptographic Auth." },
         { k: ["time", "kitne din", "duration", "timeline", "kab tak"], r: "Standard project timeline:<br>• <strong>Single Page / Portfolio:</strong> 24 se 48 ghante.<br>• <strong>Full Business Website:</strong> 3 se 5 din.<br>• <strong>Custom Web App:</strong> 7 se 10 din." },
-        { k: ["contact", "harsh", "number", "call", "whatsapp", "phone"], r: "Direct Harsh Chaudhary Tomar se judne ke liye:<br>• <strong>Call / WhatsApp:</strong> +91 94120 78091<br>• <strong>Instagram:</strong> @yubanshh_chaudhary01<br>• <strong>Email:</strong> yubanshhsalklan@gmail.com<br>• <strong>Address:</strong> NEAR CO OFFICE , SHAHABAD ROAD BILARI" },
-        { k: ["mobile", "responsive", "phone", "tablet"], r: "Haan! HarshCode Studio ki banayi gayi har website 100% mobile-friendly aur responsive hoti hai jo har phone aur screen par smooth chalti hai." }
+        { k: ["contact", "harsh", "number", "call", "whatsapp", "phone", "address"], r: "Direct Details:<br>• <strong>Call / WhatsApp:</strong> +91 94120 78091<br>• <strong>Address:</strong> NEAR CO OFFICE , SHAHABAD ROAD BILARI<br>• <strong>Email:</strong> yubanshhsalklan@gmail.com" }
     ];
 
     const toggleBtn = document.getElementById("srishti-chat-toggle");
@@ -222,13 +261,10 @@
         const lower = query.toLowerCase();
         let answer = null;
         for (let item of srishtiKB) {
-            if (item.k.some(key => lower.includes(key))) {
-                answer = item.r;
-                break;
-            }
+            if (item.k.some(key => lower.includes(key))) { answer = item.r; break; }
         }
         setTimeout(() => {
-            addMessage(answer || "Yeh badhiya sawaal hai! Is requirement ke liye aap direct Harsh se <strong>+91 94120 78091</strong> par call/WhatsApp karein ya <a href='contact.html' style='color:#0284c7; font-weight:bold;'>Contact Page</a> dekhein.", "bot");
+            addMessage(answer || "Yeh badhiya sawaal hai! Direct Harsh se judne ke liye <strong>+91 94120 78091</strong> par call/WhatsApp karein.", "bot");
         }, 300);
     }
 
