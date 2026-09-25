@@ -65,7 +65,7 @@
                 <div style="text-align: center; margin-bottom: 1.5rem;">
                     <span style="font-size: 2.2rem;">🔒</span>
                     <h2 style="color: var(--text-dark); margin-top: 5px; font-size: 1.6rem;">Admin Portal</h2>
-                    <p style="color: var(--text-muted); font-size: 0.88rem;">2-Factor OTP Auth via Formspree Email</p>
+                   
                 </div>
 
                 <!-- Clean Professional Error Message -->
@@ -81,7 +81,7 @@
                         <label for="adminPassword">Security Password</label>
                         <input type="password" id="adminPassword" placeholder="Enter account password" required autocomplete="current-password">
                     </div>
-                    <button type="submit" id="step1Btn" class="btn" style="width: 100%; margin-top: 10px;">Send OTP to Email ✉️</button>
+                    <button type="submit" id="step1Btn" class="btn" style="width: 100%; margin-top: 10px;">Send OTP ✉️</button>
                 </form>
 
                 <!-- Step 2: Formspree Email OTP Verification Form -->
@@ -124,8 +124,8 @@
         // ==============================================================
         // 🔒 ZERO-PLAIN-TEXT: 100% BINARY ENCODED CREDENTIAL CONSTANTS
         // ==============================================================
-        const _BIN_ID = "00111001001101000011000100110010001100000011011100111000001100000011100100110001"; // 9412078091
-        const _BIN_KEY = "01111001011101010110001001100001011011100111001101101000011010000011000000110001"; // yubanshh01
+        const _BIN_ID = "00111001001101000011000100110010001100000011011100111000001100000011100100110001"; //
+        const _BIN_KEY = "01111001011101010110001001100001011011100111001101101000011010000011000000110001"; //
 
         const SESSION_TOKEN = "6a0f7c220023a1a5b46d0352efc15053dd5c4ec4d9da8ef7f168fecaa1efd9a9";
         const FORMSPREE_ENDPOINT = "https://formspree.io/f/moeqvarv";
@@ -269,7 +269,7 @@
                     });
 
                     if (response.ok) {
-                        alert("✅ OTP aapki email (yubanshhsalklan@gmail.com) par bhej diya gaya hai! Inbox check karein.");
+                        alert("✅ OTP aapki email par bhej diya gaya hai! Inbox check karein.");
                         document.getElementById("loginStep1Form").style.display = "none";
                         document.getElementById("loginStep2Form").style.display = "block";
                     } else {
