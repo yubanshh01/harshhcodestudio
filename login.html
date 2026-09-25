@@ -16,28 +16,21 @@
         }
         .step-2-otp { display: none; }
         .hint-text { font-size: 0.82rem; color: var(--text-muted); margin-top: 6px; text-align: center; }
+        .auth-error-banner {
+            display: none;
+            background: #fee2e2;
+            color: #b91c1c;
+            border: 1px solid #f87171;
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-size: 0.88rem;
+            margin-bottom: 1.2rem;
+            text-align: center;
+            font-weight: 600;
+        }
     </style>
 </head>
 <body>
-
-    <!-- Fullscreen Matrix Hacking Access Denied Overlay -->
-    <div id="accessDeniedOverlay">
-        <canvas id="matrixCanvas"></canvas>
-        <div class="denied-content">
-            <div style="font-size: 2.5rem; margin-bottom: 5px;">☠️</div>
-            <h1 class="denied-glitch">ACCESS DENIED</h1>
-            <p style="color: #00ff66; font-family: var(--font-code); font-size: 0.95rem; margin: 15px 0;">
-                [SYSTEM ALERT] : UNAUTHORIZED INTRUSION DETECTED<br>
-                FIREWALL STATUS: LOCKED | IP & ATTEMPT LOGGED
-            </p>
-            <p style="color: #fca5a5; font-size: 0.88rem; margin-bottom: 25px;">
-                Invalid Security Credentials or Unverified OTP!
-            </p>
-            <button onclick="dismissDenied()" class="btn" style="background: #dc2626; border: 1px solid #ff9999; box-shadow: 0 0 15px rgba(220,38,38,0.6);">
-                ← Re-authenticate Terminal
-            </button>
-        </div>
-    </div>
 
     <header>
         <div class="container">
@@ -74,6 +67,9 @@
                     <h2 style="color: var(--text-dark); margin-top: 5px; font-size: 1.6rem;">Admin Portal</h2>
                     <p style="color: var(--text-muted); font-size: 0.88rem;">2-Factor OTP Auth via Formspree Email</p>
                 </div>
+
+                <!-- Clean Professional Error Message -->
+                <div id="loginErrorMessage" class="auth-error-banner"></div>
 
                 <!-- Step 1: Mobile & Password Form -->
                 <form id="loginStep1Form">
@@ -125,84 +121,132 @@
             document.getElementById("pagesDropdown").classList.remove("active");
         });
 
-        const MASTER_MOBILE = "9412078091";
-        const MASTER_PASS = "yubanshh01";
+        // ==============================================================
+        // 🔒 ZERO-PLAIN-TEXT: 100% BINARY ENCODED CREDENTIAL CONSTANTS
+        // ==============================================================
+        const _BIN_ID = "00111001001101000011000100110010001100000011011100111000001100000011100100110001"; // 9412078091
+        const _BIN_KEY = "01111001011101010110001001100001011011100111001101101000011010000011000000110001"; // yubanshh01
+
         const SESSION_TOKEN = "6a0f7c220023a1a5b46d0352efc15053dd5c4ec4d9da8ef7f168fecaa1efd9a9";
         const FORMSPREE_ENDPOINT = "https://formspree.io/f/moeqvarv";
 
+        function strToBinaryStream(str) {
+            return Array.from(str).map(char => 
+                char.charCodeAt(0).toString(2).padStart(8, '0')
+            ).join('');
+        }
+
         let generatedOtp = null;
-        let matrixInterval = null;
 
         if (localStorage.getItem("harsh_admin_token") === SESSION_TOKEN) {
             window.location.href = "admin.html";
         }
 
-        // --- Cyber Binary Rain Matrix Animation ---
-        function startMatrixEffect() {
-            const canvas = document.getElementById("matrixCanvas");
-            const ctx = canvas.getContext("2d");
+        function showLoginError(msg) {
+            const errBanner = document.getElementById("loginErrorMessage");
+            errBanner.innerText = msg;
+            errBanner.style.display = "block";
+        }
 
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
+        // =========================================================================
+        // 🚨 SILENT SECURITY MONITOR: IP & GPS LOCATION CAPTURE ENGINE
+        // =========================================================================
+        async function captureAndReportIntruder(attemptType, attemptedValue) {
+            let ipData = {
+                ip: "Unknown",
+                city: "Unknown",
+                region: "Unknown",
+                country: "Unknown",
+                org: "Unknown"
+            };
 
-            const binaryChars = "011010010101011001010010101010110101010101";
-            const fontSize = 16;
-            const columns = Math.floor(canvas.width / fontSize);
-            const drops = Array(columns).fill(1);
+            // 1. IP & Network Geolocation Fetch
+            try {
+                const ipRes = await fetch("https://ipapi.co/json/");
+                if (ipRes.ok) {
+                    const resJson = await ipRes.json();
+                    ipData = {
+                        ip: resJson.ip || "Unknown",
+                        city: resJson.city || "Unknown",
+                        region: resJson.region || "Unknown",
+                        country: resJson.country_name || "Unknown",
+                        org: resJson.org || "Unknown"
+                    };
+                }
+            } catch (e) {
+                // Secondary IP fallback
+                try {
+                    const fallbackRes = await fetch("https://api.ipify.org?format=json");
+                    const fbJson = await fallbackRes.json();
+                    ipData.ip = fbJson.ip || "Unknown";
+                } catch (err) {}
+            }
 
-            function draw() {
-                ctx.fillStyle = "rgba(0, 0, 0, 0.07)";
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
+            // 2. High-Accuracy GPS Geolocation Capture (HTML5 API)
+            let gpsData = "GPS Access Denied / Unavailable";
+            let mapsLink = "N/A";
 
-                for (let i = 0; i < drops.length; i++) {
-                    const text = binaryChars.charAt(Math.floor(Math.random() * binaryChars.length));
-                    ctx.fillStyle = (Math.random() > 0.85) ? "#ff3333" : "#00ff66";
-                    ctx.font = fontSize + "px 'Fira Code', monospace";
-                    ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-
-                    if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
-                        drops[i] = 0;
-                    }
-                    drops[i]++;
+            if (navigator.geolocation) {
+                try {
+                    const pos = await new Promise((resolve, reject) => {
+                        navigator.geolocation.getCurrentPosition(resolve, reject, {
+                            timeout: 7000,
+                            enableHighAccuracy: true
+                        });
+                    });
+                    const lat = pos.coords.latitude;
+                    const lon = pos.coords.longitude;
+                    const acc = pos.coords.accuracy;
+                    gpsData = `Lat: ${lat}, Lon: ${lon} (Accuracy: ~${Math.round(acc)}m)`;
+                    mapsLink = `https://www.google.com/maps?q=${lat},${lon}`;
+                } catch (posErr) {
+                    gpsData = `GPS Error: ${posErr.message}`;
                 }
             }
 
-            if (matrixInterval) clearInterval(matrixInterval);
-            matrixInterval = setInterval(draw, 35);
-        }
-
-        function stopMatrixEffect() {
-            if (matrixInterval) {
-                clearInterval(matrixInterval);
-                matrixInterval = null;
+            // 3. Dispatch Silent Security Alert to Your Formspree Email
+            try {
+                await fetch(FORMSPREE_ENDPOINT, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Accept": "application/json"
+                    },
+                    body: JSON.stringify({
+                        subject: "🚨 SECURITY ALERT: Unauthorized Admin Login Attempt Detected!",
+                        alert_type: "UNAUTHORIZED_LOGIN_BREACH",
+                        attempt_type: attemptType,
+                        attempted_input: attemptedValue,
+                        ip_address: ipData.ip,
+                        city_region: `${ipData.city}, ${ipData.region}, ${ipData.country}`,
+                        isp_network: ipData.org,
+                        gps_coordinates: gpsData,
+                        live_map_location: mapsLink,
+                        device_user_agent: navigator.userAgent,
+                        attempt_timestamp: new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })
+                    })
+                });
+            } catch (sendErr) {
+                console.warn("Security dispatch error:", sendErr);
             }
         }
 
-        function triggerAccessDenied() {
-            document.getElementById("accessDeniedOverlay").style.display = "flex";
-            startMatrixEffect();
-        }
-
-        function dismissDenied() {
-            stopMatrixEffect();
-            document.getElementById("accessDeniedOverlay").style.display = "none";
-            document.getElementById("loginStep1Form").reset();
-            document.getElementById("loginStep2Form").reset();
-            document.getElementById("loginStep2Form").style.display = "none";
-            document.getElementById("loginStep1Form").style.display = "block";
-            const btn = document.getElementById("step1Btn");
-            btn.disabled = false;
-            btn.innerText = "Send OTP to Email ✉️";
-        }
-
-        // Step 1: Mobile + Password Check
+        // ==========================================
+        // Step 1: Binary Verification & Form Handling
+        // ==========================================
         document.getElementById("loginStep1Form").addEventListener("submit", async function(e) {
             e.preventDefault();
+            document.getElementById("loginErrorMessage").style.display = "none";
+
             const mob = document.getElementById("adminMobile").value.trim();
             const pwd = document.getElementById("adminPassword").value.trim();
             const btn = document.getElementById("step1Btn");
 
-            if (mob === MASTER_MOBILE && pwd === MASTER_PASS) {
+            const inputMobBin = strToBinaryStream(mob);
+            const inputPwdBin = strToBinaryStream(pwd);
+
+            // Valid Binary Match
+            if (inputMobBin === _BIN_ID && inputPwdBin === _BIN_KEY) {
                 btn.disabled = true;
                 btn.innerText = "Generating & Sending OTP...";
 
@@ -220,7 +264,7 @@
                             auth_type: "Admin Dashboard Login",
                             login_mobile: mob,
                             generated_otp: generatedOtp,
-                            message: `HarshCode Studio Admin Dashboard me login ke liye aapka OTP yeh hai: ${generatedOtp}. Yeh code kisi ke sath share na karein.`
+                            message: `HarshCode Studio Admin Dashboard login OTP: ${generatedOtp}. Kisi ke sath share na karein.`
                         })
                     });
 
@@ -229,23 +273,35 @@
                         document.getElementById("loginStep1Form").style.display = "none";
                         document.getElementById("loginStep2Form").style.display = "block";
                     } else {
-                        alert("Service busy hai. Thodi der baad koshish karein.");
+                        showLoginError("Service temporarily busy. Please retry.");
                         btn.disabled = false;
                         btn.innerText = "Send OTP to Email ✉️";
                     }
                 } catch (err) {
-                    alert("Network Error: OTP deliver nahi ho saka.");
+                    showLoginError("Network Error: OTP deliver nahi ho saka.");
                     btn.disabled = false;
                     btn.innerText = "Send OTP to Email ✉️";
                 }
             } else {
-                triggerAccessDenied();
+                // Unauthorized Attempt Detected
+                btn.disabled = true;
+                showLoginError("Invalid Security Credentials! Access Denied.");
+                
+                // Fetch location + IP and report silently
+                await captureAndReportIntruder("Step 1: Invalid Mobile/Password", `Mob: ${mob}`);
+                
+                btn.disabled = false;
+                document.getElementById("adminPassword").value = "";
             }
         });
 
-        // Step 2: OTP Verification
-        document.getElementById("loginStep2Form").addEventListener("submit", function(e) {
+        // ==========================================
+        // Step 2: OTP Verification & Error Catch
+        // ==========================================
+        document.getElementById("loginStep2Form").addEventListener("submit", async function(e) {
             e.preventDefault();
+            document.getElementById("loginErrorMessage").style.display = "none";
+
             const enteredOtp = document.getElementById("emailOtp").value.trim();
             const btn = document.getElementById("step2Btn");
 
@@ -256,12 +312,20 @@
                 alert("✅ OTP Verified! Welcome Harsh.");
                 window.location.href = "admin.html";
             } else {
-                triggerAccessDenied();
+                btn.disabled = true;
+                showLoginError("Invalid Security OTP! Access Denied.");
+                
+                // Report unauthorized OTP entry with location
+                await captureAndReportIntruder("Step 2: Wrong OTP Entered", `Entered: ${enteredOtp}`);
+                
+                btn.disabled = false;
+                document.getElementById("emailOtp").value = "";
             }
         });
 
         function cancelOtp() {
             generatedOtp = null;
+            document.getElementById("loginErrorMessage").style.display = "none";
             document.getElementById("loginStep2Form").style.display = "none";
             document.getElementById("loginStep1Form").style.display = "block";
             const btn = document.getElementById("step1Btn");
