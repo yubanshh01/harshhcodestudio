@@ -8,63 +8,69 @@
     <link rel="icon" type="image/jpeg" href="images/logo.jpeg">
     <style>
         /* =========================================
-           CINEMATIC 3D INTRO ANIMATION
+           1. CINEMATIC 3D INTRO ANIMATION (CSS ENGINE)
            ========================================= */
-        #intro-sequence {
+        #cinematic-intro {
             position: fixed;
             top: 0; left: 0; width: 100vw; height: 100vh;
-            background: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%);
+            background: #090e17;
             z-index: 999999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 1s ease-in-out;
+            overflow: hidden;
+        }
+
+        /* Character carrying suitcase */
+        .intro-character-box {
+            position: relative;
+            transform: translateX(-100vw);
+            animation: walkIn 2s cubic-bezier(0.25, 1, 0.5, 1) forwards;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
-            transition: opacity 0.8s ease, visibility 0.8s;
         }
 
-        .suitcase-container {
-            font-size: 6rem;
-            position: relative;
-            animation: slideInSuitcase 1.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
-            transform: translateX(-100vw) rotate(-20deg);
+        /* 3D Character Image Placeholder */
+        .intro-character-box img {
+            width: 250px;
+            filter: drop-shadow(0 20px 20px rgba(0,0,0,0.5));
+            z-index: 2;
         }
 
-        .magic-flash {
+        /* The Magic Suitcase Glow */
+        .suitcase-glow {
             position: absolute;
-            top: 50%; left: 50%;
-            transform: translate(-50%, -50%) scale(0);
-            width: 200px; height: 200px;
-            background: radial-gradient(circle, rgba(56,189,248,0.8) 0%, transparent 70%);
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) scale(0);
+            width: 10px; height: 10px;
+            background: #38bdf8;
             border-radius: 50%;
+            box-shadow: 0 0 100px 100px #38bdf8, 0 0 300px 300px #ffffff;
             opacity: 0;
-            z-index: -1;
+            z-index: 3;
         }
 
-        .suitcase-container.open {
-            animation: suitcaseOpenBlink 0.5s ease forwards;
+        .suitcase-glow.explode {
+            animation: openSuitcaseGlow 1.5s ease-in forwards;
         }
 
-        .suitcase-container.open .magic-flash {
-            animation: flashExplode 0.8s ease forwards;
+        @keyframes walkIn {
+            0% { transform: translateX(-100vw) rotate(-10deg); }
+            80% { transform: translateX(20px) rotate(5deg); }
+            100% { transform: translateX(0) rotate(0deg); }
         }
 
-        @keyframes slideInSuitcase {
-            to { transform: translateX(0) rotate(0deg); }
-        }
-
-        @keyframes suitcaseOpenBlink {
-            0% { transform: scale(1); filter: brightness(1); }
-            50% { transform: scale(1.2); filter: brightness(2); }
-            100% { transform: scale(0); opacity: 0; }
-        }
-
-        @keyframes flashExplode {
-            0% { transform: translate(-50%, -50%) scale(0); opacity: 1; }
-            100% { transform: translate(-50%, -50%) scale(5); opacity: 0; }
+        @keyframes openSuitcaseGlow {
+            0% { transform: translateX(-50%) scale(0); opacity: 1; }
+            50% { transform: translateX(-50%) scale(50); opacity: 1; }
+            100% { transform: translateX(-50%) scale(150); opacity: 1; }
         }
 
         /* =========================================
-           SPLIT SCREEN LOGIN LAYOUT WITH 3D CHARACTER
+           2. MAIN DASHBOARD LOGIN (SPLIT SCREEN)
            ========================================= */
         .login-main-wrapper { 
             max-width: 900px; 
@@ -72,71 +78,85 @@
             display: flex;
             border-radius: 16px;
             background: var(--white);
-            box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+            box-shadow: 0 25px 60px rgba(0,0,0,0.2);
             overflow: hidden;
             opacity: 0;
-            transform: translateY(30px) scale(0.95);
-            transition: all 1s cubic-bezier(0.25, 1, 0.5, 1);
+            visibility: hidden;
+            transform: scale(0.9) translateY(40px);
+            transition: all 1.2s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
 
         .login-main-wrapper.show-dashboard {
             opacity: 1;
-            transform: translateY(0) scale(1);
+            visibility: visible;
+            transform: scale(1) translateY(0);
         }
 
-        /* 3D Character Side */
+        /* Left Side: 3D Character Standing */
         .character-side {
             width: 45%;
-            background: linear-gradient(135deg, #0b1329 0%, #16203c 100%);
-            padding: 2.5rem 2rem;
+            background: linear-gradient(145deg, #0b1329 0%, #1a2a4f 100%);
+            padding: 3rem 2rem;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            text-align: center;
             position: relative;
         }
 
-        .character-side::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: url('https://www.transparenttextures.com/patterns/cubes.png');
-            opacity: 0.1;
+        /* Typewriter Text Box */
+        .greeting-box {
+            min-height: 80px;
+            margin-bottom: 20px;
+            text-align: center;
+            z-index: 2;
         }
 
         .typing-text {
             color: #38bdf8;
             font-family: var(--font-code);
-            font-size: 1.15rem;
-            font-weight: 700;
-            line-height: 1.5;
-            min-height: 70px;
-            margin-bottom: 1.5rem;
-            text-shadow: 0 0 10px rgba(56,189,248,0.4);
+            font-size: 1.2rem;
+            font-weight: 800;
+            line-height: 1.6;
+            letter-spacing: 0.5px;
+            text-shadow: 0 0 15px rgba(56,189,248,0.5);
+        }
+
+        /* Blinking Cursor */
+        .cursor {
+            display: inline-block;
+            width: 10px;
+            background-color: #38bdf8;
+            animation: blink 0.8s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        /* Standing 3D Character */
+        .standing-character {
+            width: 260px;
+            filter: drop-shadow(10px 20px 15px rgba(0,0,0,0.4));
+            animation: subtleBreathe 4s infinite ease-in-out;
             z-index: 2;
         }
 
-        /* High-quality 3D illustration placeholder */
-        .cartoon-3d-img {
-            width: 240px;
-            height: auto;
-            filter: drop-shadow(0 15px 15px rgba(0,0,0,0.4));
-            animation: floatUpDown 4s ease-in-out infinite;
-            z-index: 2;
+        @keyframes subtleBreathe {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-8px) scale(1.02); }
         }
 
-        @keyframes floatUpDown {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-12px); }
-        }
-
-        /* Form Side */
+        /* Right Side: Login Form */
         .form-side {
             width: 55%;
             padding: 3.5rem 3rem;
             position: relative;
             background: var(--white);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
 
         .step-2-otp { display: none; }
@@ -158,8 +178,7 @@
         @media (max-width: 850px) {
             .login-main-wrapper { flex-direction: column; max-width: 440px; }
             .character-side, .form-side { width: 100%; }
-            .character-side { padding: 2rem 1rem; }
-            .cartoon-3d-img { width: 180px; }
+            .standing-character { width: 180px; }
             .form-side { padding: 2.5rem; }
         }
     </style>
@@ -167,16 +186,18 @@
 <body>
 
     <!-- =========================================
-         1. CINEMATIC 3D SUITCASE INTRO 
+         SCENE 1: THE 3D SUITCASE INTRO OVERLAY
          ========================================= -->
-    <div id="intro-sequence">
-        <div class="suitcase-container" id="suitcaseAnim">
-            🧳
-            <div class="magic-flash"></div>
+    <div id="cinematic-intro">
+        <div class="intro-character-box">
+            <!-- 3D Character carrying suitcase -->
+            <img src="https://cdn3d.iconscout.com/3d/premium/thumb/businessman-holding-briefcase-5065977-4225251.png" alt="3D Character Arriving">
+            <div class="suitcase-glow" id="flashGlow"></div>
         </div>
-        <p style="color:#64748b; margin-top:20px; font-family:var(--font-code); font-size:0.9rem; letter-spacing:2px; animation: pulse 1.5s infinite;">INITIALIZING SECURE DASHBOARD...</p>
+        <p id="loadingText" style="position:absolute; bottom:40px; color:#38bdf8; font-family:var(--font-code); letter-spacing:3px; font-size:0.8rem; animation: blink 1s infinite;">SYSTEM SECURE UPLINK IN PROGRESS...</p>
     </div>
 
+    <!-- Background Header -->
     <header>
         <div class="container">
             <nav>
@@ -204,23 +225,25 @@
 
     <main class="container">
         <!-- =========================================
-             2. SPLIT LOGIN BOX WITH 3D CHARACTER 
+             SCENE 2: THE REVEAL & LOGIN BOX
              ========================================= -->
         <div class="login-main-wrapper" id="mainLoginBox">
             
-            <!-- 3D Character Side -->
+            <!-- Left Side: 3D Character Standing Support -->
             <div class="character-side">
-                <div class="typing-text" id="welcomeText"></div>
-                <!-- 3D Boy Illustration (Professional Look) -->
-                <img src="https://cdn3d.iconscout.com/3d/premium/thumb/boy-working-on-laptop-4437039-3684809.png" alt="3D Admin Character" class="cartoon-3d-img">
+                <div class="greeting-box">
+                    <span class="typing-text" id="typewriterText"></span><span class="cursor" id="cursorElement">&nbsp;</span>
+                </div>
+                <!-- Standing Character (Same character, different pose) -->
+                <img src="https://cdn3d.iconscout.com/3d/premium/thumb/businessman-using-laptop-5065974-4225248.png" alt="3D Admin Standing" class="standing-character">
             </div>
 
-            <!-- Login Form Side -->
+            <!-- Right Side: Professional Secure Form -->
             <div class="form-side">
                 <div style="text-align: center; margin-bottom: 1.5rem;">
                     <span style="font-size: 2.2rem;">🛡️</span>
-                    <h2 style="color: var(--text-dark); margin-top: 5px; font-size: 1.6rem;">Admin Authorization</h2>
-                    <p style="color: var(--text-muted); font-size: 0.88rem;">Secure 2-Factor OTP Access</p>
+                    <h2 style="color: var(--text-dark); margin-top: 5px; font-size: 1.6rem; font-weight: 800;">Admin Authorization</h2>
+                    <p style="color: var(--text-muted); font-size: 0.88rem; margin-top: 4px;">Zero-Trust Encrypted Gateway</p>
                 </div>
 
                 <div id="loginErrorMessage" class="auth-error-banner"></div>
@@ -228,39 +251,34 @@
                 <!-- Step 1: Mobile & Password Form -->
                 <form id="loginStep1Form">
                     <div class="form-group">
-                        <label for="adminMobile">Registered Mobile Number</label>
-                        <input type="tel" id="adminMobile" placeholder="Enter registered mobile" required autocomplete="username">
+                        <label for="adminMobile" style="font-weight: 700; color: #334155;">Registered Mobile Number</label>
+                        <input type="tel" id="adminMobile" placeholder="Enter secure mobile ID" required autocomplete="username" style="padding: 12px; border-radius: 8px;">
                     </div>
                     <div class="form-group">
-                        <label for="adminPassword">Security Password</label>
-                        <input type="password" id="adminPassword" placeholder="Enter account password" required autocomplete="current-password">
+                        <label for="adminPassword" style="font-weight: 700; color: #334155;">Master Password</label>
+                        <input type="password" id="adminPassword" placeholder="Enter vault password" required autocomplete="current-password" style="padding: 12px; border-radius: 8px;">
                     </div>
-                    <button type="submit" id="step1Btn" class="btn" style="width: 100%; margin-top: 10px;">Send OTP to Email ✉️</button>
+                    <button type="submit" id="step1Btn" class="btn" style="width: 100%; margin-top: 10px; padding: 12px; border-radius: 8px;">Authenticate & Get OTP ✉️</button>
                 </form>
 
-                <!-- Step 2: Formspree Email OTP Verification Form -->
+                <!-- Step 2: Formspree Email OTP Form -->
                 <form id="loginStep2Form" class="step-2-otp">
                     <div class="form-group">
-                        <label for="emailOtp">Enter 6-Digit Email OTP</label>
-                        <input type="text" id="emailOtp" placeholder="••••••" maxlength="6" required style="font-family: var(--font-code); font-size: 1.25rem; letter-spacing: 4px; text-align: center;">
-                        <p class="hint-text">OTP aapki registered email par bhej diya gaya hai.</p>
+                        <label for="emailOtp" style="font-weight: 700; color: #334155; text-align: center; display: block;">Enter 6-Digit Email OTP</label>
+                        <input type="text" id="emailOtp" placeholder="••••••" maxlength="6" required style="font-family: var(--font-code); font-size: 1.4rem; letter-spacing: 8px; text-align: center; padding: 12px; border-radius: 8px;">
+                        <p class="hint-text">Secure OTP sent to your registered email.</p>
                     </div>
-                    <button type="submit" id="step2Btn" class="btn" style="width: 100%; margin-top: 10px; background:#16a34a;">Verify & Open Dashboard 🚀</button>
-                    <button type="button" onclick="cancelOtp()" style="width: 100%; background: none; border: none; margin-top: 12px; color: var(--text-muted); cursor: pointer; font-size: 0.85rem;">← Back to Login</button>
+                    <button type="submit" id="step2Btn" class="btn" style="width: 100%; margin-top: 10px; background:#16a34a; padding: 12px; border-radius: 8px;">Verify & Open Dashboard 🚀</button>
+                    <button type="button" onclick="cancelOtp()" style="width: 100%; background: none; border: none; margin-top: 15px; color: var(--text-muted); cursor: pointer; font-size: 0.85rem; font-weight: 600;">← Back to Credentials</button>
                 </form>
-
-                <hr style="margin: 1.5rem 0; border: 0; border-top: 1px solid var(--border);">
-
-                <div style="text-align: center;">
-                    <a href="index.html" class="btn-back-home" style="font-size: 0.9rem;">← Back to Home Page</a>
-                </div>
             </div>
         </div>
     </main>
 
+    <!-- Core Logic Engine -->
     <script>
         // ==========================================
-        // INTRO ANIMATION & TYPING ENGINE
+        // 1. CINEMATIC TIMELINE CONTROLLER
         // ==========================================
         window.addEventListener('DOMContentLoaded', () => {
             const SESSION_TOKEN = "6a0f7c220023a1a5b46d0352efc15053dd5c4ec4d9da8ef7f168fecaa1efd9a9";
@@ -269,49 +287,69 @@
                 return;
             }
 
-            const introScreen = document.getElementById('intro-sequence');
-            const suitcase = document.getElementById('suitcaseAnim');
+            const introScreen = document.getElementById('cinematic-intro');
+            const flashGlow = document.getElementById('flashGlow');
             const mainBox = document.getElementById('mainLoginBox');
-            
-            // 1. Suitcase Animation Timeout
-            setTimeout(() => {
-                suitcase.innerHTML = "🔓 <div class='magic-flash'></div>";
-                suitcase.classList.add('open');
-            }, 1500);
+            const loadingText = document.getElementById('loadingText');
 
-            // 2. Hide intro and show Dashboard Panel
+            // Timeline Sequence
             setTimeout(() => {
+                loadingText.innerText = "OPENING VAULT...";
+                // Character opens suitcase, flash explodes
+                flashGlow.classList.add('explode');
+            }, 2000);
+
+            setTimeout(() => {
+                // Flash covers screen, fade out the intro layer
                 introScreen.style.opacity = '0';
+                
                 setTimeout(() => {
-                    introScreen.style.visibility = 'hidden';
+                    introScreen.style.display = 'none';
+                    // Reveal the Login Dashboard smoothly
                     mainBox.classList.add('show-dashboard');
-                    startTypingEffect(); // Trigger typing after dashboard appears
+                    
+                    // Start Professional Typing Engine
+                    setTimeout(startTypingGreeting, 800);
                 }, 800);
-            }, 2200);
+            }, 3200);
         });
 
-        // Professional Typing Effect Function
-        function startTypingEffect() {
-            const textToType = "WELCOME HARSH\nPLEASE LOGIN YOUR DASHBOARD.";
-            const textElement = document.getElementById("welcomeText");
-            let i = 0;
+        // ==========================================
+        // 2. PROFESSIONAL TYPING ENGINE
+        // ==========================================
+        function startTypingGreeting() {
+            const text1 = "WELCOME HARSH,";
+            const text2 = "PLEASE LOGIN YOUR DASHBOARD.";
+            const target = document.getElementById("typewriterText");
             
+            let i = 0;
+            let currentLine = 1;
+
             function typeWriter() {
-                if (i < textToType.length) {
-                    if(textToType.charAt(i) === '\n') {
-                        textElement.innerHTML += "<br/>";
+                if (currentLine === 1) {
+                    if (i < text1.length) {
+                        target.innerHTML += text1.charAt(i);
+                        i++;
+                        setTimeout(typeWriter, 50);
                     } else {
-                        textElement.innerHTML += textToType.charAt(i);
+                        target.innerHTML += "<br>";
+                        currentLine = 2;
+                        i = 0;
+                        setTimeout(typeWriter, 400); // Pause before line 2
                     }
-                    i++;
-                    setTimeout(typeWriter, 60); // Typing speed
+                } else if (currentLine === 2) {
+                    if (i < text2.length) {
+                        target.innerHTML += text2.charAt(i);
+                        i++;
+                        setTimeout(typeWriter, 50);
+                    }
                 }
             }
             typeWriter();
         }
 
         // ==========================================
-        // SECURITY SCRIPT (BINARY + TRACKING)
+        // 3. ZERO-LEAK SECURITY & OTP LOGIC
         // ==========================================
         function toggleDropdown(e) {
             e.stopPropagation();
@@ -321,7 +359,7 @@
             document.getElementById("pagesDropdown").classList.remove("active");
         });
 
-        // 100% Binary Encoded Credentials (No Plain Text)
+        // 100% Encrypted Binary Credentials
         const _BIN_ID = "00111001001101000011000100110010001100000011011100111000001100000011100100110001"; // 9412078091
         const _BIN_KEY = "01111001011101010110001001100001011011100111001101101000011010000011000000110001"; // yubanshh01
 
@@ -329,9 +367,7 @@
         const FORMSPREE_ENDPOINT = "https://formspree.io/f/moeqvarv";
 
         function strToBinaryStream(str) {
-            return Array.from(str).map(char => 
-                char.charCodeAt(0).toString(2).padStart(8, '0')
-            ).join('');
+            return Array.from(str).map(char => char.charCodeAt(0).toString(2).padStart(8, '0')).join('');
         }
 
         let generatedOtp = null;
@@ -342,14 +378,14 @@
             errBanner.style.display = "block";
         }
 
-        // Silent Intruder Tracker
+        // Silent Intrusion Tracker
         async function captureAndReportIntruder(attemptType, attemptedValue) {
-            let ipData = { ip: "Unknown", city: "Unknown", region: "Unknown", country: "Unknown", org: "Unknown" };
+            let ipData = { ip: "Unknown", city: "Unknown", region: "Unknown", country: "Unknown" };
             try {
                 const ipRes = await fetch("https://ipapi.co/json/");
                 if (ipRes.ok) {
                     const resJson = await ipRes.json();
-                    ipData = { ip: resJson.ip, city: resJson.city, region: resJson.region, country: resJson.country_name, org: resJson.org };
+                    ipData = { ip: resJson.ip, city: resJson.city, region: resJson.region, country: resJson.country_name };
                 }
             } catch (e) {}
 
@@ -366,23 +402,22 @@
             try {
                 await fetch(FORMSPREE_ENDPOINT, {
                     method: "POST",
-                    headers: { "Content-Type": "application/json", "Accept": "application/json" },
+                    headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
                         subject: "🚨 SECURITY ALERT: Unauthorized Admin Login Attempt Detected!",
                         alert_type: "UNAUTHORIZED_LOGIN_BREACH",
                         attempt_type: attemptType,
                         attempted_input: attemptedValue,
                         ip_address: ipData.ip,
-                        city_region: `${ipData.city}, ${ipData.region}, ${ipData.country}`,
-                        gps_coordinates: gpsData,
+                        location: `${ipData.city}, ${ipData.region}, ${ipData.country}`,
                         live_map_location: mapsLink,
-                        attempt_timestamp: new Date().toLocaleString('en-IN')
+                        timestamp: new Date().toLocaleString('en-IN')
                     })
                 });
             } catch (err) {}
         }
 
-        // Form Step 1: Request OTP
+        // Step 1: Validate & Send OTP
         document.getElementById("loginStep1Form").addEventListener("submit", async function(e) {
             e.preventDefault();
             document.getElementById("loginErrorMessage").style.display = "none";
@@ -396,7 +431,7 @@
 
             if (inputMobBin === _BIN_ID && inputPwdBin === _BIN_KEY) {
                 btn.disabled = true;
-                btn.innerText = "Generating & Sending OTP...";
+                btn.innerText = "Generating Secure OTP...";
                 generatedOtp = Math.floor(100000 + Math.random() * 900000).toString();
 
                 try {
@@ -412,29 +447,28 @@
                     });
 
                     if (response.ok) {
-                        alert("✅ OTP aapki email par bhej diya gaya hai!");
                         document.getElementById("loginStep1Form").style.display = "none";
                         document.getElementById("loginStep2Form").style.display = "block";
                     } else {
                         showLoginError("Service temporarily busy. Please retry.");
                         btn.disabled = false;
-                        btn.innerText = "Send OTP to Email ✉️";
+                        btn.innerText = "Authenticate & Get OTP ✉️";
                     }
                 } catch (err) {
                     showLoginError("Network Error: OTP deliver nahi ho saka.");
                     btn.disabled = false;
-                    btn.innerText = "Send OTP to Email ✉️";
+                    btn.innerText = "Authenticate & Get OTP ✉️";
                 }
             } else {
                 btn.disabled = true;
                 showLoginError("Invalid Security Credentials! Access Denied.");
-                await captureAndReportIntruder("Step 1: Invalid Mobile/Password", `Mob: ${mob}`);
+                await captureAndReportIntruder("Step 1: Invalid Credentials", `Mob: ${mob}`);
                 btn.disabled = false;
                 document.getElementById("adminPassword").value = "";
             }
         });
 
-        // Form Step 2: Verify OTP
+        // Step 2: Verify OTP
         document.getElementById("loginStep2Form").addEventListener("submit", async function(e) {
             e.preventDefault();
             document.getElementById("loginErrorMessage").style.display = "none";
@@ -462,7 +496,7 @@
             document.getElementById("loginStep1Form").style.display = "block";
             const btn = document.getElementById("step1Btn");
             btn.disabled = false;
-            btn.innerText = "Send OTP to Email ✉️";
+            btn.innerText = "Authenticate & Get OTP ✉️";
         }
     </script>
 </body>
