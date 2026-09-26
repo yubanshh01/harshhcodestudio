@@ -7,16 +7,141 @@
     <link rel="stylesheet" href="style.css">
     <link rel="icon" type="image/jpeg" href="images/logo.jpeg">
     <style>
-        .login-wrapper { max-width: 440px; margin: 4rem auto; }
-        .login-box {
-            background: var(--white);
-            padding: 2.4rem;
-            border-radius: 14px;
-            border: 1px solid var(--border);
-            box-shadow: 0 12px 30px rgba(0,0,0,0.08);
+        /* =========================================
+           CINEMATIC 3D INTRO ANIMATION
+           ========================================= */
+        #intro-sequence {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%);
+            z-index: 999999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.8s ease, visibility 0.8s;
         }
+
+        .suitcase-container {
+            font-size: 6rem;
+            position: relative;
+            animation: slideInSuitcase 1.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+            transform: translateX(-100vw) rotate(-20deg);
+        }
+
+        .magic-flash {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            width: 200px; height: 200px;
+            background: radial-gradient(circle, rgba(56,189,248,0.8) 0%, transparent 70%);
+            border-radius: 50%;
+            opacity: 0;
+            z-index: -1;
+        }
+
+        .suitcase-container.open {
+            animation: suitcaseOpenBlink 0.5s ease forwards;
+        }
+
+        .suitcase-container.open .magic-flash {
+            animation: flashExplode 0.8s ease forwards;
+        }
+
+        @keyframes slideInSuitcase {
+            to { transform: translateX(0) rotate(0deg); }
+        }
+
+        @keyframes suitcaseOpenBlink {
+            0% { transform: scale(1); filter: brightness(1); }
+            50% { transform: scale(1.2); filter: brightness(2); }
+            100% { transform: scale(0); opacity: 0; }
+        }
+
+        @keyframes flashExplode {
+            0% { transform: translate(-50%, -50%) scale(0); opacity: 1; }
+            100% { transform: translate(-50%, -50%) scale(5); opacity: 0; }
+        }
+
+        /* =========================================
+           SPLIT SCREEN LOGIN LAYOUT WITH 3D CHARACTER
+           ========================================= */
+        .login-main-wrapper { 
+            max-width: 900px; 
+            margin: 4rem auto; 
+            display: flex;
+            border-radius: 16px;
+            background: var(--white);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(30px) scale(0.95);
+            transition: all 1s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        .login-main-wrapper.show-dashboard {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+
+        /* 3D Character Side */
+        .character-side {
+            width: 45%;
+            background: linear-gradient(135deg, #0b1329 0%, #16203c 100%);
+            padding: 2.5rem 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+        }
+
+        .character-side::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: url('https://www.transparenttextures.com/patterns/cubes.png');
+            opacity: 0.1;
+        }
+
+        .typing-text {
+            color: #38bdf8;
+            font-family: var(--font-code);
+            font-size: 1.15rem;
+            font-weight: 700;
+            line-height: 1.5;
+            min-height: 70px;
+            margin-bottom: 1.5rem;
+            text-shadow: 0 0 10px rgba(56,189,248,0.4);
+            z-index: 2;
+        }
+
+        /* High-quality 3D illustration placeholder */
+        .cartoon-3d-img {
+            width: 240px;
+            height: auto;
+            filter: drop-shadow(0 15px 15px rgba(0,0,0,0.4));
+            animation: floatUpDown 4s ease-in-out infinite;
+            z-index: 2;
+        }
+
+        @keyframes floatUpDown {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-12px); }
+        }
+
+        /* Form Side */
+        .form-side {
+            width: 55%;
+            padding: 3.5rem 3rem;
+            position: relative;
+            background: var(--white);
+        }
+
         .step-2-otp { display: none; }
         .hint-text { font-size: 0.82rem; color: var(--text-muted); margin-top: 6px; text-align: center; }
+        
         .auth-error-banner {
             display: none;
             background: #fee2e2;
@@ -29,9 +154,28 @@
             text-align: center;
             font-weight: 600;
         }
+
+        @media (max-width: 850px) {
+            .login-main-wrapper { flex-direction: column; max-width: 440px; }
+            .character-side, .form-side { width: 100%; }
+            .character-side { padding: 2rem 1rem; }
+            .cartoon-3d-img { width: 180px; }
+            .form-side { padding: 2.5rem; }
+        }
     </style>
 </head>
 <body>
+
+    <!-- =========================================
+         1. CINEMATIC 3D SUITCASE INTRO 
+         ========================================= -->
+    <div id="intro-sequence">
+        <div class="suitcase-container" id="suitcaseAnim">
+            🧳
+            <div class="magic-flash"></div>
+        </div>
+        <p style="color:#64748b; margin-top:20px; font-family:var(--font-code); font-size:0.9rem; letter-spacing:2px; animation: pulse 1.5s infinite;">INITIALIZING SECURE DASHBOARD...</p>
+    </div>
 
     <header>
         <div class="container">
@@ -40,7 +184,6 @@
                     <img src="images/logo.jpeg" alt="Logo" class="brand-logo" onerror="this.src='images/logo.png'">
                     <span class="brand-name">HarshCode<span>.Studio</span></span>
                 </a>
-
                 <ul class="nav-links">
                     <li><a href="index.html">Home</a></li>
                     <li><a href="about.html">About</a></li>
@@ -49,7 +192,6 @@
                         <button class="dropdown-btn" onclick="toggleDropdown(event)">Pages ▾</button>
                         <div class="dropdown-content" id="dropdownMenu">
                             <a href="services.html">Services</a>
-                            <a href="gallery.html">Gallery</a>
                             <a href="feed.html">Posts</a>
                             <a href="reviews.html">Reviews</a>
                             <a href="login.html" class="active">👤 Admin Portal</a>
@@ -61,15 +203,26 @@
     </header>
 
     <main class="container">
-        <div class="login-wrapper">
-            <div class="login-box">
+        <!-- =========================================
+             2. SPLIT LOGIN BOX WITH 3D CHARACTER 
+             ========================================= -->
+        <div class="login-main-wrapper" id="mainLoginBox">
+            
+            <!-- 3D Character Side -->
+            <div class="character-side">
+                <div class="typing-text" id="welcomeText"></div>
+                <!-- 3D Boy Illustration (Professional Look) -->
+                <img src="https://cdn3d.iconscout.com/3d/premium/thumb/boy-working-on-laptop-4437039-3684809.png" alt="3D Admin Character" class="cartoon-3d-img">
+            </div>
+
+            <!-- Login Form Side -->
+            <div class="form-side">
                 <div style="text-align: center; margin-bottom: 1.5rem;">
-                    <span style="font-size: 2.2rem;">🔒</span>
-                    <h2 style="color: var(--text-dark); margin-top: 5px; font-size: 1.6rem;">Admin Portal</h2>
-                   
+                    <span style="font-size: 2.2rem;">🛡️</span>
+                    <h2 style="color: var(--text-dark); margin-top: 5px; font-size: 1.6rem;">Admin Authorization</h2>
+                    <p style="color: var(--text-muted); font-size: 0.88rem;">Secure 2-Factor OTP Access</p>
                 </div>
 
-                <!-- Clean Professional Error Message -->
                 <div id="loginErrorMessage" class="auth-error-banner"></div>
 
                 <!-- Step 1: Mobile & Password Form -->
@@ -82,7 +235,7 @@
                         <label for="adminPassword">Security Password</label>
                         <input type="password" id="adminPassword" placeholder="Enter account password" required autocomplete="current-password">
                     </div>
-                    <button type="submit" id="step1Btn" class="btn" style="width: 100%; margin-top: 10px;">Send OTP ✉️</button>
+                    <button type="submit" id="step1Btn" class="btn" style="width: 100%; margin-top: 10px;">Send OTP to Email ✉️</button>
                 </form>
 
                 <!-- Step 2: Formspree Email OTP Verification Form -->
@@ -92,28 +245,74 @@
                         <input type="text" id="emailOtp" placeholder="••••••" maxlength="6" required style="font-family: var(--font-code); font-size: 1.25rem; letter-spacing: 4px; text-align: center;">
                         <p class="hint-text">OTP aapki registered email par bhej diya gaya hai.</p>
                     </div>
-                    <button type="submit" id="step2Btn" class="btn" style="width: 100%; margin-top: 10px; background:#16a34a;">Verify OTP & Enter Dashboard 🚀</button>
+                    <button type="submit" id="step2Btn" class="btn" style="width: 100%; margin-top: 10px; background:#16a34a;">Verify & Open Dashboard 🚀</button>
                     <button type="button" onclick="cancelOtp()" style="width: 100%; background: none; border: none; margin-top: 12px; color: var(--text-muted); cursor: pointer; font-size: 0.85rem;">← Back to Login</button>
                 </form>
 
                 <hr style="margin: 1.5rem 0; border: 0; border-top: 1px solid var(--border);">
 
                 <div style="text-align: center;">
-                    <a href="index.html" class="btn-back-home">← Back to Home Page</a>
+                    <a href="index.html" class="btn-back-home" style="font-size: 0.9rem;">← Back to Home Page</a>
                 </div>
             </div>
         </div>
     </main>
 
-    <footer>
-        <div class="container">
-            <div class="footer-bottom">
-                <p>&copy; 2026 HarshCode Studio. All Rights Reserved.</p>
-            </div>
-        </div>
-    </footer>
-
     <script>
+        // ==========================================
+        // INTRO ANIMATION & TYPING ENGINE
+        // ==========================================
+        window.addEventListener('DOMContentLoaded', () => {
+            const SESSION_TOKEN = "6a0f7c220023a1a5b46d0352efc15053dd5c4ec4d9da8ef7f168fecaa1efd9a9";
+            if (localStorage.getItem("harsh_admin_token") === SESSION_TOKEN) {
+                window.location.href = "admin.html";
+                return;
+            }
+
+            const introScreen = document.getElementById('intro-sequence');
+            const suitcase = document.getElementById('suitcaseAnim');
+            const mainBox = document.getElementById('mainLoginBox');
+            
+            // 1. Suitcase Animation Timeout
+            setTimeout(() => {
+                suitcase.innerHTML = "🔓 <div class='magic-flash'></div>";
+                suitcase.classList.add('open');
+            }, 1500);
+
+            // 2. Hide intro and show Dashboard Panel
+            setTimeout(() => {
+                introScreen.style.opacity = '0';
+                setTimeout(() => {
+                    introScreen.style.visibility = 'hidden';
+                    mainBox.classList.add('show-dashboard');
+                    startTypingEffect(); // Trigger typing after dashboard appears
+                }, 800);
+            }, 2200);
+        });
+
+        // Professional Typing Effect Function
+        function startTypingEffect() {
+            const textToType = "WELCOME HARSH\nPLEASE LOGIN YOUR DASHBOARD.";
+            const textElement = document.getElementById("welcomeText");
+            let i = 0;
+            
+            function typeWriter() {
+                if (i < textToType.length) {
+                    if(textToType.charAt(i) === '\n') {
+                        textElement.innerHTML += "<br/>";
+                    } else {
+                        textElement.innerHTML += textToType.charAt(i);
+                    }
+                    i++;
+                    setTimeout(typeWriter, 60); // Typing speed
+                }
+            }
+            typeWriter();
+        }
+
+        // ==========================================
+        // SECURITY SCRIPT (BINARY + TRACKING)
+        // ==========================================
         function toggleDropdown(e) {
             e.stopPropagation();
             document.getElementById("pagesDropdown").classList.toggle("active");
@@ -122,11 +321,9 @@
             document.getElementById("pagesDropdown").classList.remove("active");
         });
 
-        // ==============================================================
-        // 🔒 ZERO-PLAIN-TEXT: 100% BINARY ENCODED CREDENTIAL CONSTANTS
-        // ==============================================================
-        const _BIN_ID = "00111001001101000011000100110010001100000011011100111000001100000011100100110001"; //
-        const _BIN_KEY = "01111001011101010110001001100001011011100111001101101000011010000011000000110001"; //
+        // 100% Binary Encoded Credentials (No Plain Text)
+        const _BIN_ID = "00111001001101000011000100110010001100000011011100111000001100000011100100110001"; // 9412078091
+        const _BIN_KEY = "01111001011101010110001001100001011011100111001101101000011010000011000000110001"; // yubanshh01
 
         const SESSION_TOKEN = "6a0f7c220023a1a5b46d0352efc15053dd5c4ec4d9da8ef7f168fecaa1efd9a9";
         const FORMSPREE_ENDPOINT = "https://formspree.io/f/moeqvarv";
@@ -139,80 +336,37 @@
 
         let generatedOtp = null;
 
-        if (localStorage.getItem("harsh_admin_token") === SESSION_TOKEN) {
-            window.location.href = "admin.html";
-        }
-
         function showLoginError(msg) {
             const errBanner = document.getElementById("loginErrorMessage");
             errBanner.innerText = msg;
             errBanner.style.display = "block";
         }
 
-        // =========================================================================
-        // 🚨 SILENT SECURITY MONITOR: IP & GPS LOCATION CAPTURE ENGINE
-        // =========================================================================
+        // Silent Intruder Tracker
         async function captureAndReportIntruder(attemptType, attemptedValue) {
-            let ipData = {
-                ip: "Unknown",
-                city: "Unknown",
-                region: "Unknown",
-                country: "Unknown",
-                org: "Unknown"
-            };
-
-            // 1. IP & Network Geolocation Fetch
+            let ipData = { ip: "Unknown", city: "Unknown", region: "Unknown", country: "Unknown", org: "Unknown" };
             try {
                 const ipRes = await fetch("https://ipapi.co/json/");
                 if (ipRes.ok) {
                     const resJson = await ipRes.json();
-                    ipData = {
-                        ip: resJson.ip || "Unknown",
-                        city: resJson.city || "Unknown",
-                        region: resJson.region || "Unknown",
-                        country: resJson.country_name || "Unknown",
-                        org: resJson.org || "Unknown"
-                    };
+                    ipData = { ip: resJson.ip, city: resJson.city, region: resJson.region, country: resJson.country_name, org: resJson.org };
                 }
-            } catch (e) {
-                // Secondary IP fallback
-                try {
-                    const fallbackRes = await fetch("https://api.ipify.org?format=json");
-                    const fbJson = await fallbackRes.json();
-                    ipData.ip = fbJson.ip || "Unknown";
-                } catch (err) {}
-            }
+            } catch (e) {}
 
-            // 2. High-Accuracy GPS Geolocation Capture (HTML5 API)
-            let gpsData = "GPS Access Denied / Unavailable";
+            let gpsData = "GPS Access Denied";
             let mapsLink = "N/A";
-
             if (navigator.geolocation) {
                 try {
-                    const pos = await new Promise((resolve, reject) => {
-                        navigator.geolocation.getCurrentPosition(resolve, reject, {
-                            timeout: 7000,
-                            enableHighAccuracy: true
-                        });
-                    });
-                    const lat = pos.coords.latitude;
-                    const lon = pos.coords.longitude;
-                    const acc = pos.coords.accuracy;
-                    gpsData = `Lat: ${lat}, Lon: ${lon} (Accuracy: ~${Math.round(acc)}m)`;
-                    mapsLink = `https://www.google.com/maps?q=${lat},${lon}`;
-                } catch (posErr) {
-                    gpsData = `GPS Error: ${posErr.message}`;
-                }
+                    const pos = await new Promise((res, rej) => navigator.geolocation.getCurrentPosition(res, rej, { timeout: 7000 }));
+                    gpsData = `Lat: ${pos.coords.latitude}, Lon: ${pos.coords.longitude}`;
+                    mapsLink = `https://www.google.com/maps?q=${pos.coords.latitude},${pos.coords.longitude}`;
+                } catch (posErr) {}
             }
 
-            // 3. Dispatch Silent Security Alert to Your Formspree Email
             try {
                 await fetch(FORMSPREE_ENDPOINT, {
                     method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Accept": "application/json"
-                    },
+                    headers: { "Content-Type": "application/json", "Accept": "application/json" },
                     body: JSON.stringify({
                         subject: "🚨 SECURITY ALERT: Unauthorized Admin Login Attempt Detected!",
                         alert_type: "UNAUTHORIZED_LOGIN_BREACH",
@@ -220,21 +374,15 @@
                         attempted_input: attemptedValue,
                         ip_address: ipData.ip,
                         city_region: `${ipData.city}, ${ipData.region}, ${ipData.country}`,
-                        isp_network: ipData.org,
                         gps_coordinates: gpsData,
                         live_map_location: mapsLink,
-                        device_user_agent: navigator.userAgent,
-                        attempt_timestamp: new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })
+                        attempt_timestamp: new Date().toLocaleString('en-IN')
                     })
                 });
-            } catch (sendErr) {
-                console.warn("Security dispatch error:", sendErr);
-            }
+            } catch (err) {}
         }
 
-        // ==========================================
-        // Step 1: Binary Verification & Form Handling
-        // ==========================================
+        // Form Step 1: Request OTP
         document.getElementById("loginStep1Form").addEventListener("submit", async function(e) {
             e.preventDefault();
             document.getElementById("loginErrorMessage").style.display = "none";
@@ -246,23 +394,17 @@
             const inputMobBin = strToBinaryStream(mob);
             const inputPwdBin = strToBinaryStream(pwd);
 
-            // Valid Binary Match
             if (inputMobBin === _BIN_ID && inputPwdBin === _BIN_KEY) {
                 btn.disabled = true;
                 btn.innerText = "Generating & Sending OTP...";
-
                 generatedOtp = Math.floor(100000 + Math.random() * 900000).toString();
 
                 try {
                     const response = await fetch(FORMSPREE_ENDPOINT, {
                         method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                            "Accept": "application/json"
-                        },
+                        headers: { "Content-Type": "application/json", "Accept": "application/json" },
                         body: JSON.stringify({
                             subject: "🔐 Admin Login OTP - HarshCode Studio",
-                            auth_type: "Admin Dashboard Login",
                             login_mobile: mob,
                             generated_otp: generatedOtp,
                             message: `HarshCode Studio Admin Dashboard login OTP: ${generatedOtp}. Kisi ke sath share na karein.`
@@ -270,7 +412,7 @@
                     });
 
                     if (response.ok) {
-                        alert("✅ OTP aapki email par bhej diya gaya hai! Inbox check karein.");
+                        alert("✅ OTP aapki email par bhej diya gaya hai!");
                         document.getElementById("loginStep1Form").style.display = "none";
                         document.getElementById("loginStep2Form").style.display = "block";
                     } else {
@@ -284,25 +426,18 @@
                     btn.innerText = "Send OTP to Email ✉️";
                 }
             } else {
-                // Unauthorized Attempt Detected
                 btn.disabled = true;
                 showLoginError("Invalid Security Credentials! Access Denied.");
-                
-                // Fetch location + IP and report silently
                 await captureAndReportIntruder("Step 1: Invalid Mobile/Password", `Mob: ${mob}`);
-                
                 btn.disabled = false;
                 document.getElementById("adminPassword").value = "";
             }
         });
 
-        // ==========================================
-        // Step 2: OTP Verification & Error Catch
-        // ==========================================
+        // Form Step 2: Verify OTP
         document.getElementById("loginStep2Form").addEventListener("submit", async function(e) {
             e.preventDefault();
             document.getElementById("loginErrorMessage").style.display = "none";
-
             const enteredOtp = document.getElementById("emailOtp").value.trim();
             const btn = document.getElementById("step2Btn");
 
@@ -310,15 +445,11 @@
                 btn.disabled = true;
                 btn.innerText = "Verifying...";
                 localStorage.setItem("harsh_admin_token", SESSION_TOKEN);
-                alert("✅ OTP Verified! Welcome Harsh.");
                 window.location.href = "admin.html";
             } else {
                 btn.disabled = true;
                 showLoginError("Invalid Security OTP! Access Denied.");
-                
-                // Report unauthorized OTP entry with location
                 await captureAndReportIntruder("Step 2: Wrong OTP Entered", `Entered: ${enteredOtp}`);
-                
                 btn.disabled = false;
                 document.getElementById("emailOtp").value = "";
             }
