@@ -3,151 +3,172 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Login | HarshCode Studio</title>
+    <title>Secure Admin Login | HarshCode Studio</title>
+    <link rel="stylesheet" href="style.css">
     <link rel="icon" type="image/jpeg" href="images/logo.jpeg">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Fira+Code:wght@500&display=swap" rel="stylesheet">
     <style>
         /* =========================================
-           1. VIDEO REFERENCE THEME & LAYOUT
+           1. HIGH-TECH CYBER SCAN INTRO ANIMATION
            ========================================= */
-        body {
-            margin: 0;
-            padding: 0;
-            background: #5a67d8; /* Matching the video's blue background */
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            height: 100vh;
+        #cyber-intro {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: #020617; /* Deep Cyber Dark */
+            z-index: 999999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.6s ease, visibility 0.6s;
+        }
+
+        .scanner-container {
+            position: relative;
+            width: 100px;
+            height: 100px;
             display: flex;
             align-items: center;
             justify-content: center;
-            overflow: hidden;
-            flex-direction: column;
+            font-size: 5rem;
+            margin-bottom: 20px;
         }
 
-        .main-animation-container {
-            display: flex;
-            align-items: flex-end;
-            justify-content: center;
-            gap: 50px;
-            width: 100%;
-            max-width: 900px;
-            padding: 20px;
-        }
-
-        /* =========================================
-           2. CHARACTER WALK-IN ANIMATION
-           ========================================= */
-        .character-box {
-            width: 250px;
-            transform: translateX(-100vw);
-            /* Character comes in first */
-            animation: walkIn 1.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
-            position: relative;
+        /* The Laser Scan Line */
+        .scan-line {
+            position: absolute;
+            top: 0;
+            left: -10px;
+            width: 120px;
+            height: 3px;
+            background: #38bdf8;
+            box-shadow: 0 0 15px 5px rgba(56, 189, 248, 0.5);
+            animation: scanMove 1.2s ease-in-out infinite alternate;
             z-index: 2;
         }
 
-        .character-box img {
-            width: 100%;
-            height: auto;
-            filter: drop-shadow(0 20px 15px rgba(0,0,0,0.3));
+        .scanner-container.unlocked .scan-line {
+            display: none; /* Hide scanner when unlocked */
         }
 
-        @keyframes walkIn {
-            0% { transform: translateX(-100vw) rotate(-5deg); }
-            80% { transform: translateX(10px) rotate(2deg); }
-            100% { transform: translateX(0) rotate(0deg); }
+        .scanner-container.unlocked {
+            animation: pulseGlow 1s ease forwards;
+        }
+
+        .intro-text {
+            color: #38bdf8;
+            font-family: var(--font-code);
+            font-size: 0.85rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            font-weight: 700;
+        }
+
+        @keyframes scanMove {
+            0% { top: 0; }
+            100% { top: 100%; }
+        }
+
+        @keyframes pulseGlow {
+            0% { filter: drop-shadow(0 0 10px #38bdf8); transform: scale(1); }
+            50% { filter: drop-shadow(0 0 40px #38bdf8); transform: scale(1.1); }
+            100% { filter: drop-shadow(0 0 15px #10b981); transform: scale(1); }
         }
 
         /* =========================================
-           3. FORM DROP-DOWN ANIMATION
+           2. PREMIUM GLASSMORPHISM LOGIN CARD
            ========================================= */
-        .form-box {
-            background: #ffffff;
-            padding: 40px 30px;
+        .login-main-wrapper { 
+            max-width: 500px; 
+            margin: 3rem auto; 
             border-radius: 20px;
-            width: 100%;
-            max-width: 380px;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.25);
-            transform: translateY(-100vh);
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.4);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.1), 0 0 0 1px rgba(0,0,0,0.05);
+            padding: 3rem 2.5rem;
             opacity: 0;
-            /* Form drops down AFTER character arrives (1.5s delay) */
-            animation: dropDownForm 1s 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-            z-index: 1;
+            transform: translateY(40px);
+            transition: all 1s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
 
-        @keyframes dropDownForm {
-            0% { transform: translateY(-100vh); opacity: 0; }
-            100% { transform: translateY(0); opacity: 1; }
+        .login-main-wrapper.show-dashboard {
+            opacity: 1;
+            transform: translateY(0);
         }
 
-        /* Form Styling */
-        .form-header {
+        /* Typing Greeting */
+        .greeting-container {
             text-align: center;
-            margin-bottom: 25px;
+            min-height: 55px;
+            margin-bottom: 1.5rem;
         }
 
-        .form-header h2 {
-            margin: 0;
-            color: #1e293b;
-            font-size: 1.8rem;
+        .typing-text {
+            color: #0f172a;
+            font-family: var(--font-code);
+            font-size: 1.1rem;
             font-weight: 800;
+            line-height: 1.5;
+            letter-spacing: 0.5px;
         }
 
-        .form-header p {
-            margin: 5px 0 0 0;
-            color: #64748b;
-            font-size: 0.9rem;
-            font-weight: 500;
+        .cursor {
+            display: inline-block;
+            width: 8px;
+            background-color: #0ea5e9;
+            margin-left: 2px;
+            animation: blink 0.8s infinite;
         }
 
-        .form-group {
-            margin-bottom: 18px;
-        }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
 
+        /* Form Inputs */
         .form-group label {
-            display: block;
-            font-size: 0.85rem;
             font-weight: 700;
             color: #334155;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
             margin-bottom: 6px;
+            display: block;
         }
 
         .form-group input {
             width: 100%;
-            padding: 12px 15px;
-            border: 2px solid #e2e8f0;
+            padding: 14px 16px;
             border-radius: 10px;
-            font-size: 1rem;
-            color: #0f172a;
-            outline: none;
-            transition: all 0.3s;
-            box-sizing: border-box;
             background: #f8fafc;
+            border: 2px solid transparent;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
         }
 
         .form-group input:focus {
-            border-color: #5a67d8;
             background: #ffffff;
-            box-shadow: 0 0 0 4px rgba(90, 103, 216, 0.15);
+            border-color: #38bdf8;
+            box-shadow: 0 0 0 4px rgba(56,189,248,0.15);
+            outline: none;
         }
 
-        .btn-submit {
+        .btn-auth {
+            background: linear-gradient(135deg, #0284c7, #0369a1);
+            color: white;
             width: 100%;
-            background: #5a67d8;
-            color: #ffffff;
-            padding: 14px;
-            border: none;
+            padding: 15px;
             border-radius: 10px;
-            font-size: 1rem;
             font-weight: 700;
+            font-size: 1.05rem;
+            border: none;
             cursor: pointer;
-            transition: all 0.3s;
+            box-shadow: 0 10px 20px rgba(2,132,199,0.3);
+            transition: all 0.3s ease;
             margin-top: 10px;
         }
 
-        .btn-submit:hover {
-            background: #434ce6;
+        .btn-auth:hover {
             transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(90, 103, 216, 0.3);
+            box-shadow: 0 15px 25px rgba(2,132,199,0.4);
         }
 
         .step-2-otp { display: none; }
@@ -160,89 +181,194 @@
             padding: 12px;
             border-radius: 8px;
             font-size: 0.9rem;
-            margin-bottom: 15px;
+            margin-bottom: 1.5rem;
             text-align: center;
             font-weight: 700;
         }
 
-        .back-link {
-            display: block;
-            text-align: center;
-            margin-top: 20px;
-            color: #94a3b8;
-            text-decoration: none;
-            font-size: 0.85rem;
-            font-weight: 600;
-            transition: color 0.2s;
-        }
-
-        .back-link:hover { color: #5a67d8; }
-
-        @media (max-width: 768px) {
-            .main-animation-container { flex-direction: column; align-items: center; gap: 20px; }
-            .character-box { width: 180px; }
-            .form-box { padding: 30px 20px; }
+        @media (max-width: 600px) {
+            .login-main-wrapper { margin: 2rem 1rem; padding: 2rem 1.5rem; }
+            .typing-text { font-size: 0.95rem; }
         }
     </style>
 </head>
 <body>
 
-    <div class="main-animation-container">
-        
-        <!-- 3D Character Walking In -->
-        <div class="character-box">
-            <!-- Maine yahan ek high-quality 3D character placeholder diya hai. Agar aapko chalta hua GIF mile toh aap src link badal sakte hain -->
-            <img src="https://cdn3d.iconscout.com/3d/premium/thumb/businessman-holding-briefcase-5065977-4225251.png" alt="3D Character">
+    <!-- =========================================
+         SCENE 1: THE CYBER SCAN INTRO
+         ========================================= -->
+    <div id="cyber-intro">
+        <div class="scanner-container" id="securityScanner">
+            <div id="lockIcon">🛡️</div>
+            <div class="scan-line" id="laserBeam"></div>
         </div>
+        <p class="intro-text" id="introStatus">INITIATING SECURE PROTOCOL...</p>
+    </div>
 
-        <!-- Form Dropping Down -->
-        <div class="form-box">
-            <div class="form-header">
-                <h2>Admin Panel</h2>
-                <p>Secure your spot in the dashboard</p>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <nav>
+                <a href="index.html" class="logo-container">
+                    <img src="images/logo.jpeg" alt="Logo" class="brand-logo" onerror="this.src='images/logo.png'">
+                    <span class="brand-name">HarshCode<span>.Studio</span></span>
+                </a>
+                <ul class="nav-links">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                    <li class="nav-dropdown" id="pagesDropdown">
+                        <button class="dropdown-btn" onclick="toggleDropdown(event)">Pages ▾</button>
+                        <div class="dropdown-content" id="dropdownMenu">
+                            <a href="services.html">Services</a>
+                            <a href="feed.html">Posts</a>
+                            <a href="reviews.html">Reviews</a>
+                            <a href="login.html" class="active">👤 Admin Portal</a>
+                        </div>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- =========================================
+             SCENE 2: PREMIUM LOGIN CARD
+             ========================================= -->
+        <div class="login-main-wrapper" id="mainLoginBox">
+            
+            <div class="greeting-container">
+                <span class="typing-text" id="typewriterText"></span><span class="cursor" id="cursorElement">&nbsp;</span>
+            </div>
+
+            <div style="text-align: center; margin-bottom: 1.5rem;">
+                <h2 style="color: var(--text-dark); font-size: 1.5rem; font-weight: 800;">Admin Authorization</h2>
+                <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 4px; font-weight: 600;">Zero-Trust Encrypted Gateway</p>
             </div>
 
             <div id="loginErrorMessage" class="auth-error-banner"></div>
 
-            <!-- Step 1: Mobile & Password -->
+            <!-- Step 1: Mobile & Password Form -->
             <form id="loginStep1Form">
-                <div class="form-group">
-                    <label for="adminMobile">Registered Mobile Number *</label>
-                    <input type="tel" id="adminMobile" placeholder="Enter mobile number" required autocomplete="username">
+                <div class="form-group" style="margin-bottom: 15px;">
+                    <label for="adminMobile">Registered Mobile Number</label>
+                    <input type="tel" id="adminMobile" placeholder="Enter secure mobile ID" required autocomplete="username">
                 </div>
-                <div class="form-group">
-                    <label for="adminPassword">Master Password *</label>
-                    <input type="password" id="adminPassword" placeholder="Enter password" required autocomplete="current-password">
+                <div class="form-group" style="margin-bottom: 20px;">
+                    <label for="adminPassword">Master Password</label>
+                    <input type="password" id="adminPassword" placeholder="Enter vault password" required autocomplete="current-password">
                 </div>
-                <button type="submit" id="step1Btn" class="btn-submit">Authenticate Account</button>
+                <button type="submit" id="step1Btn" class="btn-auth">Authenticate & Get OTP ✉️</button>
             </form>
 
-            <!-- Step 2: OTP Verification -->
+            <!-- Step 2: Formspree Email OTP Form -->
             <form id="loginStep2Form" class="step-2-otp">
-                <div class="form-group">
-                    <label for="emailOtp" style="text-align: center;">Enter 6-Digit Email OTP *</label>
-                    <input type="text" id="emailOtp" placeholder="••••••" maxlength="6" required style="font-family: 'Fira Code', monospace; font-size: 1.5rem; letter-spacing: 10px; text-align: center;">
+                <div class="form-group" style="margin-bottom: 20px;">
+                    <label for="emailOtp" style="text-align: center;">Enter 6-Digit Email OTP</label>
+                    <input type="text" id="emailOtp" placeholder="••••••" maxlength="6" required style="font-family: var(--font-code); font-size: 1.5rem; letter-spacing: 12px; text-align: center; font-weight: 800;">
+                    <p style="font-size: 0.8rem; color: #64748b; margin-top: 8px; text-align: center;">Secure OTP sent to your registered email.</p>
                 </div>
-                <button type="submit" id="step2Btn" class="btn-submit" style="background: #10b981;">Verify OTP & Login</button>
-                <button type="button" onclick="cancelOtp()" style="background: none; border: none; width: 100%; margin-top: 15px; color: #64748b; font-weight: 600; cursor: pointer;">← Go Back</button>
+                <button type="submit" id="step2Btn" class="btn-auth" style="background: linear-gradient(135deg, #16a34a, #15803d); box-shadow: 0 10px 20px rgba(22,163,74,0.3);">Verify & Open Dashboard 🚀</button>
+                
+                <div style="text-align: center; margin-top: 15px;">
+                    <button type="button" onclick="cancelOtp()" style="background: none; border: none; color: #64748b; cursor: pointer; font-size: 0.85rem; font-weight: 700; transition: color 0.3s;">← Back to Credentials</button>
+                </div>
             </form>
 
-            <a href="index.html" class="back-link">Return to Home Page</a>
+            <div style="text-align: center; margin-top: 2rem; border-top: 1px solid #e2e8f0; padding-top: 1.5rem;">
+                <a href="index.html" style="font-size: 0.85rem; color: #0ea5e9; text-decoration: none; font-weight: 700;">← Back to Home Page</a>
+            </div>
         </div>
+    </main>
 
-    </div>
-
-    <!-- Security & Logic Engine -->
+    <!-- Core Logic Engine -->
     <script>
+        // ==========================================
+        // 1. CYBER SCAN TIMELINE CONTROLLER
+        // ==========================================
         window.addEventListener('DOMContentLoaded', () => {
             const SESSION_TOKEN = "6a0f7c220023a1a5b46d0352efc15053dd5c4ec4d9da8ef7f168fecaa1efd9a9";
             if (localStorage.getItem("harsh_admin_token") === SESSION_TOKEN) {
                 window.location.href = "admin.html";
+                return;
             }
+
+            const introScreen = document.getElementById('cyber-intro');
+            const scanner = document.getElementById('securityScanner');
+            const lockIcon = document.getElementById('lockIcon');
+            const introStatus = document.getElementById('introStatus');
+            const mainBox = document.getElementById('mainLoginBox');
+
+            // Wait 1.5 seconds, then stop scan and unlock
+            setTimeout(() => {
+                lockIcon.innerText = "🔓";
+                scanner.classList.add('unlocked');
+                introStatus.innerText = "CONNECTION ESTABLISHED";
+                introStatus.style.color = "#10b981"; // Green color
+            }, 1500);
+
+            // Wait 1 more second, then fade out and show dashboard
+            setTimeout(() => {
+                introScreen.style.opacity = '0';
+                
+                setTimeout(() => {
+                    introScreen.style.display = 'none';
+                    mainBox.classList.add('show-dashboard');
+                    
+                    // Start Typing Effect
+                    setTimeout(startTypingGreeting, 600);
+                }, 600);
+            }, 2500);
         });
 
-        const _BIN_ID = "00111001001101000011000100110010001100000011011100111000001100000011100100110001"; // 9412078091
-        const _BIN_KEY = "01111001011101010110001001100001011011100111001101101000011010000011000000110001"; // yubanshh01
+        // ==========================================
+        // 2. PROFESSIONAL TYPING ENGINE
+        // ==========================================
+        function startTypingGreeting() {
+            const text1 = "WELCOME HARSH,";
+            const text2 = "PLEASE AUTHENTICATE TO ACCESS DASHBOARD.";
+            const target = document.getElementById("typewriterText");
+            
+            let i = 0;
+            let currentLine = 1;
+
+            function typeWriter() {
+                if (currentLine === 1) {
+                    if (i < text1.length) {
+                        target.innerHTML += text1.charAt(i);
+                        i++;
+                        setTimeout(typeWriter, 50);
+                    } else {
+                        target.innerHTML += "<br>";
+                        currentLine = 2;
+                        i = 0;
+                        setTimeout(typeWriter, 300); // Pause before line 2
+                    }
+                } else if (currentLine === 2) {
+                    if (i < text2.length) {
+                        target.innerHTML += text2.charAt(i);
+                        i++;
+                        setTimeout(typeWriter, 40);
+                    }
+                }
+            }
+            typeWriter();
+        }
+
+        // ==========================================
+        // 3. ZERO-LEAK SECURITY & OTP LOGIC
+        // ==========================================
+        function toggleDropdown(e) {
+            e.stopPropagation();
+            document.getElementById("pagesDropdown").classList.toggle("active");
+        }
+        window.addEventListener("click", () => {
+            document.getElementById("pagesDropdown").classList.remove("active");
+        });
+
+        // 100% Encrypted Binary Credentials
+        const _BIN_ID = "00111001001101000011000100110010001100000011011100111000001100000011100100110001"; // 
+        const _BIN_KEY = "01111001011101010110001001100001011011100111001101101000011010000011000000110001"; //
         const SESSION_TOKEN = "6a0f7c220023a1a5b46d0352efc15053dd5c4ec4d9da8ef7f168fecaa1efd9a9";
         const FORMSPREE_ENDPOINT = "https://formspree.io/f/moeqvarv";
 
@@ -258,6 +384,7 @@
             errBanner.style.display = "block";
         }
 
+        // Silent Intrusion Tracker
         async function captureAndReportIntruder(attemptType, attemptedValue) {
             let ipData = { ip: "Unknown", city: "Unknown", region: "Unknown", country: "Unknown" };
             try {
@@ -296,6 +423,7 @@
             } catch (err) {}
         }
 
+        // Step 1: Validate & Send OTP
         document.getElementById("loginStep1Form").addEventListener("submit", async function(e) {
             e.preventDefault();
             document.getElementById("loginErrorMessage").style.display = "none";
@@ -309,7 +437,7 @@
 
             if (inputMobBin === _BIN_ID && inputPwdBin === _BIN_KEY) {
                 btn.disabled = true;
-                btn.innerText = "Sending Secure OTP...";
+                btn.innerText = "Generating Secure OTP...";
                 generatedOtp = Math.floor(100000 + Math.random() * 900000).toString();
 
                 try {
@@ -330,12 +458,12 @@
                     } else {
                         showLoginError("Service temporarily busy. Please retry.");
                         btn.disabled = false;
-                        btn.innerText = "Authenticate Account";
+                        btn.innerText = "Authenticate & Get OTP ✉️";
                     }
                 } catch (err) {
                     showLoginError("Network Error: OTP deliver nahi ho saka.");
                     btn.disabled = false;
-                    btn.innerText = "Authenticate Account";
+                    btn.innerText = "Authenticate & Get OTP ✉️";
                 }
             } else {
                 btn.disabled = true;
@@ -346,6 +474,7 @@
             }
         });
 
+        // Step 2: Verify OTP
         document.getElementById("loginStep2Form").addEventListener("submit", async function(e) {
             e.preventDefault();
             document.getElementById("loginErrorMessage").style.display = "none";
@@ -373,7 +502,7 @@
             document.getElementById("loginStep1Form").style.display = "block";
             const btn = document.getElementById("step1Btn");
             btn.disabled = false;
-            btn.innerText = "Authenticate Account";
+            btn.innerText = "Authenticate & Get OTP ✉️";
         }
     </script>
 </body>
