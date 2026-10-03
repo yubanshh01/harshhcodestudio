@@ -6,6 +6,7 @@
     <title>Secure Admin Login | HarshCode Studio</title>
     <link rel="stylesheet" href="style.css">
     <link rel="icon" type="image/jpeg" href="images/logo.jpeg">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         body {
             background: linear-gradient(180deg, #f8fafc 0%, #e2e8f0 100%);
@@ -162,11 +163,30 @@
             box-shadow: 0 15px 25px rgba(2,132,199,0.4);
         }
 
+        .btn-auth:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+
         .auth-error-banner {
             display: none;
             background: #fee2e2;
             color: #b91c1c;
             border: 1px solid #f87171;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            font-weight: 700;
+        }
+
+        .auth-success-banner {
+            display: none;
+            background: #dcfce7;
+            color: #166534;
+            border: 1px solid #86efac;
             padding: 12px;
             border-radius: 8px;
             font-size: 0.9rem;
@@ -223,37 +243,51 @@
 
             <div style="text-align: center; margin-bottom: 1.5rem;">
                 <h2 style="color: var(--text-dark); font-size: 1.5rem; font-weight: 800;">Admin Authorization</h2>
-                <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 4px; font-weight: 600;">Zero-Trust Encrypted Gateway</p>
+                <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 4px; font-weight: 600;">Supabase Secure Auth</p>
             </div>
 
             <div id="loginErrorMessage" class="auth-error-banner"></div>
+            <div id="loginSuccessMessage" class="auth-success-banner"></div>
 
             <form id="loginStep1Form">
                 <div class="form-group" style="margin-bottom: 15px;">
-                    <label for="adminMobile">Registered Mobile Number</label>
-                    <input type="tel" id="adminMobile" placeholder="Enter secure mobile ID" required autocomplete="username">
+                    <label for="adminEmail">Admin Email</label>
+                    <input type="email" id="adminEmail" placeholder="harsh@example.com" required autocomplete="email">
                 </div>
                 <div class="form-group" style="margin-bottom: 20px;">
-                    <label for="adminPassword">Master Password</label>
-                    <input type="password" id="adminPassword" placeholder="Enter vault password" required autocomplete="current-password">
+                    <label for="adminPassword">Password</label>
+                    <input type="password" id="adminPassword" placeholder="Enter your password" required autocomplete="current-password">
                 </div>
-                <button type="submit" id="step1Btn" class="btn-auth">Authenticate</button>
+                <button type="submit" id="step1Btn" class="btn-auth">Sign In with Supabase 🔐</button>
             </form>
         </div>
     </main>
 
     <script>
-        const AUTH_CONFIG = {
-            enabled: false,
-            sessionTokenName: 'harsh_admin_token',
-            sessionValue: 'replace-with-server-generated-token',
-            notice: 'Admin authentication is disabled in this public repository until a secure backend is configured.'
-        };
+        const SUPABASE_URL = 'https://YOUR_SUPABASE_URL.supabase.co';
+        const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
+
+        let supabase;
+        try {
+            supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        } catch (err) {
+            console.error('Supabase initialization failed:', err);
+        }
 
         function showLoginError(msg) {
             const errBanner = document.getElementById('loginErrorMessage');
+            const successBanner = document.getElementById('loginSuccessMessage');
+            successBanner.style.display = 'none';
             errBanner.innerText = msg;
             errBanner.style.display = 'block';
+        }
+
+        function showLoginSuccess(msg) {
+            const errBanner = document.getElementById('loginErrorMessage');
+            const successBanner = document.getElementById('loginSuccessMessage');
+            errBanner.style.display = 'none';
+            successBanner.innerText = msg;
+            successBanner.style.display = 'block';
         }
 
         function toggleDropdown(e) {
@@ -265,9 +299,14 @@
             document.getElementById('pagesDropdown').classList.remove('active');
         });
 
-        window.addEventListener('DOMContentLoaded', () => {
-            const SESSION_TOKEN = AUTH_CONFIG.sessionValue;
-            if (localStorage.getItem(AUTH_CONFIG.sessionTokenName) === SESSION_TOKEN) {
+        window.addEventListener('DOMContentLoaded', async () => {
+            if (!supabase) {
+                showLoginError('Supabase not configured. Please add your Supabase credentials.');
+                return;
+            }
+
+            const { data: { session } } = await supabase.auth.getSession();
+            if (session) {
                 window.location.href = 'admin.html';
                 return;
             }
@@ -296,8 +335,8 @@
         });
 
         function startTypingGreeting() {
-            const text1 = 'WELCOME ADMIN,';
-            const text2 = 'SECURE BACKEND AUTH MUST BE ENABLED.';
+            const text1 = 'WELCOME HARSH,';
+            const text2 = 'PLEASE AUTHENTICATE TO ACCESS DASHBOARD.';
             const target = document.getElementById('typewriterText');
             let i = 0;
             let currentLine = 1;
@@ -325,53 +364,46 @@
             typeWriter();
         }
 
-        document.getElementById('loginStep1Form').addEventListener('submit', function (e) {
+        document.getElementById('loginStep1Form').addEventListener('submit', async function (e) {
             e.preventDefault();
-            const mobile = document.getElementById('adminMobile').value.trim();
-            const password = document.getElementById('adminPassword').value.trim();
-            const btn = document.getElementById('step1Btn');
 
-            if (!mobile || !password) {
-                showLoginError('Please enter mobile and password.');
+            if (!supabase) {
+                showLoginError('Supabase not configured.');
                 return;
             }
 
-            if (!AUTH_CONFIG.enabled) {
-                btn.disabled = true;
-                showLoginError(AUTH_CONFIG.notice + ' Configure a real backend auth flow before enabling admin access.');
+            const email = document.getElementById('adminEmail').value.trim();
+            const password = document.getElementById('adminPassword').value.trim();
+            const btn = document.getElementById('step1Btn');
+
+            if (!email || !password) {
+                showLoginError('Please enter both email and password.');
                 return;
             }
 
             btn.disabled = true;
             btn.innerText = 'Authenticating...';
 
-            fetch('/api/admin/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ mobile, password })
-            })
-            .then(async response => {
-                if (!response.ok) {
-                    const data = await response.json().catch(() => ({ error: 'Authentication failed.' }));
-                    throw new Error(data.error || 'Authentication failed.');
+            try {
+                const { data: { user }, error } = await supabase.auth.signInWithPassword({ email, password });
+                if (error) throw error;
+                if (!user) throw new Error('Authentication failed');
+
+                const metadata = user.user_metadata || {};
+                if (metadata.role !== 'admin') {
+                    await supabase.auth.signOut();
+                    throw new Error('Access denied: Admin role required');
                 }
-                return response.json();
-            })
-            .then(result => {
-                if (result && result.token) {
-                    localStorage.setItem(AUTH_CONFIG.sessionTokenName, result.token);
+
+                showLoginSuccess('Authentication successful! Redirecting...');
+                setTimeout(() => {
                     window.location.href = 'admin.html';
-                } else {
-                    throw new Error('Invalid auth response.');
-                }
-            })
-            .catch(err => {
-                showLoginError(err.message || 'Authentication failed.');
+                }, 1500);
+            } catch (err) {
+                showLoginError(err.message || 'Authentication failed');
                 btn.disabled = false;
-                btn.innerText = 'Authenticate';
-            });
+                btn.innerText = 'Sign In with Supabase 🔐';
+            }
         });
     </script>
 </body>
