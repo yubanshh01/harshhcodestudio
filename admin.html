@@ -5,9 +5,46 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard | HarshCode Studio</title>
     <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link rel="icon" type="image/jpeg" href="images/logo.jpeg">
+    <style>
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(2, 132, 199, 0.3);
+            border-top: 3px solid #0284c7;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .auth-check {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+        }
+        .auth-check-content {
+            text-align: center;
+        }
+        .auth-check-content h2 {
+            margin-top: 20px;
+            color: #0284c7;
+        }
+    </style>
 </head>
 <body>
+    <div id="authCheck" class="auth-check">
+        <div class="auth-check-content">
+            <div class="loading-spinner"></div>
+            <h2>Verifying Admin Access...</h2>
+        </div>
+    </div>
+
     <header>
         <div class="container">
             <nav>
@@ -34,24 +71,59 @@
         </div>
     </header>
 
-    <main class="section">
+    <main class="section" id="mainContent" style="display: none;">
         <div class="container">
-            <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:2rem;background:var(--white);padding:1.2rem 1.5rem;border-radius:14px;box-shadow:0 12px 30px rgba(15,23,42,0.08);">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 2rem; background: var(--white); padding: 1.2rem 1.5rem; border-radius: 14px; box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);">
                 <div>
-                    <h2 style="font-size:1.4rem;color:var(--text-dark);">Admin Dashboard</h2>
-                    <p style="color:var(--text-muted);font-size:0.85rem;">Secure backend auth required before access is granted.</p>
+                    <h2 style="font-size: 1.4rem; color: var(--text-dark);">Admin Cloud Dashboard</h2>
+                    <p style="color: var(--text-muted); font-size: 0.85rem; font-family: var(--font-code);">Engine: Supabase Real-Time Cloud</p>
                 </div>
-                <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+                <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
                     <a href="index.html" class="btn-back-home">Home</a>
-                    <button onclick="logout()" class="btn" style="background:#dc2626;padding:6px 12px;font-size:0.85rem;">Logout 🚪</button>
+                    <a href="feed.html" class="btn btn-outline" target="_blank" style="padding: 6px 12px; font-size: 0.85rem;">Live Feed</a>
+                    <button onclick="logout()" class="btn" style="background:#dc2626; padding: 6px 12px; font-size: 0.85rem;">Logout 🚪</button>
                 </div>
             </div>
 
-            <section class="card" style="max-width:760px; margin:0 auto;">
-                <h3>Security Status</h3>
-                <div id="adminStatus" style="margin-top:1rem; color:var(--text-dark); line-height:1.7;">
-                    Loading authentication state...
+            <!-- Create Post Card -->
+            <section class="card" style="max-width: 700px; margin: 0 auto 2.5rem auto;">
+                <h3>Create New Public Post</h3>
+                <form id="postForm" style="margin-top: 1rem;">
+                    <div class="form-group">
+                        <label for="postTitle">Post Title</label>
+                        <input type="text" id="postTitle" placeholder="e.g. New Project Completed!" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="postTag">Category / Tag</label>
+                        <select id="postTag">
+                            <option value="Web Project">Web Project</option>
+                            <option value="Announcement">Announcement</option>
+                            <option value="Coding Tip">Coding Tip</option>
+                            <option value="Personal Update">Personal Update</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="postFileInput">Upload Photo (Hardware-Accelerated Auto Compression)</label>
+                        <input type="file" id="postFileInput" accept="image/*" style="cursor: pointer;">
+                        <div id="previewContainer" style="display:none; margin-top: 10px; background:#0b1329; border-radius:8px; padding:8px; text-align:center;">
+                            <img id="imagePreview" alt="Upload Preview" style="max-width: 100%; max-height: 280px; object-fit: contain; border-radius: 6px;">
+                            <p style="color:#38bdf8; font-size:0.75rem; margin-top:4px; font-family: var(--font-code);">Auto-Compressed for Instant Loading</p>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="postContent">Post Description</label>
+                        <textarea id="postContent" rows="4" placeholder="Apna message yahan likhein..." required></textarea>
+                    </div>
+                    <button type="submit" id="publishBtn" class="btn" style="width: 100%;">Publish Live Post 🚀</button>
+                </form>
+            </section>
+
+            <section>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                    <h3>Manage Published Posts</h3>
+                    <button onclick="loadAdminPosts()" class="btn btn-outline" style="padding: 4px 10px; font-size: 0.85rem;">🔄 Refresh</button>
                 </div>
+                <div id="adminPostsList"></div>
             </section>
         </div>
     </main>
@@ -60,18 +132,24 @@
         <div class="container">
             <div class="footer-bottom">
                 <p>&copy; 2026 HarshCode Studio. All Rights Reserved.</p>
-                <p><a href="index.html">Home</a> • <a href="login.html">Admin Login</a></p>
+                <p><a href="index.html">Home</a> • <a href="feed.html">Live Feed</a></p>
             </div>
         </div>
     </footer>
 
     <script>
-        const AUTH_CONFIG = {
-            enabled: false,
-            sessionTokenName: 'harsh_admin_token',
-            sessionValue: 'replace-with-server-generated-token',
-            notice: 'Admin authentication is disabled in this public repository until a secure backend is configured.'
-        };
+        // ✅ SUPABASE CONFIG - Add your real credentials here
+        const SUPABASE_URL = 'https://YOUR_SUPABASE_URL.supabase.co';
+        const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
+
+        let supabase;
+        let currentUser = null;
+
+        try {
+            supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        } catch (err) {
+            console.error('Supabase init error:', err);
+        }
 
         function toggleDropdown(e) {
             e.stopPropagation();
@@ -82,34 +160,186 @@
             document.getElementById('pagesDropdown').classList.remove('active');
         });
 
-        function logout() {
-            localStorage.removeItem(AUTH_CONFIG.sessionTokenName);
-            window.location.href = 'login.html';
-        }
-
-        function renderDisabledState() {
-            const status = document.getElementById('adminStatus');
-            status.innerHTML = `
-                <p><strong>Access status:</strong> Disabled by default for public repositories.</p>
-                <p>${AUTH_CONFIG.notice}</p>
-                <p><strong>Required fix:</strong> move admin auth to a real backend service (for example: Node.js/Express, Supabase Auth, Firebase Auth, or another server-side identity provider).</p>
-                <p><strong>Important:</strong> never store admin credentials, OTP secrets, or session tokens directly in client-side code.</p>
-                <p><a href="login.html" class="btn">Go Back to Login</a></p>
-            `;
-        }
-
-        (function () {
-            const token = localStorage.getItem(AUTH_CONFIG.sessionTokenName);
-            if (token !== AUTH_CONFIG.sessionValue || !AUTH_CONFIG.enabled) {
-                renderDisabledState();
+        // ✅ CHECK AUTH ON PAGE LOAD
+        async function checkAdminAccess() {
+            if (!supabase) {
+                console.error('Supabase not configured');
+                window.location.href = 'login.html';
                 return;
             }
 
-            document.getElementById('adminStatus').innerHTML = `
-                <p><strong>Access granted.</strong> Backend auth is active.</p>
-                <p>Use secure server-side API endpoints to manage posts, images, and admin actions.</p>
-            `;
-        })();
+            try {
+                const { data: { session } } = await supabase.auth.getSession();
+                
+                if (!session) {
+                    console.log('No session found');
+                    window.location.href = 'login.html';
+                    return;
+                }
+
+                currentUser = session.user;
+                const metadata = currentUser.user_metadata || {};
+
+                // Verify admin role
+                if (metadata.role !== 'admin') {
+                    console.log('User does not have admin role');
+                    await supabase.auth.signOut();
+                    window.location.href = 'login.html';
+                    return;
+                }
+
+                // Admin verified - show dashboard
+                document.getElementById('authCheck').style.display = 'none';
+                document.getElementById('mainContent').style.display = 'block';
+                loadAdminPosts();
+
+            } catch (err) {
+                console.error('Auth check error:', err);
+                window.location.href = 'login.html';
+            }
+        }
+
+        async function logout() {
+            if (confirm('Logout karna chahte hain?')) {
+                try {
+                    await supabase.auth.signOut();
+                    window.location.href = 'login.html';
+                } catch (err) {
+                    console.error('Logout error:', err);
+                    window.location.href = 'login.html';
+                }
+            }
+        }
+
+        let optimizedBase64 = '';
+
+        // Auto-Compressor for Photos
+        document.addEventListener('DOMContentLoaded', () => {
+            const fileInput = document.getElementById('postFileInput');
+            if (fileInput) {
+                fileInput.addEventListener('change', function (e) {
+                    const file = e.target.files[0];
+                    if (!file) {
+                        optimizedBase64 = '';
+                        document.getElementById('previewContainer').style.display = 'none';
+                        return;
+                    }
+                    const reader = new FileReader();
+                    reader.onload = function (evt) {
+                        const img = new Image();
+                        img.onload = function () {
+                            const canvas = document.createElement('canvas');
+                            const MAX_WIDTH = 800;
+                            const scale = MAX_WIDTH / img.width;
+                            canvas.width = (img.width > MAX_WIDTH) ? MAX_WIDTH : img.width;
+                            canvas.height = (img.width > MAX_WIDTH) ? (img.height * scale) : img.height;
+                            const ctx = canvas.getContext('2d');
+                            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                            optimizedBase64 = canvas.toDataURL('image/jpeg', 0.70);
+                            document.getElementById('imagePreview').src = optimizedBase64;
+                            document.getElementById('previewContainer').style.display = 'block';
+                        };
+                        img.src = evt.target.result;
+                    };
+                    reader.readAsDataURL(file);
+                });
+            }
+        });
+
+        // Publish Post
+        const postForm = document.getElementById('postForm');
+        if (postForm) {
+            postForm.addEventListener('submit', async function (e) {
+                e.preventDefault();
+                const publishBtn = document.getElementById('publishBtn');
+                publishBtn.disabled = true;
+                publishBtn.innerText = 'Publishing...';
+
+                const newPost = {
+                    id: Date.now(),
+                    title: document.getElementById('postTitle').value.trim(),
+                    tag: document.getElementById('postTag').value,
+                    img: optimizedBase64 || null,
+                    content: document.getElementById('postContent').value.trim(),
+                    date: new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }),
+                    user_id: currentUser.id
+                };
+
+                try {
+                    const { error } = await supabase
+                        .from('posts')
+                        .insert([newPost]);
+
+                    if (error) throw error;
+                    alert('Post live publish ho gayi! 🚀');
+                    this.reset();
+                    optimizedBase64 = '';
+                    document.getElementById('previewContainer').style.display = 'none';
+                    loadAdminPosts();
+                } catch (err) {
+                    alert('Error: ' + err.message);
+                } finally {
+                    publishBtn.disabled = false;
+                    publishBtn.innerText = 'Publish Live Post 🚀';
+                }
+            });
+        }
+
+        async function loadAdminPosts() {
+            const container = document.getElementById('adminPostsList');
+            container.innerHTML = '<p style="color:var(--text-muted);">Loading posts...</p>';
+
+            try {
+                const { data: posts, error } = await supabase
+                    .from('posts')
+                    .select('*')
+                    .order('id', { ascending: false });
+
+                if (error) throw error;
+                container.innerHTML = '';
+
+                if (!posts || posts.length === 0) {
+                    container.innerHTML = '<p style="color:var(--text-muted);">No posts found.</p>';
+                    return;
+                }
+
+                posts.forEach(post => {
+                    container.innerHTML += `
+                        <article class="post-card">
+                            <div class="post-header">
+                                <div>
+                                    <span class="post-tag">${post.tag}</span>
+                                    <h3 style="margin-top:4px;">${post.title}</h3>
+                                </div>
+                                <button onclick="deletePost(${post.id})" class="btn" style="background:#ef4444; padding: 4px 10px; font-size:0.85rem;">Delete</button>
+                            </div>
+                            <div style="font-size:0.85rem; color:var(--text-muted); font-family:var(--font-code);">📅 ${post.date}</div>
+                            ${post.img ? `<div class="post-img-wrapper"><img src="${post.img}" class="post-img" alt="Post Photo" loading="lazy"></div>` : ''}
+                            <p style="margin-top:10px; color:var(--text-dark); line-height:1.6;">${post.content}</p>
+                        </article>
+                    `;
+                });
+            } catch (e) {
+                container.innerHTML = '<p style="color:red;">Failed to load: ' + e.message + '</p>';
+            }
+        }
+
+        async function deletePost(postId) {
+            if (!confirm('Delete karna chahte hain?')) return;
+            try {
+                const { error } = await supabase
+                    .from('posts')
+                    .delete()
+                    .eq('id', postId);
+                if (error) throw error;
+                loadAdminPosts();
+            } catch (err) {
+                alert('Delete failed: ' + err.message);
+            }
+        }
+
+        // Check auth when page loads
+        window.addEventListener('DOMContentLoaded', checkAdminAccess);
     </script>
 </body>
 </html>
