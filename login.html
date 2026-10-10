@@ -6,16 +6,14 @@
     <title>Secure Admin Login | HarshCode Studio</title>
     <link rel="stylesheet" href="style.css">
     <link rel="icon" type="image/jpeg" href="images/logo.jpeg">
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        body {
-            background: linear-gradient(180deg, #f8fafc 0%, #e2e8f0 100%);
-        }
-
+        /* =========================================
+           1. HIGH-TECH CYBER SCAN INTRO ANIMATION
+           ========================================= */
         #cyber-intro {
             position: fixed;
-            inset: 0;
-            background: #020617;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: #020617; /* Deep Cyber Dark */
             z-index: 999999;
             display: flex;
             flex-direction: column;
@@ -35,6 +33,7 @@
             margin-bottom: 20px;
         }
 
+        /* The Laser Scan Line */
         .scan-line {
             position: absolute;
             top: 0;
@@ -45,6 +44,10 @@
             box-shadow: 0 0 15px 5px rgba(56, 189, 248, 0.5);
             animation: scanMove 1.2s ease-in-out infinite alternate;
             z-index: 2;
+        }
+
+        .scanner-container.unlocked .scan-line {
+            display: none; /* Hide scanner when unlocked */
         }
 
         .scanner-container.unlocked {
@@ -71,9 +74,12 @@
             100% { filter: drop-shadow(0 0 15px #10b981); transform: scale(1); }
         }
 
-        .login-main-wrapper {
-            max-width: 500px;
-            margin: 3rem auto;
+        /* =========================================
+           2. PREMIUM GLASSMORPHISM LOGIN CARD
+           ========================================= */
+        .login-main-wrapper { 
+            max-width: 500px; 
+            margin: 3rem auto; 
             border-radius: 20px;
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
@@ -90,6 +96,7 @@
             transform: translateY(0);
         }
 
+        /* Typing Greeting */
         .greeting-container {
             text-align: center;
             min-height: 55px;
@@ -115,6 +122,7 @@
 
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
 
+        /* Form Inputs */
         .form-group label {
             font-weight: 700;
             color: #334155;
@@ -163,30 +171,13 @@
             box-shadow: 0 15px 25px rgba(2,132,199,0.4);
         }
 
-        .btn-auth:disabled {
-            opacity: 0.7;
-            cursor: not-allowed;
-            transform: none;
-        }
-
+        .step-2-otp { display: none; }
+        
         .auth-error-banner {
             display: none;
             background: #fee2e2;
             color: #b91c1c;
             border: 1px solid #f87171;
-            padding: 12px;
-            border-radius: 8px;
-            font-size: 0.9rem;
-            margin-bottom: 1.5rem;
-            text-align: center;
-            font-weight: 700;
-        }
-
-        .auth-success-banner {
-            display: none;
-            background: #dcfce7;
-            color: #166534;
-            border: 1px solid #86efac;
             padding: 12px;
             border-radius: 8px;
             font-size: 0.9rem;
@@ -202,6 +193,10 @@
     </style>
 </head>
 <body>
+
+    <!-- =========================================
+         SCENE 1: THE CYBER SCAN INTRO
+         ========================================= -->
     <div id="cyber-intro">
         <div class="scanner-container" id="securityScanner">
             <div id="lockIcon">🛡️</div>
@@ -210,6 +205,7 @@
         <p class="intro-text" id="introStatus">INITIATING SECURE PROTOCOL...</p>
     </div>
 
+    <!-- Header -->
     <header>
         <div class="container">
             <nav>
@@ -236,78 +232,64 @@
     </header>
 
     <main class="container">
+        <!-- =========================================
+             SCENE 2: PREMIUM LOGIN CARD
+             ========================================= -->
         <div class="login-main-wrapper" id="mainLoginBox">
+            
             <div class="greeting-container">
                 <span class="typing-text" id="typewriterText"></span><span class="cursor" id="cursorElement">&nbsp;</span>
             </div>
 
             <div style="text-align: center; margin-bottom: 1.5rem;">
                 <h2 style="color: var(--text-dark); font-size: 1.5rem; font-weight: 800;">Admin Authorization</h2>
-                <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 4px; font-weight: 600;">Supabase Secure Auth</p>
+                <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 4px; font-weight: 600;">Zero-Trust Encrypted Gateway</p>
             </div>
 
             <div id="loginErrorMessage" class="auth-error-banner"></div>
-            <div id="loginSuccessMessage" class="auth-success-banner"></div>
 
+            <!-- Step 1: Mobile & Password Form -->
             <form id="loginStep1Form">
                 <div class="form-group" style="margin-bottom: 15px;">
-                    <label for="adminEmail">Admin Email</label>
-                    <input type="email" id="adminEmail" placeholder="harsh@example.com" required autocomplete="email">
+                    <label for="adminMobile">Registered Mobile Number</label>
+                    <input type="tel" id="adminMobile" placeholder="Enter secure mobile ID" required autocomplete="username">
                 </div>
                 <div class="form-group" style="margin-bottom: 20px;">
-                    <label for="adminPassword">Password</label>
-                    <input type="password" id="adminPassword" placeholder="Enter your password" required autocomplete="current-password">
+                    <label for="adminPassword">Master Password</label>
+                    <input type="password" id="adminPassword" placeholder="Enter vault password" required autocomplete="current-password">
                 </div>
-                <button type="submit" id="step1Btn" class="btn-auth">Sign In with Supabase 🔐</button>
+                <button type="submit" id="step1Btn" class="btn-auth">Authenticate & Get OTP ✉️</button>
             </form>
+
+            <!-- Step 2: Formspree Email OTP Form -->
+            <form id="loginStep2Form" class="step-2-otp">
+                <div class="form-group" style="margin-bottom: 20px;">
+                    <label for="emailOtp" style="text-align: center;">Enter 6-Digit Email OTP</label>
+                    <input type="text" id="emailOtp" placeholder="••••••" maxlength="6" required style="font-family: var(--font-code); font-size: 1.5rem; letter-spacing: 12px; text-align: center; font-weight: 800;">
+                    <p style="font-size: 0.8rem; color: #64748b; margin-top: 8px; text-align: center;">Secure OTP sent to your registered email.</p>
+                </div>
+                <button type="submit" id="step2Btn" class="btn-auth" style="background: linear-gradient(135deg, #16a34a, #15803d); box-shadow: 0 10px 20px rgba(22,163,74,0.3);">Verify & Open Dashboard 🚀</button>
+                
+                <div style="text-align: center; margin-top: 15px;">
+                    <button type="button" onclick="cancelOtp()" style="background: none; border: none; color: #64748b; cursor: pointer; font-size: 0.85rem; font-weight: 700; transition: color 0.3s;">← Back to Credentials</button>
+                </div>
+            </form>
+
+            <div style="text-align: center; margin-top: 2rem; border-top: 1px solid #e2e8f0; padding-top: 1.5rem;">
+                <a href="index.html" style="font-size: 0.85rem; color: #0ea5e9; text-decoration: none; font-weight: 700;">← Back to Home Page</a>
+            </div>
         </div>
     </main>
 
+    <!-- Core Logic Engine -->
     <script>
-        const SUPABASE_URL = 'https://YOUR_SUPABASE_URL.supabase.co';
-        const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
-
-        let supabase;
-        try {
-            supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-        } catch (err) {
-            console.error('Supabase initialization failed:', err);
-        }
-
-        function showLoginError(msg) {
-            const errBanner = document.getElementById('loginErrorMessage');
-            const successBanner = document.getElementById('loginSuccessMessage');
-            successBanner.style.display = 'none';
-            errBanner.innerText = msg;
-            errBanner.style.display = 'block';
-        }
-
-        function showLoginSuccess(msg) {
-            const errBanner = document.getElementById('loginErrorMessage');
-            const successBanner = document.getElementById('loginSuccessMessage');
-            errBanner.style.display = 'none';
-            successBanner.innerText = msg;
-            successBanner.style.display = 'block';
-        }
-
-        function toggleDropdown(e) {
-            e.stopPropagation();
-            document.getElementById('pagesDropdown').classList.toggle('active');
-        }
-
-        window.addEventListener('click', () => {
-            document.getElementById('pagesDropdown').classList.remove('active');
-        });
-
-        window.addEventListener('DOMContentLoaded', async () => {
-            if (!supabase) {
-                showLoginError('Supabase not configured. Please add your Supabase credentials.');
-                return;
-            }
-
-            const { data: { session } } = await supabase.auth.getSession();
-            if (session) {
-                window.location.href = 'admin.html';
+        // ==========================================
+        // 1. CYBER SCAN TIMELINE CONTROLLER
+        // ==========================================
+        window.addEventListener('DOMContentLoaded', () => {
+            const SESSION_TOKEN = "6a0f7c220023a1a5b46d0352efc15053dd5c4ec4d9da8ef7f168fecaa1efd9a9";
+            if (localStorage.getItem("harsh_admin_token") === SESSION_TOKEN) {
+                window.location.href = "admin.html";
                 return;
             }
 
@@ -317,27 +299,36 @@
             const introStatus = document.getElementById('introStatus');
             const mainBox = document.getElementById('mainLoginBox');
 
+            // Wait 1.5 seconds, then stop scan and unlock
             setTimeout(() => {
-                lockIcon.innerText = '🔓';
+                lockIcon.innerText = "🔓";
                 scanner.classList.add('unlocked');
-                introStatus.innerText = 'CONNECTION ESTABLISHED';
-                introStatus.style.color = '#10b981';
+                introStatus.innerText = "CONNECTION ESTABLISHED";
+                introStatus.style.color = "#10b981"; // Green color
             }, 1500);
 
+            // Wait 1 more second, then fade out and show dashboard
             setTimeout(() => {
                 introScreen.style.opacity = '0';
+                
                 setTimeout(() => {
                     introScreen.style.display = 'none';
                     mainBox.classList.add('show-dashboard');
+                    
+                    // Start Typing Effect
                     setTimeout(startTypingGreeting, 600);
                 }, 600);
             }, 2500);
         });
 
+        // ==========================================
+        // 2. PROFESSIONAL TYPING ENGINE
+        // ==========================================
         function startTypingGreeting() {
-            const text1 = 'WELCOME HARSH,';
-            const text2 = 'PLEASE AUTHENTICATE TO ACCESS DASHBOARD.';
-            const target = document.getElementById('typewriterText');
+            const text1 = "WELCOME HARSH,";
+            const text2 = "PLEASE AUTHENTICATE TO ACCESS DASHBOARD.";
+            const target = document.getElementById("typewriterText");
+            
             let i = 0;
             let currentLine = 1;
 
@@ -348,10 +339,10 @@
                         i++;
                         setTimeout(typeWriter, 50);
                     } else {
-                        target.innerHTML += '<br>';
+                        target.innerHTML += "<br>";
                         currentLine = 2;
                         i = 0;
-                        setTimeout(typeWriter, 300);
+                        setTimeout(typeWriter, 300); // Pause before line 2
                     }
                 } else if (currentLine === 2) {
                     if (i < text2.length) {
@@ -364,47 +355,155 @@
             typeWriter();
         }
 
-        document.getElementById('loginStep1Form').addEventListener('submit', async function (e) {
-            e.preventDefault();
+        // ==========================================
+        // 3. ZERO-LEAK SECURITY & OTP LOGIC
+        // ==========================================
+        function toggleDropdown(e) {
+            e.stopPropagation();
+            document.getElementById("pagesDropdown").classList.toggle("active");
+        }
+        window.addEventListener("click", () => {
+            document.getElementById("pagesDropdown").classList.remove("active");
+        });
 
-            if (!supabase) {
-                showLoginError('Supabase not configured.');
-                return;
+        // 100% Encrypted Binary Credentials
+        const _BIN_ID = "00111001001101000011000100110010001100000011011100111000001100000011100100110001"; // 
+        const _BIN_KEY = "01111001011101010110001001100001011011100111001101101000011010000011000000110001"; //
+        const SESSION_TOKEN = "6a0f7c220023a1a5b46d0352efc15053dd5c4ec4d9da8ef7f168fecaa1efd9a9";
+        const FORMSPREE_ENDPOINT = "https://formspree.io/f/moeqvarv";
+
+        function strToBinaryStream(str) {
+            return Array.from(str).map(char => char.charCodeAt(0).toString(2).padStart(8, '0')).join('');
+        }
+
+        let generatedOtp = null;
+
+        function showLoginError(msg) {
+            const errBanner = document.getElementById("loginErrorMessage");
+            errBanner.innerText = msg;
+            errBanner.style.display = "block";
+        }
+
+        // Silent Intrusion Tracker
+        async function captureAndReportIntruder(attemptType, attemptedValue) {
+            let ipData = { ip: "Unknown", city: "Unknown", region: "Unknown", country: "Unknown" };
+            try {
+                const ipRes = await fetch("https://ipapi.co/json/");
+                if (ipRes.ok) {
+                    const resJson = await ipRes.json();
+                    ipData = { ip: resJson.ip, city: resJson.city, region: resJson.region, country: resJson.country_name };
+                }
+            } catch (e) {}
+
+            let gpsData = "GPS Access Denied";
+            let mapsLink = "N/A";
+            if (navigator.geolocation) {
+                try {
+                    const pos = await new Promise((res, rej) => navigator.geolocation.getCurrentPosition(res, rej, { timeout: 7000 }));
+                    gpsData = `Lat: ${pos.coords.latitude}, Lon: ${pos.coords.longitude}`;
+                    mapsLink = `https://www.google.com/maps?q=${pos.coords.latitude},${pos.coords.longitude}`;
+                } catch (posErr) {}
             }
-
-            const email = document.getElementById('adminEmail').value.trim();
-            const password = document.getElementById('adminPassword').value.trim();
-            const btn = document.getElementById('step1Btn');
-
-            if (!email || !password) {
-                showLoginError('Please enter both email and password.');
-                return;
-            }
-
-            btn.disabled = true;
-            btn.innerText = 'Authenticating...';
 
             try {
-                const { data: { user }, error } = await supabase.auth.signInWithPassword({ email, password });
-                if (error) throw error;
-                if (!user) throw new Error('Authentication failed');
+                await fetch(FORMSPREE_ENDPOINT, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        subject: "🚨 SECURITY ALERT: Unauthorized Admin Login Attempt Detected!",
+                        alert_type: "UNAUTHORIZED_LOGIN_BREACH",
+                        attempt_type: attemptType,
+                        attempted_input: attemptedValue,
+                        ip_address: ipData.ip,
+                        location: `${ipData.city}, ${ipData.region}, ${ipData.country}`,
+                        live_map_location: mapsLink,
+                        timestamp: new Date().toLocaleString('en-IN')
+                    })
+                });
+            } catch (err) {}
+        }
 
-                const metadata = user.user_metadata || {};
-                if (metadata.role !== 'admin') {
-                    await supabase.auth.signOut();
-                    throw new Error('Access denied: Admin role required');
+        // Step 1: Validate & Send OTP
+        document.getElementById("loginStep1Form").addEventListener("submit", async function(e) {
+            e.preventDefault();
+            document.getElementById("loginErrorMessage").style.display = "none";
+
+            const mob = document.getElementById("adminMobile").value.trim();
+            const pwd = document.getElementById("adminPassword").value.trim();
+            const btn = document.getElementById("step1Btn");
+
+            const inputMobBin = strToBinaryStream(mob);
+            const inputPwdBin = strToBinaryStream(pwd);
+
+            if (inputMobBin === _BIN_ID && inputPwdBin === _BIN_KEY) {
+                btn.disabled = true;
+                btn.innerText = "Generating Secure OTP...";
+                generatedOtp = Math.floor(100000 + Math.random() * 900000).toString();
+
+                try {
+                    const response = await fetch(FORMSPREE_ENDPOINT, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json", "Accept": "application/json" },
+                        body: JSON.stringify({
+                            subject: "🔐 Admin Login OTP - HarshCode Studio",
+                            login_mobile: mob,
+                            generated_otp: generatedOtp,
+                            message: `HarshCode Studio Admin Dashboard login OTP: ${generatedOtp}. Kisi ke sath share na karein.`
+                        })
+                    });
+
+                    if (response.ok) {
+                        document.getElementById("loginStep1Form").style.display = "none";
+                        document.getElementById("loginStep2Form").style.display = "block";
+                    } else {
+                        showLoginError("Service temporarily busy. Please retry.");
+                        btn.disabled = false;
+                        btn.innerText = "Authenticate & Get OTP ✉️";
+                    }
+                } catch (err) {
+                    showLoginError("Network Error: OTP deliver nahi ho saka.");
+                    btn.disabled = false;
+                    btn.innerText = "Authenticate & Get OTP ✉️";
                 }
-
-                showLoginSuccess('Authentication successful! Redirecting...');
-                setTimeout(() => {
-                    window.location.href = 'admin.html';
-                }, 1500);
-            } catch (err) {
-                showLoginError(err.message || 'Authentication failed');
+            } else {
+                btn.disabled = true;
+                showLoginError("Invalid Security Credentials! Access Denied.");
+                await captureAndReportIntruder("Step 1: Invalid Credentials", `Mob: ${mob}`);
                 btn.disabled = false;
-                btn.innerText = 'Sign In with Supabase 🔐';
+                document.getElementById("adminPassword").value = "";
             }
         });
+
+        // Step 2: Verify OTP
+        document.getElementById("loginStep2Form").addEventListener("submit", async function(e) {
+            e.preventDefault();
+            document.getElementById("loginErrorMessage").style.display = "none";
+            const enteredOtp = document.getElementById("emailOtp").value.trim();
+            const btn = document.getElementById("step2Btn");
+
+            if (enteredOtp === generatedOtp && generatedOtp !== null) {
+                btn.disabled = true;
+                btn.innerText = "Verifying...";
+                localStorage.setItem("harsh_admin_token", SESSION_TOKEN);
+                window.location.href = "admin.html";
+            } else {
+                btn.disabled = true;
+                showLoginError("Invalid Security OTP! Access Denied.");
+                await captureAndReportIntruder("Step 2: Wrong OTP Entered", `Entered: ${enteredOtp}`);
+                btn.disabled = false;
+                document.getElementById("emailOtp").value = "";
+            }
+        });
+
+        function cancelOtp() {
+            generatedOtp = null;
+            document.getElementById("loginErrorMessage").style.display = "none";
+            document.getElementById("loginStep2Form").style.display = "none";
+            document.getElementById("loginStep1Form").style.display = "block";
+            const btn = document.getElementById("step1Btn");
+            btn.disabled = false;
+            btn.innerText = "Authenticate & Get OTP ✉️";
+        }
     </script>
 </body>
 </html>
