@@ -7,43 +7,8 @@
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link rel="icon" type="image/jpeg" href="images/logo.jpeg">
-    <style>
-        .loading-spinner {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid rgba(2, 132, 199, 0.3);
-            border-top: 3px solid #0284c7;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        .auth-check {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-        }
-        .auth-check-content {
-            text-align: center;
-        }
-        .auth-check-content h2 {
-            margin-top: 20px;
-            color: #0284c7;
-        }
-    </style>
 </head>
 <body>
-    <div id="authCheck" class="auth-check">
-        <div class="auth-check-content">
-            <div class="loading-spinner"></div>
-            <h2>Verifying Admin Access...</h2>
-        </div>
-    </div>
 
     <header>
         <div class="container">
@@ -71,12 +36,13 @@
         </div>
     </header>
 
-    <main class="section" id="mainContent" style="display: none;">
+    <main class="section">
         <div class="container">
-            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 2rem; background: var(--white); padding: 1.2rem 1.5rem; border-radius: 14px; box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);">
+            
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 2rem; background: var(--white); padding: 1.2rem 1.5rem; border-radius: 12px; border: 1px solid var(--border); box-shadow: var(--card-shadow);">
                 <div>
                     <h2 style="font-size: 1.4rem; color: var(--text-dark);">Admin Cloud Dashboard</h2>
-                    <p style="color: var(--text-muted); font-size: 0.85rem; font-family: var(--font-code);">Engine: Supabase Real-Time Cloud</p>
+                    <p style="color: var(--text-muted); font-size: 0.85rem; font-family: var(--font-code);">Engine: Supabase Real-Time Cloud (Zero Expiry)</p>
                 </div>
                 <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
                     <a href="index.html" class="btn-back-home">Home</a>
@@ -125,6 +91,7 @@
                 </div>
                 <div id="adminPostsList"></div>
             </section>
+
         </div>
     </main>
 
@@ -138,168 +105,110 @@
     </footer>
 
     <script>
-        // ✅ SUPABASE CONFIG - Add your real credentials here
-        const SUPABASE_URL = 'https://YOUR_SUPABASE_URL.supabase.co';
-        const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
-
-        let supabase;
-        let currentUser = null;
-
-        try {
-            supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-        } catch (err) {
-            console.error('Supabase init error:', err);
-        }
-
         function toggleDropdown(e) {
             e.stopPropagation();
-            document.getElementById('pagesDropdown').classList.toggle('active');
+            document.getElementById("pagesDropdown").classList.toggle("active");
         }
-
-        window.addEventListener('click', () => {
-            document.getElementById('pagesDropdown').classList.remove('active');
+        window.addEventListener("click", () => {
+            document.getElementById("pagesDropdown").classList.remove("active");
         });
 
-        // ✅ CHECK AUTH ON PAGE LOAD
-        async function checkAdminAccess() {
-            if (!supabase) {
-                console.error('Supabase not configured');
-                window.location.href = 'login.html';
-                return;
-            }
+        const HASH_AUTH_SIG = "6a0f7c220023a1a5b46d0352efc15053dd5c4ec4d9da8ef7f168fecaa1efd9a9";
+        if (localStorage.getItem("harsh_admin_token") !== HASH_AUTH_SIG) {
+            window.location.href = "login.html";
+        }
 
-            try {
-                const { data: { session } } = await supabase.auth.getSession();
-                
-                if (!session) {
-                    console.log('No session found');
-                    window.location.href = 'login.html';
-                    return;
-                }
-
-                currentUser = session.user;
-                const metadata = currentUser.user_metadata || {};
-
-                // Verify admin role
-                if (metadata.role !== 'admin') {
-                    console.log('User does not have admin role');
-                    await supabase.auth.signOut();
-                    window.location.href = 'login.html';
-                    return;
-                }
-
-                // Admin verified - show dashboard
-                document.getElementById('authCheck').style.display = 'none';
-                document.getElementById('mainContent').style.display = 'block';
-                loadAdminPosts();
-
-            } catch (err) {
-                console.error('Auth check error:', err);
-                window.location.href = 'login.html';
+        function logout() {
+            if (confirm("Logout karna chahte hain?")) {
+                localStorage.removeItem("harsh_admin_token");
+                window.location.href = "login.html";
             }
         }
 
-        async function logout() {
-            if (confirm('Logout karna chahte hain?')) {
-                try {
-                    await supabase.auth.signOut();
-                    window.location.href = 'login.html';
-                } catch (err) {
-                    console.error('Logout error:', err);
-                    window.location.href = 'login.html';
-                }
-            }
-        }
+        const SUPABASE_URL = "https://rbbryqshvycrstzrtytp.supabase.co";
+        const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJiYnJ5cXNodnljcnN0enJ0eXRwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg3MTI1MjYsImV4cCI6MjEwNDI4ODUyNn0.WzH2ju9G2nW8iOKnh77OFF0N3G0ECHx1iLBjcPISItc";
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        let optimizedBase64 = '';
+        let optimizedBase64 = "";
 
         // Auto-Compressor for Photos
-        document.addEventListener('DOMContentLoaded', () => {
-            const fileInput = document.getElementById('postFileInput');
-            if (fileInput) {
-                fileInput.addEventListener('change', function (e) {
-                    const file = e.target.files[0];
-                    if (!file) {
-                        optimizedBase64 = '';
-                        document.getElementById('previewContainer').style.display = 'none';
-                        return;
-                    }
-                    const reader = new FileReader();
-                    reader.onload = function (evt) {
-                        const img = new Image();
-                        img.onload = function () {
-                            const canvas = document.createElement('canvas');
-                            const MAX_WIDTH = 800;
-                            const scale = MAX_WIDTH / img.width;
-                            canvas.width = (img.width > MAX_WIDTH) ? MAX_WIDTH : img.width;
-                            canvas.height = (img.width > MAX_WIDTH) ? (img.height * scale) : img.height;
-                            const ctx = canvas.getContext('2d');
-                            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-                            optimizedBase64 = canvas.toDataURL('image/jpeg', 0.70);
-                            document.getElementById('imagePreview').src = optimizedBase64;
-                            document.getElementById('previewContainer').style.display = 'block';
-                        };
-                        img.src = evt.target.result;
-                    };
-                    reader.readAsDataURL(file);
-                });
+        document.getElementById("postFileInput").addEventListener("change", function(e) {
+            const file = e.target.files[0];
+            if (!file) {
+                optimizedBase64 = "";
+                document.getElementById("previewContainer").style.display = "none";
+                return;
+            }
+            const reader = new FileReader();
+            reader.onload = function(evt) {
+                const img = new Image();
+                img.onload = function() {
+                    const canvas = document.createElement("canvas");
+                    const MAX_WIDTH = 800;
+                    const scale = MAX_WIDTH / img.width;
+                    canvas.width = (img.width > MAX_WIDTH) ? MAX_WIDTH : img.width;
+                    canvas.height = (img.width > MAX_WIDTH) ? (img.height * scale) : img.height;
+                    const ctx = canvas.getContext("2d");
+                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                    optimizedBase64 = canvas.toDataURL("image/jpeg", 0.70);
+                    document.getElementById("imagePreview").src = optimizedBase64;
+                    document.getElementById("previewContainer").style.display = "block";
+                };
+                img.src = evt.target.result;
+            };
+            reader.readAsDataURL(file);
+        });
+
+        // Publish Regular Post
+        document.getElementById("postForm").addEventListener("submit", async function(e) {
+            e.preventDefault();
+            const publishBtn = document.getElementById("publishBtn");
+            publishBtn.disabled = true;
+            publishBtn.innerText = "Syncing to Supabase Cloud...";
+
+            const newPost = {
+                id: Date.now(),
+                title: document.getElementById("postTitle").value.trim(),
+                tag: document.getElementById("postTag").value,
+                img: optimizedBase64 || null,
+                content: document.getElementById("postContent").value.trim(),
+                date: new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })
+            };
+
+            try {
+                const { error } = await supabaseClient
+                    .from('posts')
+                    .insert([newPost]);
+
+                if (error) throw error;
+                alert("Post live publish ho gayi! 🚀");
+                this.reset();
+                optimizedBase64 = "";
+                document.getElementById("previewContainer").style.display = "none";
+                loadAdminPosts();
+            } catch (err) {
+                alert("Cloud Error: " + err.message);
+            } finally {
+                publishBtn.disabled = false;
+                publishBtn.innerText = "Publish Live Post 🚀";
             }
         });
 
-        // Publish Post
-        const postForm = document.getElementById('postForm');
-        if (postForm) {
-            postForm.addEventListener('submit', async function (e) {
-                e.preventDefault();
-                const publishBtn = document.getElementById('publishBtn');
-                publishBtn.disabled = true;
-                publishBtn.innerText = 'Publishing...';
-
-                const newPost = {
-                    id: Date.now(),
-                    title: document.getElementById('postTitle').value.trim(),
-                    tag: document.getElementById('postTag').value,
-                    img: optimizedBase64 || null,
-                    content: document.getElementById('postContent').value.trim(),
-                    date: new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }),
-                    user_id: currentUser.id
-                };
-
-                try {
-                    const { error } = await supabase
-                        .from('posts')
-                        .insert([newPost]);
-
-                    if (error) throw error;
-                    alert('Post live publish ho gayi! 🚀');
-                    this.reset();
-                    optimizedBase64 = '';
-                    document.getElementById('previewContainer').style.display = 'none';
-                    loadAdminPosts();
-                } catch (err) {
-                    alert('Error: ' + err.message);
-                } finally {
-                    publishBtn.disabled = false;
-                    publishBtn.innerText = 'Publish Live Post 🚀';
-                }
-            });
-        }
-
         async function loadAdminPosts() {
-            const container = document.getElementById('adminPostsList');
-            container.innerHTML = '<p style="color:var(--text-muted);">Loading posts...</p>';
+            const container = document.getElementById("adminPostsList");
+            container.innerHTML = "<p style='color:var(--text-muted);'>Loading posts...</p>";
 
             try {
-                const { data: posts, error } = await supabase
+                const { data: posts, error } = await supabaseClient
                     .from('posts')
                     .select('*')
                     .order('id', { ascending: false });
 
                 if (error) throw error;
-                container.innerHTML = '';
+                container.innerHTML = "";
 
                 if (!posts || posts.length === 0) {
-                    container.innerHTML = '<p style="color:var(--text-muted);">No posts found.</p>';
+                    container.innerHTML = "<p style='color:var(--text-muted);'>No posts found.</p>";
                     return;
                 }
 
@@ -320,26 +229,25 @@
                     `;
                 });
             } catch (e) {
-                container.innerHTML = '<p style="color:red;">Failed to load: ' + e.message + '</p>';
+                container.innerHTML = "<p style='color:red;'>Failed to load: " + e.message + "</p>";
             }
         }
 
         async function deletePost(postId) {
-            if (!confirm('Delete karna chahte hain?')) return;
+            if (!confirm("Delete karna chahte hain?")) return;
             try {
-                const { error } = await supabase
+                const { error } = await supabaseClient
                     .from('posts')
                     .delete()
                     .eq('id', postId);
                 if (error) throw error;
                 loadAdminPosts();
             } catch (err) {
-                alert('Delete failed: ' + err.message);
+                alert("Delete failed: " + err.message);
             }
         }
 
-        // Check auth when page loads
-        window.addEventListener('DOMContentLoaded', checkAdminAccess);
+        loadAdminPosts();
     </script>
 </body>
 </html>
