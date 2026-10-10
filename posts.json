@@ -1,1 +1,26 @@
-[]
+[
+  {
+    "id": 1,
+    "title": "Responsive Web Design Tips",
+    "date": "2026-10-05",
+    "category": "Web Design",
+    "excerpt": "Mobile-first approach se responsive websites design karne ke best practices.",
+    "image": "photo2.jpeg"
+  },
+  {
+    "id": 2,
+    "title": "Performance Optimization",
+    "date": "2026-10-03",
+    "category": "Performance",
+    "excerpt": "Website speed increase karne ke liye CSS aur JavaScript optimization techniques.",
+    "image": "photo3.jpeg"
+  },
+  {
+    "id": 3,
+    "title": "Modern UI/UX Trends",
+    "date": "2026-09-28",
+    "category": "Design",
+    "excerpt": "2026 mein trending design patterns aur user experience best practices.",
+    "image": "photo4.jpeg"
+  }
+]

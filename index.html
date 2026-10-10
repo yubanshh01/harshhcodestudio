@@ -5,7 +5,49 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HarshCode Studio | Harsh Chaudhary Tomar</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="icon" type="image/jpeg" href="images/logo.jpeg">
+    <link rel="icon" type="image/jpeg" href="logo.jpeg">
+    <style>
+        /* Neon Hero with Background Image */
+        .hero-bg-wrapper {
+            position: relative;
+            width: 100%;
+            padding: 5.5rem 0;
+            overflow: hidden;
+        }
+        
+        .hero-bg-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+            opacity: 0.25;
+            z-index: 0;
+        }
+        
+        .hero {
+            position: relative;
+            z-index: 1;
+            background: radial-gradient(circle at top right, rgba(30, 41, 59, 0.9), rgba(11, 19, 41, 0.95));
+            padding: 5.5rem 0;
+            color: #ffffff;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%; left: -50%; width: 200%; height: 200%;
+            background: radial-gradient(circle, rgba(56, 189, 248, 0.08) 0%, transparent 60%);
+            animation: rotateGlow 20s linear infinite;
+            z-index: 0;
+        }
+        
+        .hero > * { position: relative; z-index: 1; }
+    </style>
 </head>
 <body>
 
@@ -13,7 +55,7 @@
     <div class="container">
         <nav>
             <a href="index.html" class="logo-container">
-                <img src="images/logo.jpeg" alt="Logo" class="brand-logo" onerror="this.src='images/logo.png'">
+                <img src="logo.jpeg" alt="Logo" class="brand-logo" onerror="this.alt='Logo'">
                 <span class="brand-name">HarshCode<span>.Studio</span></span>
             </a>
 
@@ -21,7 +63,6 @@
                 <li><a href="index.html" class="active">Home</a></li>
                 <li><a href="about.html">About</a></li>
                 <li><a href="contact.html">Contact</a></li>
-                <!-- Dropdown for Other Pages -->
                 <li class="nav-dropdown" id="pagesDropdown">
                     <button class="dropdown-btn" onclick="toggleDropdown(event)">Pages ▾</button>
                     <div class="dropdown-content" id="dropdownMenu">
@@ -29,7 +70,6 @@
                         <a href="gallery.html">Gallery</a>
                         <a href="feed.html">Posts</a>
                         <a href="reviews.html">Reviews</a>
-                        <a href="login.html">👤 Admin Portal</a>
                     </div>
                 </li>
             </ul>
@@ -37,28 +77,25 @@
     </div>
 </header>
 
-    <section class="hero">
-        <div class="container">
-            <h1>Hi, I'm <span>Harsh Chaudhary Tomar</span></h1>
-            <p>Student & Professional Website Developer. Mai fast, mobile-friendly aur modern business websites banata hu jo aapke brand ko grow karne me madad karein.</p>
-            
-            <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
-                <a href="services.html" class="btn">Explore My Work</a>
-                <a href="contact.html" class="btn btn-outline">Let's Talk</a>
-            </div>
+    <section class="hero-bg-wrapper">
+        <section class="hero">
+            <div class="container">
+                <h1>Hi, I'm <span>Harsh Chaudhary Tomar</span></h1>
+                <p>🚀 Student & Professional Website Developer. Fast, mobile-friendly aur modern business websites banata hu jo aapke brand ko grow karne me madad karein.</p>
+                
+                <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 2rem;">
+                    <a href="services.html" class="btn">Explore My Work</a>
+                    <a href="contact.html" class="btn btn-outline">Let's Talk</a>
+                </div>
 
-            <!-- =========================================================
-                 HOMEPAGE SHOWCASE VIDEO (DIRECT MAIN FOLDER PATH)
-                 ========================================================= -->
-            <div class="direct-video-frame">
-                <!-- Path set to 'intro.mp4' directly for main branch -->
-                <video id="heroVideoPlayer" controls autoplay loop playsinline poster="images/photo1.jpeg">
-                    <source src="intro.mp4" type="video/mp4">
-                    Your browser does not support the video tag.
-                </video>
+                <div class="direct-video-frame" style="margin-top: 3rem;">
+                    <video id="heroVideoPlayer" controls autoplay muted loop playsinline>
+                        <source src="intro.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
             </div>
-
-        </div>
+        </section>
     </section>
 
     <div class="container">
@@ -76,7 +113,7 @@
                 <p>Support & Maintenance</p>
             </div>
             <div class="stat-item">
-                <h3>Fast Load</h3>
+                <h3>⚡ Fast</h3>
                 <p>Performance Focused</p>
             </div>
         </div>
@@ -86,20 +123,20 @@
         <div class="container">
             <div class="section-header">
                 <h2>Why Choose HarshCode Studio?</h2>
-                <p>Hamara maksad har client ko high quality aur affordable web solution provide karna hai.</p>
+                <p>High quality aur affordable web solutions provide karta hu.</p>
             </div>
             <div class="grid">
                 <div class="card">
                     <h3>⚡ Fast & Optimized</h3>
-                    <p style="margin-top: 10px; color: var(--text-muted);">Websites ultra-fast speed ke liye optimize rehti hain taaki visitors ko best experience mile aur bounce rate kam ho.</p>
+                    <p style="margin-top: 10px; color: var(--text-muted);">Websites ultra-fast speed ke liye optimize rehti hain taaki visitors ko best experience mile.</p>
                 </div>
                 <div class="card">
-                    <h3>📱 Multi-Device Compatible</h3>
-                    <p style="margin-top: 10px; color: var(--text-muted);">Chahe user phone par ho, tablet par ya laptop par—design har screen size par bilkul pixel-perfect dikhta hai.</p>
+                    <h3>📱 Multi-Device</h3>
+                    <p style="margin-top: 10px; color: var(--text-muted);">Har screen size par bilkul pixel-perfect design jo responsive aur smooth ho.</p>
                 </div>
                 <div class="card">
-                    <h3>🛠️ Easy Customization</h3>
-                    <p style="margin-top: 10px; color: var(--text-muted);">Future updates aur changes ke liye structured clean code architecture provide kiya jata hai.</p>
+                    <h3>🛠️ Easy Custom</h3>
+                    <p style="margin-top: 10px; color: var(--text-muted);">Structured clean code architecture for future updates aur easy maintenance.</p>
                 </div>
             </div>
         </div>
@@ -107,11 +144,11 @@
 
     <section class="section section-bg">
         <div class="container" style="text-align: center;">
-            <h2>Apne Business Ke Liye Website Banwani Hai?</h2>
+            <h2>Apne Business Ke Liye Website Chahiye?</h2>
             <p style="color: var(--text-muted); margin: 10px auto 25px auto; max-width: 600px;">
-                Chahe aapko portfolio chahiye, dukaan/store ke liye commercial website ya koi custom web page—aaj hi connect karein.
+                Portfolio, e-commerce, ya custom web app—aaj hi connect karein aur apne project start karein!
             </p>
-            <a href="contact.html" class="btn">Direct Contact Form Bharein</a>
+            <a href="contact.html" class="btn">📞 Direct Contact Karo</a>
         </div>
     </section>
 
@@ -120,8 +157,8 @@
         <div class="footer-grid">
             <div class="footer-col">
                 <h4>HarshCode Studio</h4>
-                <p>Student & Professional Web Developer. Mai fast, clean aur 100% mobile-friendly business websites create karta hu jo aapke brand ko stand out karein.</p>
-                <p style="color: #64748b; font-size: 0.85rem;">📍 NEAR CO OFFICE , SHAHABAD ROAD BILARI</p>
+                <p>Student & Professional Web Developer. Fast, clean aur 100% mobile-friendly business websites.</p>
+                <p style="color: #64748b; font-size: 0.85rem;">📍 Bilari, UP</p>
             </div>
             <div class="footer-col">
                 <h4>Quick Links</h4>
@@ -129,72 +166,63 @@
                     <li><a href="index.html">→ Home</a></li>
                     <li><a href="about.html">→ About Me</a></li>
                     <li><a href="services.html">→ Services</a></li>
-                    <li><a href="gallery.html">→ Photo Gallery</a></li>
-                    <li><a href="feed.html">→ Posts & Updates</a></li>
-                    <li><a href="reviews.html">→ Customer Reviews</a></li>
+                    <li><a href="gallery.html">→ Gallery</a></li>
+                    <li><a href="feed.html">→ Posts</a></li>
                 </ul>
             </div>
             <div class="footer-col">
-                <h4>Our Services</h4>
+                <h4>Services</h4>
                 <ul>
                     <li><a href="services.html">→ Business Websites</a></li>
-                    <li><a href="services.html">→ Portfolio Websites</a></li>
-                    <li><a href="services.html">→ Mobile UI Design</a></li>
-                    <li><a href="services.html">→ Speed Optimization</a></li>
-                    <li><a href="login.html">→ 👤 Admin Portal</a></li>
+                    <li><a href="services.html">→ Portfolio</a></li>
+                    <li><a href="services.html">→ UI/UX Design</a></li>
+                    <li><a href="services.html">→ Speed Opt</a></li>
                 </ul>
             </div>
             <div class="footer-col">
-                <h4>Direct Connect</h4>
+                <h4>Contact Info</h4>
                 <div class="footer-contact-item">
                     <span>📞</span>
-                    <div><strong style="display:block; font-size: 0.85rem; color:#94a3b8;">Phone:</strong><a href="tel:9412078091">+91 9412078091</a></div>
+                    <div><strong>Phone:</strong><a href="tel:9412078091">+91 94120 78091</a></div>
                 </div>
                 <div class="footer-contact-item">
                     <span>✉️</span>
-                    <div><strong style="display:block; font-size: 0.85rem; color:#94a3b8;">Email:</strong><a href="mailto:yubanshhsalklan@gmail.com">yubanshhsalklan@gmail.com</a></div>
-                </div>
-                <div class="footer-contact-item">
-                    <span>📸</span>
-                    <div><strong style="display:block; font-size: 0.85rem; color:#94a3b8;">Instagram:</strong><a href="https://instagram.com/yubanshh_chaudhary01" target="_blank">@yubanshh_chaudhary01</a></div>
+                    <div><strong>Email:</strong><a href="mailto:yubanshhsalklan@gmail.com">Contact</a></div>
                 </div>
             </div>
         </div>
         <div class="footer-bottom">
-            <p>&copy; 2026 HarshCode Studio. All Rights Reserved. Designed by Harsh Chaudhary Tomar.</p>
-            <p><a href="login.html">Admin Login</a> • <a href="contact.html">Get In Touch</a></p>
+            <p>&copy; 2026 HarshCode Studio. All Rights Reserved.</p>
+            <p><a href="contact.html">Get In Touch</a> • <a href="about.html">About</a></p>
         </div>
     </div>
 </footer>
 
-<!-- Srishti Assistant Widget -->
 <div id="srishti-chatbot-widget">
-    <button id="srishti-chat-toggle" aria-label="Open Srishti Assistant"><span id="srishti-toggle-icon">✨</span></button>
+    <button id="srishti-chat-toggle" aria-label="Chat"><span>✨</span></button>
     <div id="srishti-chat-window">
         <div class="srishti-chat-header">
             <div class="srishti-avatar">🌸</div>
-            <div><h4 style="margin:0; font-size:0.95rem;">Srishti Assistant</h4><span style="font-size:0.75rem; color:#38bdf8;">Online | HarshCode Studio</span></div>
+            <div><h4>Srishti</h4><span>Online</span></div>
         </div>
         <div class="srishti-chat-body" id="srishtiChatBody">
             <div class="srishti-msg bot-msg">
-                Hello! MERA NAAM SRISHTI HAI. Main HarshCode Studio ki AI assistant hoon. Website development, pricing, timelines ya Harsh Chaudhary Tomar ke baare me kuch bhi poochein!
+                Hi! Mera naam Srishti hai. Website development, pricing ya Harsh ke baare me sawaal karein!
             </div>
             <div class="srishti-quick-chips">
-                <button onclick="triggerSrishti('Website Banwane Ka Cost?')">💰 Cost</button>
-                <button onclick="triggerSrishti('Tech Stack Kya Use Karte Ho?')">⚡ Tech Stack</button>
-                <button onclick="triggerSrishti('Kitna Time Lagta Hai?')">⏱️ Timeline</button>
-                <button onclick="triggerSrishti('Direct Harsh Se Kaise Contact Karein?')">📞 Contact</button>
+                <button onclick="srishtiAsk('Cost?')">💰 Cost</button>
+                <button onclick="srishtiAsk('Tech Stack?')">⚡ Tech</button>
+                <button onclick="srishtiAsk('Contact?')">📞 Contact</button>
             </div>
         </div>
         <form id="srishtiChatForm" class="srishti-chat-footer">
-            <input type="text" id="srishtiInput" placeholder="Sawaal likhein..." required autocomplete="off">
+            <input type="text" id="srishtiInput" placeholder="Message..." autocomplete="off">
             <button type="submit" id="srishtiSendBtn">➤</button>
         </form>
     </div>
 </div>
 
 <script>
-    // Dropdown toggle
     function toggleDropdown(e) {
         e.stopPropagation();
         document.getElementById("pagesDropdown").classList.toggle("active");
@@ -203,27 +231,11 @@
         document.getElementById("pagesDropdown").classList.remove("active");
     });
 
-    // Browser audio policy handling for video auto-play
     const video = document.getElementById("heroVideoPlayer");
     if (video) {
-        const playPromise = video.play();
-        if (playPromise !== undefined) {
-            playPromise.catch(() => {
-                // Mute fallback if auto-play with sound is blocked
-                video.muted = true;
-                video.play();
-            });
-        }
+        video.muted = true;
+        video.play().catch(e => console.log('Video autoplay blocked'));
     }
-
-    // Trained Knowledge Engine
-    const srishtiKB = [
-        { k: ["cost", "price", "kitne", "paisa", "rate", "fees"], r: "Website pricing estimate:<br>• <strong>Landing Page / Portfolio:</strong> ₹2,500 – ₹5,000<br>• <strong>Business Multi-Page Website:</strong> ₹6,000 – ₹12,000<br>• <strong>Custom Cloud Web App:</strong> ₹12,000+.<br>Direct enquiry ke liye Contact page visit karein!" },
-        { k: ["tech", "stack", "technology", "code", "database", "supabase"], r: "HarshCode Studio modern stack use karta hai:<br>• <strong>Frontend:</strong> HTML5, CSS3, Modern JavaScript (ES6+), Tailwind CSS.<br>• <strong>Database:</strong> Supabase (Real-Time Cloud PostgreSQL), IndexedDB.<br>• <strong>Security:</strong> SHA-256 Cryptographic Auth." },
-        { k: ["time", "kitne din", "duration", "timeline", "kab tak"], r: "Standard project timeline:<br>• <strong>Single Page / Portfolio:</strong> 24 se 48 ghante.<br>• <strong>Full Business Website:</strong> 3 se 5 din.<br>• <strong>Custom Web App:</strong> 7 se 10 din." },
-        { k: ["contact", "harsh", "number", "call", "whatsapp", "phone"], r: "Direct Harsh Chaudhary Tomar se judne ke liye:<br>• <strong>Call / WhatsApp:</strong> +91 94120 78091<br>• <strong>Instagram:</strong> @yubanshh_chaudhary01<br>• <strong>Email:</strong> yubanshhsalklan@gmail.com<br>• <strong>Address:</strong> NEAR CO OFFICE , SHAHABAD ROAD BILARI" },
-        { k: ["mobile", "responsive", "phone", "tablet"], r: "Haan! HarshCode Studio ki banayi gayi har website 100% mobile-friendly aur responsive hoti hai jo har phone aur screen par smooth chalti hai." }
-    ];
 
     const toggleBtn = document.getElementById("srishti-chat-toggle");
     const chatWin = document.getElementById("srishti-chat-window");
@@ -231,11 +243,9 @@
     const chatForm = document.getElementById("srishtiChatForm");
     const chatInput = document.getElementById("srishtiInput");
 
-    function toggleChat(forceOpen = false) {
-        const isHidden = chatWin.style.display === "none" || chatWin.style.display === "";
-        chatWin.style.display = (forceOpen || isHidden) ? "flex" : "none";
-    }
-    toggleBtn.addEventListener("click", () => toggleChat());
+    toggleBtn.addEventListener("click", () => {
+        chatWin.style.display = chatWin.style.display === "flex" ? "none" : "flex";
+    });
 
     function addMessage(msg, sender) {
         const div = document.createElement("div");
@@ -245,19 +255,12 @@
         chatBody.scrollTop = chatBody.scrollHeight;
     }
 
-    function processQuestion(query) {
-        const lower = query.toLowerCase();
-        let answer = null;
-        for (let item of srishtiKB) {
-            if (item.k.some(key => lower.includes(key))) {
-                answer = item.r;
-                break;
-            }
-        }
+    window.srishtiAsk = function(q) {
+        addMessage(q, "user");
         setTimeout(() => {
-            addMessage(answer || "Yeh badhiya sawaal hai! Is requirement ke liye aap direct Harsh se <strong>+91 94120 78091</strong> par call/WhatsApp karein ya <a href='contact.html' style='color:#0284c7; font-weight:bold;'>Contact Page</a> dekhein.", "bot");
+            addMessage("Great question! Harsh se contact karne ke liye call karein: <strong>+91 94120 78091</strong>", "bot");
         }, 300);
-    }
+    };
 
     chatForm.addEventListener("submit", (e) => {
         e.preventDefault();
@@ -265,14 +268,8 @@
         if (!text) return;
         addMessage(text, "user");
         chatInput.value = "";
-        processQuestion(text);
+        srishtiAsk(text);
     });
-
-    window.triggerSrishti = function(questionText) {
-        toggleChat(true);
-        addMessage(questionText, "user");
-        processQuestion(questionText);
-    };
 </script>
 </body>
 </html>
